@@ -1,35 +1,22 @@
 # Why "Promptware"?
 
-The term **promptware** is used throughout PROMPTARCH to name a class of software whose dominant behavior is shaped by prompts and natural-language specifications consumed by LLM agents, rather than by deterministic code paths.
+This is a short introduction to the term. **For the full, citable position** — what promptware is, what it is NOT, why it requires its own architectural discipline, and how it relates to neighbouring terms (prompt engineering, AI engineering, agentic AI, Software 2.0, low-code, policy-as-code) — see [APR-000 PROMPTWARE](../principles/APR-000-promptware.md).
 
-## The distinction
+## The one-paragraph version
 
-Consider two systems that "do the same thing" — say, both classify a piece of text as `low | medium | high | critical`.
+**Promptware** is software whose dominant runtime behaviour is shaped by content read at execution time by LLM agents, rather than by deterministic code paths. Editing a markdown or YAML file in a promptware system can materially change runtime behaviour, because that file is loaded into an agent's context at execution time. The term distinguishes *content-centric* software (where the operative content is prose) from *code-centric*, deterministic software — and that distinction matters because the two classes have qualitatively different engineering disciplines: drift is silent in promptware, audit becomes interpretation, change impact is invisible without governance. PROMPTARCH is the principles layer that addresses those shifts.
 
-- **Code-centric.** A function with explicit `if`/`else` branches over regex matches, keyword counts, and numeric thresholds. The behavior is entirely defined by the code; the inputs to debugging are the code itself plus example traces.
-- **Promptware.** A skill spec whose prose says "classify the input according to the rubric below" plus an injected ontology that defines what each label means, an injected policy that defines the decision rules, and a few-shot example block. The behavior is shaped by an LLM reading prose; the inputs to debugging include all of the injected content, the prompt template, the model version, and the temperature.
+## Why a new term at all?
 
-These two systems have **profoundly different engineering disciplines** even when they produce the same outputs. In particular:
+The names already in circulation — "AI software," "agentic AI," "LLM application," "prompt engineering" — each cut a different joint:
 
-- Drift in promptware is silent because the "code" is prose, and prose has no compiler.
-- Audit in promptware depends on capturing *what content was injected at the moment of decision*, not just what the latest version of the repo says.
-- Change impact in promptware is hard to see — editing a single ontology file can change the behavior of every skill that injects it.
+- **"AI software"** is too broad. A deterministic pipeline with one LLM call at the edge is mostly code-centric; calling it "AI software" obscures the engineering reality.
+- **"Agentic"** names a runtime pattern, not a content profile. Some agentic systems are promptware; some promptware systems are not agentic.
+- **"LLM application"** is an implementation flavour, not an architectural category.
+- **"Prompt engineering"** is a craft — the writing of *individual* prompts. It does not name the engineering of *systems* of prompts, content, and orchestration.
 
-## Why not just call it "AI software"?
-
-"AI software" is too broad. A system that calls an LLM once at the edge but otherwise behaves deterministically (e.g., a deterministic pipeline with an LLM-powered enrichment step) is mostly code-centric, with a small AI component bolted on. The architectural discipline for that system is *mostly* traditional software engineering.
-
-A system whose central decision-making loop is an agent reading prose, choosing what to do, calling other agents, and producing consequential actions is qualitatively different. Calling both "AI software" obscures the architectural challenge that PROMPTARCH addresses.
-
-## Why not "agentic software"?
-
-"Agentic" describes a runtime pattern (autonomous decision-making, multi-turn, tool use). Promptware describes a *content profile* (prose as operative content). The two overlap heavily in practice but are not identical.
-
-- A heavily-promptware system that has no agentic loop (e.g., a one-shot text classifier with rich injected ontology and policies) still benefits from PROMPTARCH's principles.
-- An agentic system whose behavior is entirely defined by code (e.g., a state-machine bot with no LLM in the loop) is not promptware.
-
-Most modern agentic AI systems are also promptware systems; PROMPTARCH uses both terms.
+Without a name for the class of software where prose-and-config drive runtime decisions, architectural conversations slip into talking past each other. The full motivation, including how promptware sits relative to each of these neighbouring terms, is in [APR-000](../principles/APR-000-promptware.md).
 
 ## Is "promptware" original to PROMPTARCH?
 
-The term has appeared informally in industry usage. PROMPTARCH does not claim invention of the term — only its specific use as the named subject domain of these APRs. Where the term is used in other ways in the literature, this project's usage is the one defined here.
+No. The term has appeared informally in industry usage. PROMPTARCH does not claim invention — only a specific, bounded, technical use of the term, with the architectural discipline that follows.

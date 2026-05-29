@@ -22,9 +22,9 @@ You can, but cite it with the status noted: "APR-001 ASPECT v0.1.0 (Draft)". A `
 
 Open an issue in the repository following the structure in [`meta/apr-process.md`](../meta/apr-process.md). Substantive review happens at issue stage — before any prose is written — to avoid wasting effort on proposals that aren't a fit.
 
-## Why MIT licence, not Creative Commons?
+## How is PROMPTARCH licensed?
 
-The reasoning is recorded in [`meta/decisions/ADR-001-license.md`](../meta/decisions/ADR-001-license.md). In short: licence-shape simplicity. The project will reconsider if real-world adoption shows MIT-on-prose causing friction.
+It is dual-licensed: prose and documentation under **CC BY 4.0**, and code (schemas, tooling) under **Apache 2.0**. CC BY fits a citable principles corpus and requires attribution on reuse; Apache 2.0 gives code adopters an explicit patent grant. The full reasoning is in [`meta/decisions/ADR-002-license.md`](../meta/decisions/ADR-002-license.md), which supersedes the project's original MIT decision ([ADR-001](../meta/decisions/ADR-001-license.md)).
 
 ## What if I disagree with an APR?
 

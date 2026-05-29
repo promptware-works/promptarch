@@ -4,13 +4,16 @@ title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 status: Draft
 version: 0.1.0
 authors:
-  - Robil Daher
-created: 2026-05-28
+  - D. Maxios
+co-authors:
+  - "Claude Opus 4.7 (Anthropic; 1M context)"
+created: 2026-05-01
 last-updated: 2026-05-28
 audience: Architects and framework authors of agentic AI platforms
 supersedes: []
 superseded-by: []
 related:
+  - APR-000
   - APR-001
 tags:
   - content-organization

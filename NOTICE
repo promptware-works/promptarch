@@ -1,0 +1,17 @@
+PROMPTARCH
+Copyright 2026 D. Maxios and PROMPTARCH contributors
+
+This repository is dual-licensed:
+
+- Prose and documentation — the APRs under principles/, and all content under
+  docs/, meta/, examples/, and the repository's Markdown files — are licensed
+  under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+  See LICENSE-docs.
+
+- Code — including the machine-readable schemas under schemas/ and any tooling
+  under tools/ — is licensed under the Apache License, Version 2.0.
+  See LICENSE.
+
+When a file's type is ambiguous, the YAML/JSON/code files follow Apache 2.0 and
+everything else follows CC BY 4.0. See README.md ("Licensing") and
+meta/decisions/ADR-002-license.md for the rationale.

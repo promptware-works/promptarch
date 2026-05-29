@@ -1,8 +1,13 @@
 # ADR-001 — Project licence: MIT for everything
 
-- **Status**: Accepted
+- **Status**: Superseded by [ADR-002](ADR-002-license.md) (2026-05-29)
 - **Date**: 2026-05-28
-- **Decider**: Robil Daher
+- **Decider**: D. Maxios
+
+> **Superseded.** This decision (MIT for the whole repository) was reversed before
+> public release. The project now dual-licenses prose under CC BY 4.0 and code under
+> Apache 2.0 — see [ADR-002](ADR-002-license.md). The text below is retained as the
+> historical record and is no longer in force.
 
 ## Context
 

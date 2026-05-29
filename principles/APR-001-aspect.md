@@ -2,15 +2,18 @@
 apr: 001
 title: "ASPECT — A Prompt Framework for Agent & Skill Specifications"
 status: Draft
-version: 0.1.0
+version: 0.2.0
 authors:
-  - Robil Daher
-created: 2026-05-28
+  - D. Maxios
+co-authors:
+  - "Claude Opus 4.7 (Anthropic; 1M context)"
+created: 2026-03-21
 last-updated: 2026-05-28
 audience: Designers and authors of LLM-based agents and skills
 supersedes: []
 superseded-by: []
 related:
+  - APR-000
   - APR-002
 tags:
   - agents
@@ -398,6 +401,40 @@ The framework treats security-sensitivity as a *property of the component*, not 
 
 ---
 
+## What ASPECT is NOT
+
+ASPECT is deliberately bounded:
+
+- **Not a runtime.** ASPECT prescribes how an agent or skill is *specified*, not how it executes. Any agent runtime can consume ASPECT-conformant specs; the framework imposes no scheduler, no message bus, no execution model.
+- **Not a frontmatter schema.** ASPECT governs the markdown body only. The frontmatter is whatever the host runtime (Claude Code, VS Code Copilot Workspace, OpenAI Assistants API, a bespoke platform) requires. ASPECT and the frontmatter layer are siblings, not nested.
+- **Not a prompt template library.** ASPECT specifies the *shape* of agent / skill prose, not the wording for any particular domain task. There are no fill-in-the-blank prompts for "summarise this article" or "classify this ticket."
+- **Not a behaviour framework.** The framework says how to describe what an agent does; it does not say *what* an agent should do for any particular domain or business case.
+- **Not an inter-agent message protocol.** Multi-agent coordination — message envelopes, routing topology, retry semantics — is the host platform's concern. ASPECT only narrates the *delegation contract* in the agent's body prose.
+- **Not a tool-grant policy.** Tool permissions live in frontmatter. ASPECT's `Tools & Capabilities` section narrates the granted set; it does not enforce it.
+- **Not a regulatory compliance package.** ASPECT produces audit-friendly structure (declarative tables, named patterns, evidence-grounded prose) that *supports* ISO 42001 / EU AI Act audits, but it does not by itself satisfy any regulatory obligation. Adopters in regulated environments layer their own controls on top.
+- **Not a substitute for review.** Well-formed sections do not substitute for architectural judgement. A spec that completes every section but routes incorrectly is still wrong.
+
+ASPECT is also explicitly **not coupled to any particular host runtime**. Where the framework references frontmatter fields, schemas, or skill definitions, those are illustrative of the *kind* of contract host runtimes provide — not a specification of any one runtime's format.
+
+---
+
+## Relationship to established patterns
+
+ASPECT shares DNA with patterns from outside agentic-AI specification. Honest positioning matters for adopters evaluating whether ASPECT is novel or a recombination:
+
+| Pattern | What it shares with ASPECT | What ASPECT adds |
+|---|---|---|
+| **Acronym prompt frameworks** (CRISPE, RTF, CO-STAR, RACE, RISEN, RICTOC, CITOC; ~2023–2025) | Per-section guidance for prompt construction; named slots with explicit purpose | Name decoupled from slot-mnemonic, so the slot list evolves without breaking the name; agents and skills as *distinct* variants (ASPECT-A, ASPECT-S); positive AND negative scoping mandatory for agents; declarative governance via tables, not prose |
+| **ADR templates** (Michael Nygard, ~2011) | Required sections; active-voice headings; versioned change log; lightweight markdown contract | Targets specification of LLM-based components, not architectural decisions; situational sections governed by component type (e.g., security-sensitivity flips three slots into stricter mode) |
+| **arc42 template** (~2005) | Prescribed body shape for architecture documentation; explicit sections for constraints, quality goals, risks | Component-level rather than system-level; tailored to LLM-component concerns (autonomy, blast radius, untrusted-input handling); shorter and stricter — no optional "architecture decisions" or "deployment view" |
+| **OpenAPI / JSON Schema for endpoints** (~2014) | Machine-readable contract sibling to human-readable spec | Carries the contract split *into the spec document itself* (body = semantics, frontmatter = contract); the body explains *why* the contract is what it is, which is auditable |
+| **Host-runtime agent / skill conventions** (Anthropic Claude Code, OpenAI Assistants, VS Code Copilot Workspace) | One markdown spec per agent / skill; tools listed declaratively; frontmatter as machine-readable header | Two-variant split with different mandatory sections per variant; explicit autonomy / blast-radius declarative table; security-sensitivity as a stricter-mode trigger that bumps three otherwise-situational slots to mandatory |
+| **Behaviour-Driven Development feature files** (Cucumber Gherkin, ~2008) | Structured prose readable by humans and consumed by machines; prescribed wording for section starts | Operates at component-specification level rather than test-case level; the output is a spec, not an executable test |
+
+The novel contribution is **two purpose-built variants (ASPECT-A for agents, ASPECT-S for skills) with type-driven mandatory sections and a security-sensitivity stricter-mode** — making LLM-component spec corpora auditable in a way that single-template approaches cannot, because agent and skill concerns are fundamentally different and a unified template forces the same noise on both.
+
+---
+
 ## Authoring discipline
 
 Three habits matter more than any specific slot:
@@ -413,3 +450,4 @@ Three habits matter more than any specific slot:
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-001. |
+| 0.2.0 | 2026-05-28 | Draft | Added `What ASPECT is NOT` and `Relationship to established patterns` sections; no semantic change to existing material. |

@@ -27,10 +27,11 @@ A promptware system is one where editing a Markdown file or a YAML file can mate
 
 | ID | Name | Title | Status |
 |---|---|---|---|
+| [APR-000](principles/APR-000-promptware.md) | **PROMPTWARE** | A Foundational Position for the PROMPTARCH APR Series | Draft |
 | [APR-001](principles/APR-001-aspect.md) | **ASPECT** | A Prompt Framework for Agent & Skill Specifications | Draft |
 | [APR-002](principles/APR-002-observe.md) | **OBSERVE** | A Content-Organization Principle for Agentic Platforms | Draft |
 
-See [`principles/README.md`](principles/README.md) for the full index and status legend.
+APR-000 is the project's foundational position — read it first if you are new to PROMPTARCH or evaluating whether the APR series applies. See [`principles/README.md`](principles/README.md) for the full index and status legend.
 
 ## Repository layout
 
@@ -59,11 +60,16 @@ It is *not* a tutorial on building your first agent — it assumes you've felt t
 
 **Pre-release.** APR-001 and APR-002 are at Draft status. The APR process itself (see [`meta/apr-process.md`](meta/apr-process.md)) is also in early iteration; expect refinement as the first few APRs land.
 
-## License
+## Licensing
 
-MIT — see [`LICENSE`](LICENSE).
+PROMPTARCH is **dual-licensed**, matching the two kinds of content it contains:
 
-The choice of MIT (rather than CC-BY for prose) is recorded in [`meta/decisions/ADR-001-license.md`](meta/decisions/ADR-001-license.md). In short: simplicity, one license everywhere, maximum permissive reuse. Citation is welcomed but not required by the licence.
+| Content | License | File |
+|---|---|---|
+| **Prose & docs** — the APRs (`principles/`), plus `docs/`, `meta/`, `examples/`, and Markdown | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | [`LICENSE-docs`](LICENSE-docs) |
+| **Code** — schemas (`schemas/`) and tooling (`tools/`) | [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) | [`LICENSE`](LICENSE) |
+
+CC BY 4.0 fits a citable principles corpus and **requires attribution** when you reuse or adapt the prose — which is exactly how we want the series cited (see *Citing PROMPTARCH* below). Apache 2.0 gives code adopters an explicit patent grant. See [`NOTICE`](NOTICE) for the short version and [`meta/decisions/ADR-002-license.md`](meta/decisions/ADR-002-license.md) for the full rationale (it supersedes the original MIT decision in [ADR-001](meta/decisions/ADR-001-license.md)).
 
 ## Contributing
 

@@ -10,6 +10,18 @@ where `NNN` is a zero-padded three-digit integer assigned at the time the APR mo
 
 The three-digit width is a soft convention chosen for legibility. The project will widen to four digits at `APR-999`; existing IDs will not be retroactively renumbered.
 
+## APR-000 reservation
+
+`APR-000` is reserved for the project's *foundational position* — the document that introduces and motivates the APR series itself. The convention is borrowed from numbering schemes (RFC, IETF drafts, some ADR collections) that reserve index zero for the meta-entry.
+
+APR-000 is unique:
+
+- There is exactly one APR-000. It is not a normal principle record; it is the project's position statement.
+- Revising APR-000 in place uses standard version bumps, like any other APR.
+- If a fundamentally different foundational position is adopted, the new draft is published *as* APR-000 with `supersedes: [APR-000]` (referencing the prior version) and the prior content is preserved in git history. APR-000's *slot* is durable; its *content* may evolve.
+
+APR-001 onward are normal principle records and follow the rules below.
+
 ## Filename
 
 ```

@@ -23,13 +23,16 @@ required:
   - superseded-by
   - related
   - tags
+# co-authors is OPTIONAL — see field description below.
 properties:
   apr:
     description: >
       Numeric APR identifier. Monotonically increasing across the project,
       never reused. Filename is derived as APR-NNN-<slug>.md with NNN zero-padded.
+      APR-000 is reserved for the project's foundational position statement
+      (see meta/apr-numbering.md); APR-001 onward are normal principle records.
     type: integer
-    minimum: 1
+    minimum: 0
   title:
     description: >
       Full title as it should appear in citations. Conventionally:
@@ -53,7 +56,29 @@ properties:
     type: string
     pattern: '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$'
   authors:
-    description: List of human authors. At least one required.
+    description: >
+      List of HUMAN authors. At least one required. Human authors are the
+      citable, accountable signatories of the APR.
+    type: array
+    minItems: 1
+    items:
+      type: string
+      minLength: 1
+  co-authors:
+    description: >
+      Optional list of non-human (typically LLM-based) drafting assistants
+      that materially contributed to the APR. Distinct from `authors:` so
+      the human / non-human distinction is grep-able and auditable.
+
+      Conventional format is `"<Model Name> <Version> (<Provider>)"`, e.g.
+      `"Claude Opus 4.7 (Anthropic)"` or `"GPT-5 (OpenAI)"`. Authors MAY
+      append additional qualifiers when reproducibility matters — context
+      window, deployment tier, or the canonical model ID — e.g.
+      `"Claude Opus 4.7 (Anthropic; model ID claude-opus-4-7)"`.
+
+      The field is optional: omit it if no LLM materially contributed.
+      Trivial assistance (typo fixes, formatting suggestions) does not need
+      to be recorded.
     type: array
     minItems: 1
     items:

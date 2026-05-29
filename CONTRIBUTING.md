@@ -24,6 +24,19 @@ A passing APR draft typically includes:
 - At least one section relating the principle to established patterns or prior art, written honestly.
 - Versioned frontmatter conforming to [`schemas/apr-frontmatter.schema.yaml`](schemas/apr-frontmatter.schema.yaml).
 
+## Attributing LLM co-authorship
+
+If an LLM materially helped draft your APR, record it in the optional `co-authors:` frontmatter field. This is distinct from `authors:` so the human / non-human distinction stays grep-able and auditable.
+
+```yaml
+authors:
+  - Your Name
+co-authors:
+  - "Claude Opus 4.7 (Anthropic)"
+```
+
+Use one entry per model that contributed substantively. Trivial assistance (typo fixes, formatting suggestions) does not need to be recorded; substantive drafting, restructuring, or section authorship does. The full field convention is in [`schemas/apr-frontmatter.schema.yaml`](schemas/apr-frontmatter.schema.yaml).
+
 ## Tone
 
 PROMPTARCH prose is matter-of-fact, declarative, and audit-friendly. We avoid:
@@ -38,4 +51,4 @@ See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 ## Licence
 
-By contributing you agree your contribution is offered under the project's MIT licence (see [`LICENSE`](LICENSE)).
+By contributing you agree your contribution is offered under the project's licences on an inbound-equals-outbound basis: prose and documentation under **CC BY 4.0** (see [`LICENSE-docs`](LICENSE-docs)) and code under **Apache 2.0** (see [`LICENSE`](LICENSE)). The split is recorded in [`meta/decisions/ADR-002-license.md`](meta/decisions/ADR-002-license.md).

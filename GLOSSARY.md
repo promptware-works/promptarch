@@ -30,7 +30,7 @@ The runtime component that sits between "decide to delegate to a skill" and "sen
 
 Software whose dominant behavior is shaped by prompts and natural-language specifications consumed by LLM agents, rather than by deterministic code paths. Editing a Markdown or YAML file in a promptware system can materially change runtime behavior, because that file is loaded into an agent's context at execution time.
 
-The term exists to distinguish *content-centric* software (where the operative content is prose) from *code-centric*, deterministic software. PROMPTARCH is the principles layer for the former.
+The full position — what promptware is, what it is NOT, and why it requires its own architectural discipline — is in [APR-000 PROMPTWARE](principles/APR-000-promptware.md). This glossary entry is a one-paragraph summary; the APR is the citable canonical statement.
 
 ## Skill
 
