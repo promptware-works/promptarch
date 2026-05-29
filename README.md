@@ -23,15 +23,11 @@ We use **promptware** to distinguish *content-centric* software — where the op
 
 A promptware system is one where editing a Markdown file or a YAML file can materially change runtime behavior, because that file is loaded into an agent's context at execution time. This shifts the engineering discipline: drift is silent, audit becomes interpretation, change impact is invisible without governance. PROMPTARCH is the principles layer that addresses those shifts.
 
-## Initial APRs
+## The APRs
 
-| ID | Name | Title | Status |
-|---|---|---|---|
-| [APR-000](principles/APR-000-promptware.md) | **PROMPTWARE** | A Foundational Position for the PROMPTARCH APR Series | Draft |
-| [APR-001](principles/APR-001-aspect.md) | **ASPECT** | A Prompt Framework for Agent & Skill Specifications | Draft |
-| [APR-002](principles/APR-002-observe.md) | **OBSERVE** | A Content-Organization Principle for Agentic Platforms | Draft |
+The canonical, always-current list of APRs — with status and version for each — lives in **[`principles/README.md`](principles/README.md)**. This top-level README does not repeat it, so the index has a single source of truth.
 
-APR-000 is the project's foundational position — read it first if you are new to PROMPTARCH or evaluating whether the APR series applies. See [`principles/README.md`](principles/README.md) for the full index and status legend.
+Start with **[APR-000 PROMPTWARE](principles/APR-000-promptware.md)** if you are new to PROMPTARCH or evaluating whether the series applies to your work — it is the project's foundational position. APR-001 onward are normal principle records.
 
 ## Repository layout
 
