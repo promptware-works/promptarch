@@ -2,13 +2,13 @@
 apr: 002
 title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 status: Draft
-version: 0.1.0
+version: 0.1.1
 authors:
   - D. Maxios
 co-authors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
 created: 2026-05-01
-last-updated: 2026-05-28
+last-updated: 2026-05-29
 audience: Architects and framework authors of agentic AI platforms
 supersedes: []
 superseded-by: []
@@ -35,7 +35,7 @@ tags:
 
 OBSERVE is an architecture concept for organizing the **non-behavioral content** of an agentic platform — the concept definitions, values, decision rules, data shapes, demonstrations, and quality gates that agents reference, consume, produce, or are measured against — as distinct, first-class artifacts, separate from the behavioral content (skills, prompts, agent definitions).
 
-OBSERVE is a **prompt-engineering, context-engineering, and quality-engineering principle**. Its central claim is that a maintainable, auditable agentic platform requires seven content categories to live in separate places:
+OBSERVE is a **prompt-engineering, context-engineering, and quality-engineering principle**. Its central claim is that a maintainable, auditable agentic platform requires seven content categories to live in separate places (their initials spell the principle's name — see [§12 About the Name](#12-about-the-name)):
 
 | Category | What it contains | What it answers |
 |---|---|---|
@@ -347,6 +347,8 @@ Cross-reference depth multiplies the tax: a 3-hop chain (skill → policy → co
 
 The acronym is a recall aid, not an ordering — the categories are parallel artifact kinds, and the teaching order used in §1 (Behavior → Ontology → Values → Rules → Shapes → Examples → Evals) follows logical buildup rather than letter sequence.
 
+This makes OBSERVE an initial-letter mnemonic of exactly the kind [APR-001](APR-001-aspect.md#why-a-name-not-a-mnemonic) cautions against — one letter per slot, where growth forces an awkward new letter and risks breaking the name. OBSERVE accepts that constraint deliberately, and the reason it is safe to do so is the property §1 establishes: the seven categories are **fixed and collectively exhaustive**. The set does not acquire new members, so the name is not at risk. APR-001's caution is aimed at open-ended *section* lists that grow as governance needs evolve; it does not bind a closed, exhaustive category set whose membership is itself part of the principle.
+
 Two letters denote singular forms (*E*val, *E*xample) for acronym convenience; the corresponding directories are plural (`evals/`, `examples/`). This is cosmetic.
 
 The principle is portable to any agentic platform regardless of the host runtime's branding.
@@ -394,3 +396,4 @@ Platform-specific adoption plans provide concrete examples of this pattern. Phas
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-002. |
+| 0.1.1 | 2026-05-29 | Draft | §1 forward pointer to the name derivation; §12 notes OBSERVE deliberately accepts the letter-per-slot constraint APR-001 cautions against (safe because the category set is fixed and exhaustive). No semantic change. |
