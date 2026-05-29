@@ -79,4 +79,4 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md). The short version: open an issue first
 
 If you build on an APR in published work, please cite the APR by its full ID, title, and version, e.g.:
 
-> APR-001 ASPECT — A Prompt Framework for Agent & Skill Specifications, v0.1.0. PROMPTARCH, 2026. https://github.com/<org>/promptarch/blob/main/principles/APR-001-aspect.md
+> APR-001 ASPECT — A Prompt Framework for Agent & Skill Specifications, v0.1.0. PROMPTARCH, 2026. https://github.com/dmaxios/promptarch/blob/main/principles/APR-001-aspect.md
