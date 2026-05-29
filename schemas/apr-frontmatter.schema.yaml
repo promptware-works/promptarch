@@ -1,0 +1,116 @@
+# APR Frontmatter Schema (JSON Schema, expressed in YAML).
+#
+# Every file under principles/ MUST begin with YAML frontmatter conforming to
+# this schema. Validators (planned under tools/) consume this file as input.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/promptarch/promptarch/blob/main/schemas/apr-frontmatter.schema.yaml
+title: APR Frontmatter
+type: object
+description: >
+  Frontmatter required at the top of every Architectural Principle Record (APR).
+additionalProperties: false
+required:
+  - apr
+  - title
+  - status
+  - version
+  - authors
+  - created
+  - last-updated
+  - audience
+  - supersedes
+  - superseded-by
+  - related
+  - tags
+properties:
+  apr:
+    description: >
+      Numeric APR identifier. Monotonically increasing across the project,
+      never reused. Filename is derived as APR-NNN-<slug>.md with NNN zero-padded.
+    type: integer
+    minimum: 1
+  title:
+    description: >
+      Full title as it should appear in citations. Conventionally:
+      "MNEMONIC — Descriptive subtitle".
+    type: string
+    minLength: 1
+  status:
+    description: APR lifecycle state. See meta/apr-statuses.md for transitions.
+    type: string
+    enum:
+      - Draft
+      - Proposed
+      - Accepted
+      - Deprecated
+      - Superseded
+      - Withdrawn
+  version:
+    description: >
+      Semantic version of the APR. Pre-Accepted versions use 0.x; first
+      Accepted version is conventionally 1.0.0.
+    type: string
+    pattern: '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$'
+  authors:
+    description: List of human authors. At least one required.
+    type: array
+    minItems: 1
+    items:
+      type: string
+      minLength: 1
+  created:
+    description: ISO date the APR was first opened as a draft.
+    type: string
+    format: date
+  last-updated:
+    description: ISO date of the most recent semantic update.
+    type: string
+    format: date
+  audience:
+    description: One-line description of who this APR is written for.
+    type: string
+    minLength: 1
+  supersedes:
+    description: >
+      APR IDs (e.g., "APR-001") this APR replaces. Empty list if none.
+    type: array
+    items:
+      type: string
+      pattern: '^APR-\d{3,}$'
+  superseded-by:
+    description: >
+      APR IDs that supersede this one. Empty list if none. Populated when
+      status transitions to Superseded.
+    type: array
+    items:
+      type: string
+      pattern: '^APR-\d{3,}$'
+  related:
+    description: >
+      APR IDs related (but neither superseding nor superseded). Used for
+      cross-discovery; ordering is not significant.
+    type: array
+    items:
+      type: string
+      pattern: '^APR-\d{3,}$'
+  tags:
+    description: >
+      Free-form keywords for discovery and grouping. Kebab-case preferred.
+    type: array
+    items:
+      type: string
+      minLength: 1
+
+# Cross-field rules expressed as JSON Schema conditionals.
+#
+# Rule: when status is Superseded, superseded-by MUST be non-empty.
+allOf:
+  - if:
+      properties:
+        status:
+          const: Superseded
+    then:
+      properties:
+        superseded-by:
+          minItems: 1

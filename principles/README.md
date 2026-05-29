@@ -1,0 +1,33 @@
+# Principles — APR Index
+
+This directory contains the **Architectural Principle Records (APRs)** that are the core deliverable of PROMPTARCH.
+
+For background on what an APR is, see the top-level [`README.md`](../README.md). For the proposal / review / acceptance workflow, see [`meta/apr-process.md`](../meta/apr-process.md). For the status state machine, see [`meta/apr-statuses.md`](../meta/apr-statuses.md). For the frontmatter schema, see [`schemas/apr-frontmatter.schema.yaml`](../schemas/apr-frontmatter.schema.yaml).
+
+## Status legend
+
+| Status | Citable? | Notes |
+|---|---|---|
+| `Draft` | No | Active authoring; content unstable. |
+| `Proposed` | Cautiously | Author considers complete; under review. |
+| `Accepted` | **Yes** | Reviewed, merged, frozen content; editorial fixes only. |
+| `Deprecated` | No | No replacement; cite historically only. |
+| `Superseded` | No | Cite the superseding APR instead. |
+| `Withdrawn` | No | Terminal; kept for historical reference. |
+
+## Index
+
+| ID | Name | Title | Status | Version |
+|---|---|---|---|---|
+| [APR-001](APR-001-aspect.md) | **ASPECT** | A Prompt Framework for Agent & Skill Specifications | Draft | 0.1.0 |
+| [APR-002](APR-002-observe.md) | **OBSERVE** | A Content-Organization Principle for Agentic Platforms | Draft | 0.1.0 |
+
+## Conventions
+
+- **Filename**: `APR-NNN-<mnemonic>.md` (lowercase mnemonic).
+- **Canonical ID**: `APR-NNN`, used in citations and cross-references.
+- **Frontmatter**: every APR begins with YAML frontmatter conforming to [`schemas/apr-frontmatter.schema.yaml`](../schemas/apr-frontmatter.schema.yaml).
+
+## Authoring a new APR
+
+Copy [`_template/APR-NNN-template.md`](_template/APR-NNN-template.md) to a new file, replacing `NNN` with your assigned ID (see [`meta/apr-numbering.md`](../meta/apr-numbering.md)). Fill in the frontmatter, write the prose, open a PR. See [`meta/apr-process.md`](../meta/apr-process.md) for the full workflow.
