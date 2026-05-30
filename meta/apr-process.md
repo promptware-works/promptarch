@@ -52,6 +52,7 @@ When the author considers the draft complete, they update `status` to `Proposed`
 - **Prior-art honesty.** Are relationships to established patterns named openly *and backed by a References section with resolvable links*? Standards and tools are cited, not merely named; ideas with no canonical source are flagged as such rather than given an invented citation.
 - **Wording.** Active voice; RFC 2119 keywords where normative; no marketing language; tables for declarative governance.
 - **Cross-references.** Internal links resolve; APR references use canonical IDs.
+- **Standard opening.** Frontmatter carries the (schema-required) `abstract`; the body opens with a one-line `>` principle callout immediately after the H1, per the template skeleton.
 
 A Proposed APR sits open for at least 7 days before merge, to give the community a chance to weigh in. Substantive review comments may move the APR back to `Draft`.
 

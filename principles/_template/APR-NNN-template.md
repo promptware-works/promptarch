@@ -32,7 +32,8 @@ the principle.
 What every APR MUST cover, in some recognisable form:
 
   ☐ MOTIVATION             — what goes wrong without this principle?
-  ☐ THE PRINCIPLE          — a clear, callout-worthy statement
+  ☐ THE PRINCIPLE          — a one-line `>` callout immediately after the H1
+                             (per the skeleton), expanded later in the body
   ☐ SCOPE                  — positive case (when this applies)
   ☐ NEGATIVE SCOPE         — explicit "what this is NOT" / when it doesn't apply
   ☐ PRESCRIPTION           — actionable content; tables/lists over prose
