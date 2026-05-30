@@ -1,0 +1,13 @@
+{
+  "name": "@promptarch/tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "PROMPTARCH repository tooling (TypeScript/Node per ADR-003).",
+  "scripts": {
+    "check:digests": "node check-digests.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22"
+  }
+}
