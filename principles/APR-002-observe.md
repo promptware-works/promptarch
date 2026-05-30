@@ -3,7 +3,7 @@ apr: 002
 title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 abstract: "Organizes an agentic platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — as seven first-class artifact types, each with a single canonical source, a declarative manifest, selective runtime injection, and audit-logged provenance."
 status: Draft
-version: 0.1.3
+version: 0.1.4
 authors:
   - D. Maxios
 co-authors:
@@ -25,6 +25,8 @@ tags:
 ---
 
 # APR-002 OBSERVE — A Content-Organization Principle for Agentic Platforms
+
+> **A platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — belongs in separate, first-class, canonically-sourced artifacts, declaratively referenced by skills rather than embedded in their prose. No overlap.**
 
 **Origin**: Developed November 2025 for an agentic platform; extended May 2026 to cover examples, evals, and ontology.
 **Scope**: A principle applicable to any agentic platform; validated in internal platform pilots; promotion to additional deployments is voluntary.
@@ -424,3 +426,4 @@ External sources referenced in this APR; see §13 *Relationship to Established P
 | 0.1.1 | 2026-05-29 | Draft | §1 forward pointer to the name derivation; §12 notes OBSERVE deliberately accepts the letter-per-slot constraint APR-001 cautions against (safe because the category set is fixed and exhaustive). No semantic change. |
 | 0.1.2 | 2026-05-30 | Draft | Added References section. No semantic change. |
 | 0.1.3 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
+| 0.1.4 | 2026-05-30 | Draft | Added opening principle callout, for consistency with APR-000/003. No semantic change. |
