@@ -52,7 +52,13 @@ These are cheap, high-value, and worth building *before* the generator itself:
 
 1. **Governance section in or out?** Currently in (analysis showed ~7/12 OBSERVE governance items are authoring requirements). Make it a `--governance` flag so it's a one-switch decision, not a rewrite.
 2. **Per-APR-type templates?** Position statements (APR-000), frameworks (APR-001), and rule-sets (002/003) digest differently. Either one template with conditional sections, or a small template per type.
-3. **Language/tooling?** Python under `tools/` (markdown parsing + optional Anthropic API call for the condensation pass). No runtime dependency for the MVP path.
+3. **Language/tooling — TypeScript (Node).** Chosen over Python:
+   - The broader `tools/` vision is JSON-Schema validation and manifest linting, where TypeScript + [`ajv`](https://ajv.js.org/) (the reference JSON Schema implementation) is first-class — one toolchain serves both the digest generator and the planned frontmatter validator.
+   - Runs cross-platform via `npx` with no global install.
+   - Aligns with the host runtimes the APRs target (VS Code/Copilot, Claude Code, the Anthropic TypeScript SDK).
+   - Libraries: `unified`/`remark` (Markdown) + `gray-matter` (frontmatter) + `js-yaml`; optional condensation pass via `@anthropic-ai/sdk`; eval-gating via `promptfoo` (JS — already cited in the APRs), keeping a single toolchain.
+
+   *Note: "cross-platform" is not the deciding factor — Python is cross-platform too. The deciding factors are JSON-Schema tooling fit and ecosystem alignment.*
 4. **Where do golden digests live?** The four current hand-written digests become the eval set for the condensation prompt — they are the target the generator should approximate.
 
 ## Recommended first step
