@@ -3,7 +3,7 @@ apr: 4
 title: "A Canonical-Source and Materialization Principle for Runtime-Independent Promptware"
 abstract: "Author promptware once in a runtime-neutral canonical location and materialize each AI environment's home (.claude/, .github/, .cursor/, …) from it — generated, never hand-edited — so promptware is portable across tools and outlives any single vendor's directory convention."
 status: Draft
-version: 0.1.0
+version: 0.1.1
 principals:
   - D. Maxios
 generative-contributors:
@@ -65,10 +65,15 @@ Two halves, inseparable:
 
 ## The canonical layout
 
-The canonical root defaults to a **visible** folder — `promptware/` — because it is *source you author and review*, not hidden config. The name is configurable; the discipline matters more than the name.
+The canonical root's **name and visibility follow its role in the repository** — the discipline (one root, materialize outward) is invariant; only the location adapts:
+
+- **Promptware-first repos** (the promptware is the deliverable): a **visible** root — default `promptware/` — because it is source you author and review, like `src/`.
+- **Code-first repos where promptware is auxiliary**: a **hidden** root — `.promptware/` — sitting alongside the other repo-meta tooling dotfolders (`.github/`, `.vscode/`, `.devcontainer/`), so product source stays prominent and the AI layer reads as support, not product.
+
+When the canonical root is hidden, it sits next to the (also hidden) materialized vendor dirs. The "generated — do not edit" marker that every materialized artifact carries (see *Materialization*) is what distinguishes the single canonical source from its generated projections.
 
 ```text
-promptware/                      # canonical source of truth — author here, only here
+promptware/                      # canonical source (or .promptware/ when auxiliary) — author here, only here
 ├── agents/                      # ASPECT-A agent specs
 ├── skills/  ontology/  config/  policies/  contracts/  examples/  evals/   # OBSERVE layout
 └── ...
@@ -91,7 +96,7 @@ The canonical root **SHOULD** organize its contents per [APR-002 OBSERVE](APR-00
 
 ## Prescription
 
-- Promptware **MUST** have exactly one runtime-neutral canonical root (default `promptware/`; name configurable). All authoring happens there.
+- Promptware **MUST** have exactly one runtime-neutral canonical root. Its name and visibility follow its role: a visible `promptware/` when promptware is a first-class concern, or a hidden `.promptware/` when it is auxiliary to a code-first repo. All authoring happens there.
 - Vendor/runtime homes **MUST** be materialized from the canonical root and **MUST NOT** be authored directly.
 - Materialization **MUST** be one-way; reverse edits **MUST NOT** be a supported workflow.
 - Materialized artifacts **MUST NOT** be hand-edited. If committed, each **MUST** carry a "generated — do not edit" marker and **MUST** be covered by a staleness check that fails when canonical source changed without regeneration.
@@ -147,3 +152,4 @@ External sources referenced in this APR; see *Relationship to established patter
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-30 | Draft | Initial draft published as APR-004. |
+| 0.1.1 | 2026-05-30 | Draft | Canonical root visibility is role-based — visible `promptware/` when primary, hidden `.promptware/` when auxiliary to a code-first repo; the generated-marker disambiguates source from artifact when both are hidden. |

@@ -1,6 +1,6 @@
 # APR-004 — Canonical Source & Materialization — Digest
 
-> **Generated digest of [APR-004 — A Canonical-Source and Materialization Principle for Runtime-Independent Promptware](../APR-004-canonical-source.md) v0.1.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-004 — A Canonical-Source and Materialization Principle for Runtime-Independent Promptware](../APR-004-canonical-source.md) v0.1.1.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
 **Abstract.** Author promptware once in a runtime-neutral canonical location and materialize each AI environment's home (.claude/, .github/, .cursor/, …) from it — generated, never hand-edited — so promptware is portable across tools and outlives any single vendor's directory convention.
 
@@ -9,7 +9,7 @@
 ## The shape
 
 ```text
-promptware/                 # canonical source — author here, only here
+promptware/                 # canonical source (or .promptware/ when auxiliary) — author here, only here
 ├── agents/                 # ASPECT-A specs
 └── skills/ ontology/ config/ policies/ contracts/ examples/ evals/   # OBSERVE
         │  materialize (one-way; transform, not copy)
@@ -21,7 +21,7 @@ The canonical root SHOULD organize its content per OBSERVE; this principle gover
 
 ## Normative rules
 
-- Promptware MUST have exactly one runtime-neutral canonical root (default `promptware/`; name configurable). All authoring happens there.
+- Promptware MUST have exactly one runtime-neutral canonical root; its name/visibility follows role — visible `promptware/` when primary, hidden `.promptware/` when auxiliary to a code-first repo. All authoring happens there.
 - Vendor/runtime homes MUST be materialized from the canonical root and MUST NOT be authored directly.
 - Materialization MUST be one-way (canonical → runtime); reverse edits MUST NOT be a supported workflow.
 - Materialized artifacts MUST NOT be hand-edited. If committed, each MUST carry a "generated — do not edit" marker and MUST be covered by a staleness check that fails when the source changed without regeneration.
@@ -38,4 +38,4 @@ Vendor dirs contain only generated files (no hand-authored promptware under `.cl
 Not a runtime or execution model · not a folder-name or build-tool mandate (`promptware/` is a default; the discipline is the point) · not a vendor format spec (it maps onto tools' formats, doesn't define them) · not two-way sync (one-way generation; a vendor dir is never an authoring place) · not a replacement for OBSERVE/ASPECT (it is the outer portability layer; they operate inside the canonical root).
 
 ---
-*Source: [APR-004 — A Canonical-Source and Materialization Principle for Runtime-Independent Promptware](../APR-004-canonical-source.md) v0.1.0 · regenerate this digest whenever the source changes.*
+*Source: [APR-004 — A Canonical-Source and Materialization Principle for Runtime-Independent Promptware](../APR-004-canonical-source.md) v0.1.1 · regenerate this digest whenever the source changes.*
