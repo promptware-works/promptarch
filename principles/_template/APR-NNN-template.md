@@ -4,11 +4,11 @@ title: "MNEMONIC — <Descriptive subtitle>"
 abstract: "<one- to two-sentence summary, ≤300 chars: what this APR is about and why one would adopt it. Descriptive, not normative.>"
 status: Draft                  # Draft | Proposed | Accepted | Deprecated | Superseded | Withdrawn
 version: 0.1.0
-authors:
-  - <Author Name>
-co-authors:                    # OPTIONAL — list LLM drafting assistants here, in the
+principals:
+  - <Principal Name>
+generative-contributors:       # OPTIONAL — list generative (LLM) systems here, in the
   - "<Model Name & Version (Provider)>"   # form 'Claude Opus 4.7 (Anthropic)'. Remove the
-                                          # section entirely if no LLM materially contributed.
+                                          # section entirely if no generative system contributed.
 created: YYYY-MM-DD
 last-updated: YYYY-MM-DD
 audience: <one-line audience description>

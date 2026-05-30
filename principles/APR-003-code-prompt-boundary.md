@@ -3,10 +3,10 @@ apr: 003
 title: "A Code/Prompt Boundary Principle for Promptware"
 abstract: "Places deterministic, verifiable, or safety-critical behavior in code and open-ended judgment in prompts, with an explicit, typed, testable seam at every code/prompt crossing — so each behavior is verified the right way and no safety decision rests silently on a model."
 status: Draft
-version: 0.1.2
-authors:
+version: 0.1.3
+principals:
   - D. Maxios
-co-authors:
+generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-05-29
 last-updated: 2026-05-30
@@ -152,3 +152,4 @@ External sources referenced in this APR; see §9 *Relationship to established pa
 | 0.1.0 | 2026-05-29 | Draft | Initial draft published as APR-003. |
 | 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |
 | 0.1.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
+| 0.1.3 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |

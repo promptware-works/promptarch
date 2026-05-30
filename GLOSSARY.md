@@ -22,9 +22,17 @@ A point-in-time decision record for one project. PROMPTARCH uses ADRs only in [`
 
 Prompts, skill prose, agent definitions — the imperative content an LLM reads to know *what to do*. Contrast with **non-behavioral content** (concepts, values, rules, shapes, examples, evals). The distinction is the central premise of APR-002 OBSERVE.
 
+## Generative contributor
+
+A generative (typically LLM-based) system that materially contributed to producing an APR's content, recorded in the optional `generative-contributors:` frontmatter field. A generative contributor is distinct from a **principal**: it generates content under a principal's direction but is not accountable for the work and is not an author. The distinction separates the *generation* axis (what produced the text) from the *accountability* axis (who is responsible).
+
 ## Loader / Orchestrator
 
 The runtime component that sits between "decide to delegate to a skill" and "send a prompt to the LLM." The loader resolves declared references, injects content, and writes audit-log entries. Several APRs assume a loader exists; platforms without one cannot conform to those APRs without first adding one.
+
+## Principal
+
+The entity that defines a work's intent, governs its creation, validates its content, and assumes responsibility for its publication. Recorded in the `principals:` frontmatter field (one or more). Generation of the content may be performed by humans, AI systems, or both — so *principal* names the accountable role, not the act of writing. Contrast with **generative contributor**. The term follows the principal/agent sense used in agency and in agentic-AI authorization: the principal is the accountable entity on whose behalf generation is performed.
 
 ## Promptware
 

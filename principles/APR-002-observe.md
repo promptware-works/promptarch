@@ -3,10 +3,10 @@ apr: 002
 title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 abstract: "Organizes an agentic platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — as seven first-class artifact types, each with a single canonical source, a declarative manifest, selective runtime injection, and audit-logged provenance."
 status: Draft
-version: 0.1.4
-authors:
+version: 0.1.5
+principals:
   - D. Maxios
-co-authors:
+generative-contributors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
 created: 2026-05-01
 last-updated: 2026-05-30
@@ -427,3 +427,4 @@ External sources referenced in this APR; see §13 *Relationship to Established P
 | 0.1.2 | 2026-05-30 | Draft | Added References section. No semantic change. |
 | 0.1.3 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
 | 0.1.4 | 2026-05-30 | Draft | Added opening principle callout, for consistency with APR-000/003. No semantic change. |
+| 0.1.5 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |

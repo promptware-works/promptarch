@@ -3,12 +3,12 @@ apr: 0
 title: "PROMPTWARE — A Foundational Position for the PROMPTARCH APR Series"
 abstract: "Defines promptware — software whose runtime behavior is shaped by content (prose, specs, ontology, policies) read by LLM agents at execution time — and argues it needs an architectural discipline distinct from code-centric software, published as the PROMPTARCH APR series."
 status: Draft
-version: 0.1.2
-authors:
+version: 0.1.3
+principals:
   - D. Maxios
-co-authors:
+generative-contributors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
-created: 2026-05-28
+created: 2025-11-03
 last-updated: 2026-05-30
 audience: Readers approaching PROMPTARCH for the first time; architects evaluating whether the APR series applies to their systems
 supersedes: []
@@ -191,3 +191,4 @@ External sources referenced in this APR. PROMPTARCH claims no novelty over these
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-000, the foundational position for the PROMPTARCH APR series. |
 | 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |
 | 0.1.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
+| 0.1.3 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |

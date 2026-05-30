@@ -19,10 +19,10 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 
 | ID | Name | Title | Status | Version |
 |---|---|---|---|---|
-| [APR-000](APR-000-promptware.md) | **PROMPTWARE** | A Foundational Position for the PROMPTARCH APR Series | Draft | 0.1.2 |
-| [APR-001](APR-001-aspect.md) | **ASPECT** | A Prompt Framework for Agent & Skill Specifications | Draft | 0.2.3 |
-| [APR-002](APR-002-observe.md) | **OBSERVE** | A Content-Organization Principle for Agentic Platforms | Draft | 0.1.4 |
-| [APR-003](APR-003-code-prompt-boundary.md) | — | A Code/Prompt Boundary Principle for Promptware | Draft | 0.1.2 |
+| [APR-000](APR-000-promptware.md) | **PROMPTWARE** | A Foundational Position for the PROMPTARCH APR Series | Draft | 0.1.3 |
+| [APR-001](APR-001-aspect.md) | **ASPECT** | A Prompt Framework for Agent & Skill Specifications | Draft | 0.2.4 |
+| [APR-002](APR-002-observe.md) | **OBSERVE** | A Content-Organization Principle for Agentic Platforms | Draft | 0.1.5 |
+| [APR-003](APR-003-code-prompt-boundary.md) | — | A Code/Prompt Boundary Principle for Promptware | Draft | 0.1.3 |
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 

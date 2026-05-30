@@ -24,18 +24,20 @@ A passing APR draft typically includes:
 - At least one section relating the principle to established patterns or prior art, written honestly.
 - Versioned frontmatter conforming to [`schemas/apr-frontmatter.schema.yaml`](schemas/apr-frontmatter.schema.yaml).
 
-## Attributing LLM co-authorship
+## Principals and generative contributors
 
-If an LLM materially helped draft your APR, record it in the optional `co-authors:` frontmatter field. This is distinct from `authors:` so the human / non-human distinction stays grep-able and auditable.
+Every APR records one or more `principals:` — the entities that define the work's intent, govern its creation, validate its content, and assume responsibility for its publication. Generation of the content may be performed by humans, AI systems, or both.
+
+If a generative (LLM-based) system materially helped produce your APR, record it in the optional `generative-contributors:` field. Keeping it distinct from `principals:` separates two axes — *who is accountable* versus *what produced the text* — and keeps both grep-able and auditable.
 
 ```yaml
-authors:
+principals:
   - Your Name
-co-authors:
+generative-contributors:
   - "Claude Opus 4.7 (Anthropic)"
 ```
 
-Use one entry per model that contributed substantively. Trivial assistance (typo fixes, formatting suggestions) does not need to be recorded; substantive drafting, restructuring, or section authorship does. The full field convention is in [`schemas/apr-frontmatter.schema.yaml`](schemas/apr-frontmatter.schema.yaml).
+Use one entry per generative system that contributed substantively. Trivial assistance (typo fixes, formatting suggestions) does not need to be recorded; substantive drafting, restructuring, or section generation does. The full field convention is in [`schemas/apr-frontmatter.schema.yaml`](schemas/apr-frontmatter.schema.yaml).
 
 ## Tone
 
