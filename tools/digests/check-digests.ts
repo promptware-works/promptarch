@@ -18,8 +18,8 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const TOOLS_DIR = dirname(fileURLToPath(import.meta.url));
-const PRINCIPLES = join(TOOLS_DIR, "..", "principles");
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url)); // tools/digests/
+const PRINCIPLES = join(SCRIPT_DIR, "..", "..", "principles");
 const DIGESTS = join(PRINCIPLES, "digests");
 
 const APR_FILE = /^APR-\d+.*\.md$/;

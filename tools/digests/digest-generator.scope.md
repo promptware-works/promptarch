@@ -1,10 +1,10 @@
 # Scope: APR Digest Generator
 
-**Status:** Scoping (not built). Tracking the design before committing code, per [`tools/README.md`](README.md).
+**Status:** Scoping. The first increment — the staleness check — is built ([`check-digests.ts`](check-digests.ts)); the generator itself is not. Tracking the design here, per [`tools/README.md`](../README.md).
 
 ## Goal
 
-Regenerate the files in [`principles/digests/`](../principles/digests/) from their source APRs in [`principles/`](../principles/), so digests are *derived artifacts* with one source of truth — never hand-maintained copies that drift.
+Regenerate the files in [`principles/digests/`](../../principles/digests/) from their source APRs in [`principles/`](../../principles/), so digests are *derived artifacts* with one source of truth — never hand-maintained copies that drift.
 
 - **Input:** one `principles/APR-NNN-<slug>.md`
 - **Output:** one `principles/digests/APR-NNN-<slug>.md`
@@ -12,7 +12,7 @@ Regenerate the files in [`principles/digests/`](../principles/digests/) from the
 
 ## The core design tension (this is an APR-003 problem)
 
-Generating a digest is itself a code/prompt boundary question — so [APR-003](../principles/APR-003-code-prompt-boundary.md) decides the architecture:
+Generating a digest is itself a code/prompt boundary question — so [APR-003](../../principles/APR-003-code-prompt-boundary.md) decides the architecture:
 
 | Part of the digest | Assurance mode | Substrate |
 |---|---|---|
@@ -44,17 +44,19 @@ Add a prompt step that condenses the extracted prose lines into the tight one-li
 
 These are cheap, high-value, and worth building *before* the generator itself:
 
-- **Completeness check** — every RFC-2119 rule in the source appears (in some form) in the digest. A digest that drops a MUST fails CI.
-- **Staleness check** — the version string in the digest header equals the source's `version`. If an APR is bumped without regenerating its digest, CI fails. *(This one is worth shipping immediately — it protects the hand-written digests we have today.)*
+- **Completeness check** — every RFC-2119 rule in the source appears (in some form) in the digest. A digest that drops a MUST fails CI. *(Not yet built.)*
+- **Staleness check** — the version string in the digest header equals the source's `version`. If an APR is bumped without regenerating its digest, CI fails. *(Built — [`check-digests.ts`](check-digests.ts).)*
 - **No-contradiction check (full level only)** — sample-check that condensed lines don't invert a source rule (LLM-graded; advisory).
 
 ## Open questions
 
 1. **Governance section in or out?** Currently in (analysis showed ~7/12 OBSERVE governance items are authoring requirements). Make it a `--governance` flag so it's a one-switch decision, not a rewrite.
 2. **Per-APR-type templates?** Position statements (APR-000), frameworks (APR-001), and rule-sets (002/003) digest differently. Either one template with conditional sections, or a small template per type.
-3. **Language/tooling — TypeScript (Node).** Decided repo-wide in [ADR-003](../meta/decisions/ADR-003-tooling-stack.md). Relevant libraries for this tool: `unified`/`remark` (Markdown) + `gray-matter` (frontmatter) + `js-yaml`; optional condensation pass via `@anthropic-ai/sdk`; eval-gating via `promptfoo`.
+3. **Language/tooling — TypeScript (Node).** Decided repo-wide in [ADR-003](../../meta/decisions/ADR-003-tooling-stack.md). Relevant libraries for this tool: `unified`/`remark` (Markdown) + `gray-matter` (frontmatter) + `js-yaml`; optional condensation pass via `@anthropic-ai/sdk`; eval-gating via `promptfoo`.
 4. **Where do golden digests live?** The four current hand-written digests become the eval set for the condensation prompt — they are the target the generator should approximate.
 
-## Recommended first step
+## Status / next increments
 
-Ship the **staleness check** (a ~20-line script: compare each digest's header version to its source `version:`) and wire it into review. It immediately protects the four hand-written digests from silently drifting, and is pure deterministic code — no LLM, no eval, no risk. The extractor (MVP) and the condensation pass (full) follow as separate increments.
+1. **Staleness check** — done ([`check-digests.ts`](check-digests.ts)): pure deterministic code, protects the hand-written digests from silent drift. *(Wiring it into CI is the obvious follow-up.)*
+2. **MVP extractor** — the deterministic generator above; next increment.
+3. **Condensation pass** — the LLM/eval-gated layer; last.

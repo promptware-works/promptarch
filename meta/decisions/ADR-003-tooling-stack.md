@@ -6,7 +6,7 @@
 
 ## Context
 
-PROMPTARCH is currently a docs-only repository (Markdown, YAML). The first tooling is now being scoped — a digest generator (see [`tools/digest-generator.scope.md`](../../tools/digest-generator.scope.md)) — and the [`tools/`](../../tools/) README anticipates more: a frontmatter validator against [`schemas/apr-frontmatter.schema.yaml`](../../schemas/apr-frontmatter.schema.yaml) and an OBSERVE-manifest linter. A language for `tools/` should be chosen once, deliberately, rather than drifting per-script.
+PROMPTARCH is currently a docs-only repository (Markdown, YAML). The first tooling is now being scoped — a digest generator (see [`tools/digests/digest-generator.scope.md`](../../tools/digests/digest-generator.scope.md)) — and the [`tools/`](../../tools/) README anticipates more: a frontmatter validator against [`schemas/apr-frontmatter.schema.yaml`](../../schemas/apr-frontmatter.schema.yaml) and an OBSERVE-manifest linter. A language for `tools/` should be chosen once, deliberately, rather than drifting per-script.
 
 Two candidates were considered seriously (a third, shell, was rejected as not portable to Windows):
 
