@@ -1,8 +1,9 @@
 ---
 apr: 003
 title: "A Code/Prompt Boundary Principle for Promptware"
+abstract: "Places deterministic, verifiable, or safety-critical behavior in code and open-ended judgment in prompts, with an explicit, typed, testable seam at every code/prompt crossing — so each behavior is verified the right way and no safety decision rests silently on a model."
 status: Draft
-version: 0.1.1
+version: 0.1.2
 authors:
   - D. Maxios
 co-authors:
@@ -150,3 +151,4 @@ External sources referenced in this APR; see §9 *Relationship to established pa
 |---|---|---|---|
 | 0.1.0 | 2026-05-29 | Draft | Initial draft published as APR-003. |
 | 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |
+| 0.1.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |

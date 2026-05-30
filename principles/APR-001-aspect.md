@@ -1,8 +1,9 @@
 ---
 apr: 001
 title: "ASPECT — A Prompt Framework for Agent & Skill Specifications"
+abstract: "A body-level prompt framework for specifying LLM agents and skills as two variants (ASPECT-A, ASPECT-S), with type-driven mandatory sections, negative scoping required for agents, and a stricter mode for security-sensitive components — making agent and skill spec corpora auditable."
 status: Draft
-version: 0.2.1
+version: 0.2.2
 authors:
   - D. Maxios
 co-authors:
@@ -470,3 +471,4 @@ External sources referenced in this APR; see *Relationship to established patter
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-001. |
 | 0.2.0 | 2026-05-28 | Draft | Added `What ASPECT is NOT` and `Relationship to established patterns` sections; no semantic change to existing material. |
 | 0.2.1 | 2026-05-30 | Draft | Added References section. No semantic change. |
+| 0.2.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |

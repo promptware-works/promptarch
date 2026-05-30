@@ -1,8 +1,9 @@
 ---
 apr: 0
 title: "PROMPTWARE — A Foundational Position for the PROMPTARCH APR Series"
+abstract: "Defines promptware — software whose runtime behavior is shaped by content (prose, specs, ontology, policies) read by LLM agents at execution time — and argues it needs an architectural discipline distinct from code-centric software, published as the PROMPTARCH APR series."
 status: Draft
-version: 0.1.1
+version: 0.1.2
 authors:
   - D. Maxios
 co-authors:
@@ -189,3 +190,4 @@ External sources referenced in this APR. PROMPTARCH claims no novelty over these
 |---|---|---|---|
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-000, the foundational position for the PROMPTARCH APR series. |
 | 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |
+| 0.1.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |

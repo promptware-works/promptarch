@@ -13,6 +13,7 @@ additionalProperties: false
 required:
   - apr
   - title
+  - abstract
   - status
   - version
   - authors
@@ -39,6 +40,17 @@ properties:
       "MNEMONIC — Descriptive subtitle".
     type: string
     minLength: 1
+  abstract:
+    description: >
+      One- to two-sentence summary of the principle, for discovery and
+      citation previews: what the APR is about and why one would adopt it.
+      Descriptive, not normative — the normative one-line statement lives in
+      the body. Distinct from `audience` (who it is for) and from the
+      component-level `description` field that ASPECT/OBSERVE define for
+      skills and agents. Plain text (rendered as YAML, not Markdown).
+    type: string
+    minLength: 1
+    maxLength: 300
   status:
     description: APR lifecycle state. See meta/apr-statuses.md for transitions.
     type: string
