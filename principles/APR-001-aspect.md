@@ -27,6 +27,8 @@ tags:
 
 > **Specify every LLM agent and skill in a prescribed Markdown body — ASPECT-A for agents, ASPECT-S for skills — with type-driven mandatory sections and active-voice headings, so the spec corpus stays consistent, auditable, and resistant to drift.**
 
+*Injectable summary (for feeding to an LLM): [`digests/APR-001-aspect.md`](digests/APR-001-aspect.md). This full APR is canonical.*
+
 **ASPECT** stands for *Agent & Skill Prompt-Engineered Component Template*. It is a body-level prompt framework for specifying two distinct kinds of LLM-based components:
 
 - **Agents** — stateful actors with identity, authority, and routing logic.

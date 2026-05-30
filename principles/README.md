@@ -26,6 +26,8 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 
+Each APR also has a token-efficient **[digest](digests/)** — an injectable summary (~1k tokens vs 3–7k) for feeding to an LLM while building promptware. The full APR is always canonical; see [`digests/README.md`](digests/README.md).
+
 ## Conventions
 
 - **Filename**: `APR-NNN-<short-slug>.md` (lowercase, kebab-case). The slug is the mnemonic where one exists (`aspect`, `observe`); a descriptive slug otherwise (`code-prompt-boundary`). A `—` in the **Name** column above means the APR has no mnemonic — see [`meta/apr-numbering.md`](../meta/apr-numbering.md#L73-L75).

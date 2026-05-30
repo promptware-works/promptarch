@@ -29,6 +29,8 @@ tags:
 
 > **Deterministic, verifiable, or safety-critical behavior MUST be implemented in code; open-ended judgment, synthesis, and natural-language understanding belong in prompts; the boundary between the two MUST be explicit, typed, and independently testable.**
 
+*Injectable summary (for feeding to an LLM): [`digests/APR-003-code-prompt-boundary.md`](digests/APR-003-code-prompt-boundary.md). This full APR is canonical.*
+
 ## 1. Motivation
 
 [APR-000 PROMPTWARE](APR-000-promptware.md) defines promptware as software whose behavior is shaped by content read at execution time by LLM agents. It deliberately does **not** say where the line sits — what should remain ordinary code. This principle draws that line.

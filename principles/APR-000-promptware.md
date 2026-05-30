@@ -27,6 +27,8 @@ tags:
 
 > **Promptware** — software whose dominant runtime behaviour is shaped by content read at execution time by LLM agents, rather than by deterministic code paths — requires architectural discipline distinct from that of code-centric software. PROMPTARCH publishes that discipline as a series of Architectural Principle Records (APRs).
 
+*Injectable summary (for feeding to an LLM): [`digests/APR-000-promptware.md`](digests/APR-000-promptware.md). This full APR is canonical.*
+
 This APR is the foundational position the rest of the series builds on. It is not a dictionary entry for the term "promptware"; it is a normative claim about *why* promptware deserves its own discipline and *what* PROMPTARCH does about it.
 
 ---

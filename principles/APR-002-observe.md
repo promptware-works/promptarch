@@ -28,6 +28,8 @@ tags:
 
 > **A platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — belongs in separate, first-class, canonically-sourced artifacts, declaratively referenced by skills rather than embedded in their prose. No overlap.**
 
+*Injectable summary (for feeding to an LLM): [`digests/APR-002-observe.md`](digests/APR-002-observe.md). This full APR is canonical.*
+
 **Origin**: Developed November 2025 for an agentic platform; extended May 2026 to cover examples, evals, and ontology.
 **Scope**: A principle applicable to any agentic platform; validated in internal platform pilots; promotion to additional deployments is voluntary.
 **Note on location**: This is the canonical principle reference. Platform-specific adoption documents build on this baseline.
