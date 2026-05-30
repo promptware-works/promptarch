@@ -2,13 +2,13 @@
 apr: 001
 title: "ASPECT — A Prompt Framework for Agent & Skill Specifications"
 status: Draft
-version: 0.2.0
+version: 0.2.1
 authors:
   - D. Maxios
 co-authors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
 created: 2026-03-21
-last-updated: 2026-05-28
+last-updated: 2026-05-30
 audience: Designers and authors of LLM-based agents and skills
 supersedes: []
 superseded-by: []
@@ -445,9 +445,28 @@ Three habits matter more than any specific slot:
 
 ---
 
+## References
+
+External sources referenced in this APR; see *Relationship to established patterns* for how each relates.
+
+1. Bradner, S. *Key words for use in RFCs to Indicate Requirement Levels (RFC 2119 / BCP 14)*. IETF, 1997. <https://datatracker.ietf.org/doc/html/rfc2119>
+2. Teo, S. *How I Won Singapore's GPT-4 Prompt Engineering Competition* (origin of the CO-STAR framework). Towards Data Science, 2023. <https://towardsdatascience.com/how-i-won-singapores-gpt-4-prompt-engineering-competition-34c195a93d41/>
+3. Nigh, M. *ChatGPT Free Prompt List* (commonly cited origin of the CRISPE framework). <https://github.com/mattnigh/ChatGPT-Free-Prompt-List>. The RTF, RACE, RISEN, RICTOC, and CITOC mnemonics are informal community conventions with no single canonical source.
+4. Nygard, M. *Documenting Architecture Decisions*. Cognitect, 2011. <https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions>
+5. Starke, G. and Hruschka, P. *arc42 — Template for Architecture Communication and Documentation*. <https://arc42.org/>
+6. OpenAPI Initiative (Linux Foundation). *OpenAPI Specification*. <https://spec.openapis.org/oas/latest.html>
+7. JSON Schema. *JSON Schema Specification (Draft 2020-12)*. <https://json-schema.org/specification>
+8. Anthropic. *Claude Code Documentation*. <https://code.claude.com/docs/en/overview>
+9. OpenAI. *Assistants API*. <https://platform.openai.com/docs/assistants/overview>
+10. GitHub. *Copilot coding agent*. <https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent>
+11. Cucumber. *Gherkin Reference*. <https://cucumber.io/docs/gherkin/reference/>
+12. ISO/IEC. *ISO/IEC 42001:2023 — Artificial intelligence — Management system*. 2023. <https://www.iso.org/standard/42001>
+13. European Parliament and Council. *Regulation (EU) 2024/1689 (Artificial Intelligence Act)*. 2024. <https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng>
+
 ## Change log
 
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-001. |
 | 0.2.0 | 2026-05-28 | Draft | Added `What ASPECT is NOT` and `Relationship to established patterns` sections; no semantic change to existing material. |
+| 0.2.1 | 2026-05-30 | Draft | Added References section. No semantic change. |

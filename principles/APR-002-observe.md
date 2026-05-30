@@ -2,13 +2,13 @@
 apr: 002
 title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 status: Draft
-version: 0.1.1
+version: 0.1.2
 authors:
   - D. Maxios
 co-authors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
 created: 2026-05-01
-last-updated: 2026-05-29
+last-updated: 2026-05-30
 audience: Architects and framework authors of agentic AI platforms
 supersedes: []
 superseded-by: []
@@ -391,9 +391,34 @@ Platform-specific adoption plans provide concrete examples of this pattern. Phas
 
 ---
 
+## References
+
+External sources referenced in this APR; see §13 *Relationship to Established Patterns* for how each relates.
+
+1. Bradner, S. *Key words for use in RFCs to Indicate Requirement Levels (RFC 2119 / BCP 14)*. IETF, 1997. <https://datatracker.ietf.org/doc/html/rfc2119>
+2. Open Policy Agent (CNCF). *Rego Policy Language*. <https://www.openpolicyagent.org/docs/policy-language>
+3. Confluent. *Schema Registry for Confluent Platform*. <https://docs.confluent.io/platform/current/schema-registry/index.html>
+4. Apicurio. *Apicurio Registry*. <https://www.apicur.io/registry/>
+5. JSON Schema. *JSON Schema Specification (Draft 2020-12)*. <https://json-schema.org/specification>
+6. Wiggins, A. *The Twelve-Factor App — III. Config*. 2011. <https://12factor.net/config>
+7. W3C. *RDF 1.1 Concepts and Abstract Syntax*. W3C Recommendation, 2014. <https://www.w3.org/TR/rdf11-concepts/>
+8. W3C. *OWL 2 Web Ontology Language Document Overview*. W3C Recommendation, 2012. <https://www.w3.org/TR/owl2-overview/>
+9. Schema.org. *Schema.org Vocabulary*. <https://schema.org/>
+10. pytest. *pytest — testing framework and fixtures*. <https://docs.pytest.org/>
+11. Liang, P. et al. *Holistic Evaluation of Language Models (HELM)*. Stanford CRFM, arXiv:2211.09110, 2022. <https://arxiv.org/abs/2211.09110>
+12. Srivastava, A. et al. *Beyond the Imitation Game (BIG-bench)*. arXiv:2206.04615, 2022. <https://github.com/google/BIG-bench>
+13. Braintrust. *Braintrust — AI evaluation and observability platform*. <https://www.braintrust.dev/>
+14. promptfoo. *Promptfoo — LLM evaluation and red-teaming*. <https://www.promptfoo.dev/>
+15. OpenAI. *OpenAI Evals*. <https://github.com/openai/evals>
+16. Confident AI. *DeepEval — the LLM evaluation framework*. <https://github.com/confident-ai/deepeval>
+17. ISO/IEC. *ISO/IEC 42001:2023 — Artificial intelligence — Management system*. 2023. <https://www.iso.org/standard/42001>
+18. European Parliament and Council. *Regulation (EU) 2024/1689 (Artificial Intelligence Act)*. 2024. <https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng>
+19. ISO/IEC/IEEE. *ISO/IEC/IEEE 42010:2022 — Software, systems and enterprise — Architecture description*. 2022. <https://www.iso.org/standard/74393.html>
+
 ## Change log
 
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-002. |
 | 0.1.1 | 2026-05-29 | Draft | §1 forward pointer to the name derivation; §12 notes OBSERVE deliberately accepts the letter-per-slot constraint APR-001 cautions against (safe because the category set is fixed and exhaustive). No semantic change. |
+| 0.1.2 | 2026-05-30 | Draft | Added References section. No semantic change. |

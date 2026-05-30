@@ -49,7 +49,7 @@ When the author considers the draft complete, they update `status` to `Proposed`
 - **Scope discipline.** Is this one principle, or several?
 - **Self-containment.** Does it stand alone, or does it presume undocumented context?
 - **Limits.** Is there an explicit "what this is not" section? Principles without bounded scope tend to over-reach.
-- **Prior-art honesty.** Are relationships to established patterns named openly?
+- **Prior-art honesty.** Are relationships to established patterns named openly *and backed by a References section with resolvable links*? Standards and tools are cited, not merely named; ideas with no canonical source are flagged as such rather than given an invented citation.
 - **Wording.** Active voice; RFC 2119 keywords where normative; no marketing language; tables for declarative governance.
 - **Cross-references.** Internal links resolve; APR references use canonical IDs.
 

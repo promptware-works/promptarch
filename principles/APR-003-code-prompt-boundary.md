@@ -2,13 +2,13 @@
 apr: 003
 title: "A Code/Prompt Boundary Principle for Promptware"
 status: Draft
-version: 0.1.0
+version: 0.1.1
 authors:
   - D. Maxios
 co-authors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-05-29
-last-updated: 2026-05-29
+last-updated: 2026-05-30
 audience: Architects and framework authors of agentic AI platforms; anyone deciding whether logic executes as code or as a prompt
 supersedes: []
 superseded-by: []
@@ -132,8 +132,21 @@ The novel contribution is a **promptware-specific placement principle**: classif
 - **Introduce the seam contract before relocating logic** — type the crossing first, then move the implementation behind it, so consumers never see churn.
 - **Expect decomposition.** Many "single" behaviors are a probabilistic judgment plus a deterministic computation fused together; adopting this principle surfaces and splits them, which usually clarifies the spec.
 
+## References
+
+External sources referenced in this APR; see §9 *Relationship to established patterns* for how each relates.
+
+1. Bradner, S. *Key words for use in RFCs to Indicate Requirement Levels (RFC 2119 / BCP 14)*. IETF, 1997. <https://datatracker.ietf.org/doc/html/rfc2119>
+2. Bernhardt, G. *Boundaries* (functional core, imperative shell). Talk, 2012. <https://www.destroyallsoftware.com/talks/boundaries>
+3. Levin, R., Cohen, E., Corwin, W., Pollack, F., and Wulf, W. *Policy/mechanism separation in Hydra*. Proc. 5th ACM Symposium on Operating Systems Principles (SOSP), 1975.
+4. Cockburn, A. *Hexagonal Architecture (Ports and Adapters)*. 2005. <https://alistair.cockburn.us/hexagonal-architecture/>
+5. Schick, T. et al. *Toolformer: Language Models Can Teach Themselves to Use Tools*. arXiv:2302.04761, 2023. <https://arxiv.org/abs/2302.04761>
+6. Yao, S. et al. *ReAct: Synergizing Reasoning and Acting in Language Models*. arXiv:2210.03629, 2022. <https://arxiv.org/abs/2210.03629>
+7. Garcez, A. d'Avila and Lamb, L. C. *Neurosymbolic AI: The 3rd Wave*. arXiv:2012.05876, 2020. <https://arxiv.org/abs/2012.05876>
+
 ## Change log
 
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-29 | Draft | Initial draft published as APR-003. |
+| 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |

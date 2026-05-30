@@ -2,13 +2,13 @@
 apr: 0
 title: "PROMPTWARE — A Foundational Position for the PROMPTARCH APR Series"
 status: Draft
-version: 0.1.0
+version: 0.1.1
 authors:
   - D. Maxios
 co-authors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
 created: 2026-05-28
-last-updated: 2026-05-28
+last-updated: 2026-05-30
 audience: Readers approaching PROMPTARCH for the first time; architects evaluating whether the APR series applies to their systems
 supersedes: []
 superseded-by: []
@@ -172,8 +172,20 @@ If the foundational position changes substantively, a new draft of APR-000 is pu
 
 ---
 
+## References
+
+External sources referenced in this APR. PROMPTARCH claims no novelty over these; see *Relationship to established terms and patterns* above.
+
+1. Karpathy, A. *Software 2.0*. 2017. <https://karpathy.medium.com/software-2-0-a64152b37c35>
+2. Huyen, C. *AI Engineering: Building Applications with Foundation Models*. O'Reilly, 2025. <https://huyenchip.com/>
+3. Open Policy Agent (CNCF). *Rego Policy Language*. <https://www.openpolicyagent.org/docs/policy-language>
+4. Bradner, S. *Key words for use in RFCs to Indicate Requirement Levels (RFC 2119 / BCP 14)*. IETF, 1997. <https://datatracker.ietf.org/doc/html/rfc2119>
+5. ISO/IEC. *ISO/IEC 42001:2023 — Information technology — Artificial intelligence — Management system*. 2023. <https://www.iso.org/standard/42001>
+6. European Parliament and Council. *Regulation (EU) 2024/1689 (Artificial Intelligence Act)*. Official Journal of the EU, 2024. <https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng>
+
 ## Change log
 
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-28 | Draft | Initial draft published as APR-000, the foundational position for the PROMPTARCH APR series. |
+| 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |

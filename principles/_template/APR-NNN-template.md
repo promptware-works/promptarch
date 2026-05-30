@@ -43,6 +43,7 @@ What every APR SHOULD cover when applicable:
   ☐ GOVERNANCE             — what does a conformant adopter check / enforce?
   ☐ ADOPTION NOTES         — phased migration, pitfalls, measurement protocols
   ☐ WORKED VARIANTS        — if the principle has multiple variants, describe each
+  ☐ REFERENCES             — external sources cited with resolvable links (back the PRIOR ART claims)
 
 Pick headings that fit your principle. Reviewers verify that the required
 concerns are addressed and findable, not that headings match this template
@@ -105,6 +106,12 @@ The goal is contribution, not novelty for novelty's sake. Adopters evaluating th
 ## Adoption notes (if applicable)
 
 Tips for adopters: phased migration patterns, common pitfalls, measurement protocols.
+
+## References
+
+External sources cited in this APR — standards, prior art, and tools. Cite sources, do not merely name them. Use angle-bracket URLs (`<https://…>`) so the list stays lint-clean. Omit the section only if the APR genuinely relies on no external source. Where an idea has no single canonical origin (an informal community term), say so rather than inventing a citation.
+
+1. Author / Org. *Title*. Venue, Year. <https://example.org/>
 
 ## Change log
 
