@@ -26,7 +26,7 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Artifact lifecycle & model migration | Runtime artifacts are versioned, status-tracked, and deprecated by discipline; they declare the model they're validated against, so upgrades trigger re-validation, not silent regression. | ✍️ Drafted | [APR-008](../principles/APR-008-artifact-lifecycle.md) · issue #6 |
 | Human-in-the-loop oversight | Place human oversight by reversibility/blast-radius — plan-and-approve (gate before) for irreversible/high-blast actions, fire-and-judge (review after) for reversible/low-blast ones. | ✍️ Drafted | [APR-009](../principles/APR-009-human-in-the-loop.md) · issue #7 |
 | Governance (conformance) | The reconstructed conformance safety net — two-tier model (CI fitness functions + human review), audit-binding, change-via-ADR — as the canonical source the domain APRs defer to. Repointing them is a staged follow-up. | ✍️ Drafted | [APR-010](../principles/APR-010-governance.md) · issue #8 |
-| Observability & cost | End-to-end traces over the delegation graph linking behavior to artifact/model versions and injected content, with cost as a first-class attributed, budgeted dimension. | 📋 Proposed | issue #9 |
+| Observability & cost | End-to-end traces over the delegation graph linking behavior to artifact/model versions and injected content, with cost as a first-class attributed, budgeted dimension. | ✍️ Drafted | [APR-011](../principles/APR-011-observability.md) · issue #9 |
 
 ## Idea backlog (not yet proposed)
 
