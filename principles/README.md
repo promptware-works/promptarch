@@ -28,6 +28,7 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 | [APR-006](APR-006-composition-topology.md) | — | A Composition and Delegation-Topology Principle for Multi-Agent Promptware | Draft | 0.1.1 |
 | [APR-007](APR-007-pattern-mechanism.md) | — | A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior | Draft | 0.1.0 |
 | [APR-008](APR-008-artifact-lifecycle.md) | — | An Artifact-Lifecycle and Model-Migration Principle for Promptware | Draft | 0.1.0 |
+| [APR-009](APR-009-human-in-the-loop.md) | — | A Human-in-the-Loop Oversight-Placement Principle for Promptware | Draft | 0.1.0 |
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 
