@@ -280,7 +280,7 @@ An OBSERVE-conformant platform requires governance / CI validation across all si
 - **Content provenance** — examples and eval cases declare `provenance: human | synthetic | hybrid`. Synthetic-only cases MAY NOT be the sole grading basis for safety-critical skills (those declaring `safety_critical: true`); at least one human-authored case must be present. Hybrid cases (human-edited synthetic) are treated as synthetic for this rule unless reviewer attribution is recorded.
 - **Schema evolution discipline** — `contracts/` changes are classified additive (new optional field, no consumer impact), evolutionary (deprecation with a window), or breaking (removed/renamed field). Breaking changes require an ADR plus a deprecation window before removal; governance flags all consuming and producing skills at each transition so refactors can be batched rather than scrambled. The same classification applies to `policies/`, `ontology/`, and `evals/` schema-level changes that affect skill manifests.
 
-Two-tier enforcement keeps governance from becoming a bottleneck: pure YAML checks run as automated CI; architectural judgments (new-skill manifests, breaking changes, ontology rename, eval-threshold changes) require human review.
+Two-tier enforcement — the general model is defined in [APR-010](APR-010-governance.md) — keeps governance from becoming a bottleneck: pure YAML checks run as automated CI; architectural judgments (new-skill manifests, breaking changes, ontology rename, eval-threshold changes) require human review.
 
 ---
 

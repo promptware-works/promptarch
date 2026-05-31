@@ -35,6 +35,17 @@ APR-000 is the project's foundational position — start there if you are new to
 
 Each APR also has a token-efficient **[digest](digests/)** — an injectable summary (~1k tokens vs 3–7k) for feeding to an LLM while building promptware. The full APR is always canonical; see [`digests/README.md`](digests/README.md).
 
+## By concern (reading guide)
+
+The numbers above are stable citation IDs assigned in drafting order (RFC-style) — **not** a ranking or reading sequence, so an APR may reference a higher-numbered one (see [`meta/apr-numbering.md`](../meta/apr-numbering.md)). For a conceptual tour, the principles group into four layers:
+
+- **Foundations** — [APR-000](APR-000-promptware.md) (what promptware is) · [APR-010](APR-010-governance.md) (how conformance is governed)
+- **Specifying a component** — [APR-001](APR-001-aspect.md) ASPECT · [APR-003](APR-003-code-prompt-boundary.md) code/prompt boundary · [APR-007](APR-007-pattern-mechanism.md) patterns
+- **Organizing the platform** — [APR-002](APR-002-observe.md) OBSERVE · [APR-004](APR-004-canonical-source.md) canonical source · [APR-006](APR-006-composition-topology.md) composition
+- **Operating safely over time** — [APR-005](APR-005-trust-boundaries.md) trust boundaries · [APR-008](APR-008-artifact-lifecycle.md) lifecycle · [APR-009](APR-009-human-in-the-loop.md) human-in-the-loop
+
+This grouping is a navigation aid; the numbered index above remains authoritative.
+
 ## Conventions
 
 - **Filename**: `APR-NNN-<short-slug>.md` (lowercase, kebab-case). The slug is the mnemonic where one exists (`aspect`, `observe`); a descriptive slug otherwise (`code-prompt-boundary`). A `—` in the **Name** column above means the APR has no mnemonic — see [`meta/apr-numbering.md`](../meta/apr-numbering.md#L73-L75).

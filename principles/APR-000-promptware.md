@@ -106,7 +106,7 @@ Promptware systems exhibit a set of failure modes that code-centric architectura
 
 Each failure mode has a code-centric analogue (typo, audit log, refactor scope, test coverage, code duplication, API misuse, privilege escalation), but the *mitigations* are different because the artefact being engineered is prose, not code. Type systems, compilers, dependency graphs, and unit tests do not apply directly — equivalent mitigations have to be reinvented for content-centric artefacts.
 
-PROMPTARCH publishes those equivalents as APRs.
+PROMPTARCH publishes those equivalents as APRs. The discipline that *enforces* them — the reconstructed conformance safety net — is itself a principle: see [APR-010 Governance](APR-010-governance.md).
 
 ---
 

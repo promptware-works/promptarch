@@ -106,6 +106,8 @@ The canonical root **SHOULD** organize its contents per [APR-002 OBSERVE](APR-00
 
 ## Governance and validation
 
+The shared governance model — two-tier enforcement, audit-log binding, and change-via-ADR — is defined in [APR-010](APR-010-governance.md); the checks below are this APR's domain-specific additions.
+
 A conformant repository checks, in review or CI:
 
 - **Single source.** Vendor dirs contain *only* generated files; no hand-authored promptware lives under `.claude/`, `.github/`, etc.

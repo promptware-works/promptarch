@@ -10,6 +10,17 @@ where `NNN` is a zero-padded three-digit integer assigned at the time the APR mo
 
 The three-digit width is a soft convention chosen for legibility. The project will widen to four digits at `APR-999`; existing IDs will not be retroactively renumbered.
 
+## Numbers are identifiers, not a ranking
+
+PROMPTARCH numbers APRs the way the **RFC series** numbers documents: an ID is a stable handle assigned **in order of drafting** (first-PR-wins), nothing more. The number answers *"which document?"* — never *"how important is it,"* *"read this first,"* or *"what depends on what."*
+
+Two consequences follow:
+
+- **Conceptual importance is independent of the number.** A foundational principle can have a high number simply because it was written later. The only number that carries inherent meaning is the reserved `APR-000` (the project's position statement); `APR-001` onward are assignment-order identifiers.
+- **Forward references are normal.** An APR may cite a higher-numbered one — `APR-000` already references `APR-001` and `APR-002`, and a domain APR may defer to a later cross-cutting one (e.g. `APR-002` → `APR-010`). This is expected, just as an older RFC is read in light of a newer RFC that updates it. Cross-references are by canonical ID (see *Cross-references between APRs*), so order of creation never breaks them.
+
+Conceptual structure — which principles are foundational, which build on which — is conveyed by the grouped reading guide in [`principles/README.md`](../principles/README.md) and by each APR's `related:` field, **not** by the numbers. APRs are therefore **never renumbered** to reflect changing views of their importance; renumbering would break every existing citation and is forbidden by the never-reused rule above.
+
 ## APR-000 reservation
 
 `APR-000` is reserved for the project's *foundational position* — the document that introduces and motivates the APR series itself. The convention is borrowed from numbering schemes (RFC, IETF drafts, some ADR collections) that reserve index zero for the meta-entry.

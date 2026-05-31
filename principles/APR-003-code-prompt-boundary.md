@@ -107,7 +107,7 @@ A conformant platform checks, in review or CI:
 - **Safety gating.** Safety-critical paths show a deterministic check bounding any probabilistic step.
 - **Provisional placements are tracked.** §4.4 prompt-placeholders carry their migration intent and contract, so they are not forgotten.
 
-Two-tier enforcement, as in OBSERVE: schema/test presence is automatable; the *classification judgment* (is this behavior really probabilistic?) is a human review concern.
+Two-tier enforcement, per [APR-010](APR-010-governance.md): schema/test presence is automatable; the *classification judgment* (is this behavior really probabilistic?) is a human review concern.
 
 ## 8. What this principle is NOT
 

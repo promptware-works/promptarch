@@ -102,6 +102,8 @@ Patterns reuse OBSERVE's discipline wholesale:
 
 ## Governance and validation
 
+The shared governance model — two-tier enforcement, audit-log binding, and change-via-ADR — is defined in [APR-010](APR-010-governance.md); the checks below are this APR's domain-specific additions.
+
 A conformant platform checks, in review or CI:
 
 - **No inline duplication** — components reference patterns, never embed their text.
