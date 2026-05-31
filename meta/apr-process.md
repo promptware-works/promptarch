@@ -26,6 +26,8 @@ This document describes how an Architectural Principle Record progresses from id
 
 ## 2. Proposing an APR
 
+Rough ideas not yet ready for an issue can be parked in the [APR backlog](apr-backlog.md) — a living list of candidate APRs and their stage.
+
 Before writing prose, open an issue using the *APR proposal* template (when available) or a free-form issue covering:
 
 1. **One-line statement of the principle.** If you can't write it in one line, the principle is probably two principles.
