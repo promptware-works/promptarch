@@ -24,16 +24,33 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Composition & delegation topology | Compose agents/skills into an explicit, bounded delegation graph — structured topology, depth/cycle/termination limits, composed blast radius. | ✍️ Drafted | [APR-006](../principles/APR-006-composition-topology.md) · issue #4 |
 | Pattern mechanism | A reusable unit of behavior ("pattern") is a first-class, named, versioned artifact applied declaratively — defined once, never copy-pasted. | ✍️ Drafted | [APR-007](../principles/APR-007-pattern-mechanism.md) · issue #5 |
 | Artifact lifecycle & model migration | Runtime artifacts are versioned, status-tracked, and deprecated by discipline; they declare the model they're validated against, so upgrades trigger re-validation, not silent regression. | ✍️ Drafted | [APR-008](../principles/APR-008-artifact-lifecycle.md) · issue #6 |
+| Human-in-the-loop oversight | Place human oversight by reversibility/blast-radius — plan-and-approve (gate before) for irreversible/high-blast actions, fire-and-judge (review after) for reversible/low-blast ones. | 📋 Proposed | issue #7 |
 
 ## Idea backlog (not yet proposed)
 
 Ranked by current priority. Each is a candidate, not a commitment.
 
-### 1. Eval-driven development — 💡 Idea (low / hold)
+### 1. Observability & cost — 💡 Idea (medium)
+
+- **One-liner:** Every agent run is end-to-end traceable — a trace spanning the delegation graph capturing inputs, decisions, injected-content versions, and **cost** — so production behavior is debuggable and drift is detectable.
+- **Gap:** Audit threads are scattered (OBSERVE injection logs, APR-006 delegation logs, APR-008 version/model lineage); nothing unifies them into an *operational* picture, and cost is governed nowhere.
+- **Scope note:** Hold the line between *operational visibility* (this) and *compliance provenance* (OBSERVE audit-binding). **Cost/token-budget governance is folded in here** (you can't govern cost you don't measure) rather than as a separate APR.
+
+### 2. Graceful degradation & failure handling — 💡 Idea (medium)
+
+- **One-liner:** When a tool errors, a delegate times out, an injection is missing, or a model is unavailable, the system degrades by discipline — fail-closed for safety-critical, degrade-gracefully elsewhere, with explicit fallbacks.
+- **Gap:** Failure handling is piecemeal (OBSERVE's halt-on-missing-injection, APR-006 termination) with no unifying degradation discipline.
+- **Relationship:** Composes with APR-005 (fail-closed for safety), APR-006 (delegate failure in the graph), APR-008 (model unavailability).
+
+### 3. Eval-driven development — 💡 Idea (low / hold)
 
 - **One-liner:** Golden sets + graders + CI regression gates as a development *discipline* for promptware.
 - **Gap:** OBSERVE says *where* eval sets live and what governance applies; it does not prescribe the *methodology*.
 - **Hold:** Wait until APR-002 OBSERVE is `Accepted`, to avoid two `Draft` APRs contesting the eval territory.
+
+## Considered, not pursued as standalone
+
+- **Prompt-caching discipline** — too tactical and provider-coupled to be a durable APR. Its durable kernel — *order injected context by volatility (stable/shared first, volatile/per-request last) for cache-stability* — should fold into OBSERVE's injection discipline (or the observability & cost idea) as a `SHOULD`, not a standalone APR.
 
 ## How to use this file
 
