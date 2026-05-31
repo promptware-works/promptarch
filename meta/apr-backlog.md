@@ -26,32 +26,41 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Artifact lifecycle & model migration | Runtime artifacts are versioned, status-tracked, and deprecated by discipline; they declare the model they're validated against, so upgrades trigger re-validation, not silent regression. | ✍️ Drafted | [APR-008](../principles/APR-008-artifact-lifecycle.md) · issue #6 |
 | Human-in-the-loop oversight | Place human oversight by reversibility/blast-radius — plan-and-approve (gate before) for irreversible/high-blast actions, fire-and-judge (review after) for reversible/low-blast ones. | ✍️ Drafted | [APR-009](../principles/APR-009-human-in-the-loop.md) · issue #7 |
 | Governance (conformance) | The reconstructed conformance safety net — two-tier model (CI fitness functions + human review), audit-binding, change-via-ADR — as the canonical source the domain APRs defer to. Repointing them is a staged follow-up. | ✍️ Drafted | [APR-010](../principles/APR-010-governance.md) · issue #8 |
+| Observability & cost | End-to-end traces over the delegation graph linking behavior to artifact/model versions and injected content, with cost as a first-class attributed, budgeted dimension. | 📋 Proposed | issue #9 |
 
 ## Idea backlog (not yet proposed)
 
 Ranked by current priority. Each is a candidate, not a commitment.
 
-### 1. Observability & cost — 💡 Idea (medium)
-
-- **One-liner:** Every agent run is end-to-end traceable — a trace spanning the delegation graph capturing inputs, decisions, injected-content versions, and **cost** — so production behavior is debuggable and drift is detectable.
-- **Gap:** Audit threads are scattered (OBSERVE injection logs, APR-006 delegation logs, APR-008 version/model lineage); nothing unifies them into an *operational* picture, and cost is governed nowhere.
-- **Scope note:** Hold the line between *operational visibility* (this) and *compliance provenance* (OBSERVE audit-binding). **Cost/token-budget governance is folded in here** (you can't govern cost you don't measure) rather than as a separate APR.
-
-### 2. Graceful degradation & failure handling — 💡 Idea (medium)
+### 1. Graceful degradation & failure handling — 💡 Idea (medium)
 
 - **One-liner:** When a tool errors, a delegate times out, an injection is missing, or a model is unavailable, the system degrades by discipline — fail-closed for safety-critical, degrade-gracefully elsewhere, with explicit fallbacks.
 - **Gap:** Failure handling is piecemeal (OBSERVE's halt-on-missing-injection, APR-006 termination) with no unifying degradation discipline.
 - **Relationship:** Composes with APR-005 (fail-closed for safety), APR-006 (delegate failure in the graph), APR-008 (model unavailability).
 
-### 3. Eval-driven development — 💡 Idea (low / hold)
+### 2. Eval-driven development — 💡 Idea (low / hold)
 
 - **One-liner:** Golden sets + graders + CI regression gates as a development *discipline* for promptware.
 - **Gap:** OBSERVE says *where* eval sets live and what governance applies; it does not prescribe the *methodology*.
 - **Hold:** Wait until APR-002 OBSERVE is `Accepted`, to avoid two `Draft` APRs contesting the eval territory.
 
+### 3. PII & sensitive data in promptware artifacts — 💡 Idea (low / maybe)
+
+- **One-liner:** PII, credentials, and secrets that land in prompts, examples, eval cases, logs, and traces are classified, redacted, and access-controlled — content-centric data privacy.
+- **Gap:** OBSERVE §10 flags sensitive data in `examples/` as out of scope; nobody owns content privacy. The one genuinely promptware-specific slice of security not in APR-005.
+- **Relationship:** Complements APR-005 (trust) and ties to observability (PII in traces).
+
+### 4. Coordination mechanisms (beyond delegation) — 💡 Idea (low / maybe)
+
+- **One-liner:** How agents coordinate *without* a delegation edge — shared state (blackboard), broadcast/pub-sub, negotiation/market — under discipline.
+- **Gap:** APR-006 governs the delegation call-graph; coordination that isn't call→return is untouched.
+- **Caveat:** May not be a principle — much of it reduces to "shared state is an OBSERVE-governed artifact." Park and revisit.
+
 ## Considered, not pursued as standalone
 
 - **Prompt-caching discipline** — too tactical and provider-coupled to be a durable APR. Its durable kernel — *order injected context by volatility (stable/shared first, volatile/per-request last) for cache-stability* — should fold into OBSERVE's injection discipline (or the observability & cost idea) as a `SHOULD`, not a standalone APR.
+- **General security** — covered. The promptware-specific security concern (trust boundaries, untrusted input, prompt injection, RBAC on content, provenance) is [APR-005](../principles/APR-005-trust-boundaries.md); the rest (secrets, transport, sandboxing, authn/authz) is generic platform security the corpus deliberately delegates (APR-000 scope, APR-005 §What-this-is-NOT, OBSERVE §10). A general security APR would be generic advice, not a promptware principle.
+- **General orchestration / hub-spoke models** — covered by [APR-006](../principles/APR-006-composition-topology.md). Hub-spoke is its DAG-default supervisor/worker topology; specific orchestration patterns are *instances* (content), not principles — cataloguing them would repeat the mechanism-vs-catalogue trap.
 
 ## How to use this file
 
