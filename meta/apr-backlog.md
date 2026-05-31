@@ -22,24 +22,19 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Canonical source + materialization | Author promptware once in a runtime-neutral canonical root; materialize each vendor home from it; never hand-edit the generated copies. | ✍️ Drafted | [APR-004](../principles/APR-004-canonical-source.md) · issue #2 |
 | Trust boundaries & untrusted input | Classify content by trust; untrusted is data, never instructions; category/author boundaries explicit and enforced, with provenance. | ✍️ Drafted | [APR-005](../principles/APR-005-trust-boundaries.md) · issue #3 |
 | Composition & delegation topology | Compose agents/skills into an explicit, bounded delegation graph — structured topology, depth/cycle/termination limits, composed blast radius. | ✍️ Drafted | [APR-006](../principles/APR-006-composition-topology.md) · issue #4 |
+| Pattern mechanism | A reusable unit of behavior ("pattern") is a first-class, named, versioned artifact applied declaratively — defined once, never copy-pasted. | 📋 Proposed | issue #5 |
 
 ## Idea backlog (not yet proposed)
 
 Ranked by current priority. Each is a candidate, not a commitment.
 
-### 1. Pattern mechanism — 💡 Idea (medium)
-
-- **One-liner:** A reusable behavioral unit ("pattern") is a first-class, declaratively-applied, versioned artifact — not copy-pasted prose.
-- **Gap:** APR-001 ASPECT and APR-002 OBSERVE both *reference* `applied_patterns` / shared patterns, but neither defines what a pattern is, how it is applied, versioned, or audited.
-- **Relationship:** Formalizes a concept two existing APRs lean on.
-
-### 2. Artifact lifecycle & model migration — 💡 Idea (medium)
+### 1. Artifact lifecycle & model migration — 💡 Idea (medium)
 
 - **One-liner:** Runtime promptware artifacts (prompts, skills, ontologies) version, deprecate, and migrate under discipline — especially across model upgrades.
 - **Gap:** The APR *process* versions the APRs; nothing governs versioning/migration of the *runtime artifacts*. Topical given model churn.
 - **Relationship:** Operationalizes the silent-drift failure APR-000 names; complements OBSERVE's schema-evolution discipline.
 
-### 3. Eval-driven development — 💡 Idea (low / hold)
+### 2. Eval-driven development — 💡 Idea (low / hold)
 
 - **One-liner:** Golden sets + graders + CI regression gates as a development *discipline* for promptware.
 - **Gap:** OBSERVE says *where* eval sets live and what governance applies; it does not prescribe the *methodology*.
