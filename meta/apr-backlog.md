@@ -21,7 +21,7 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Code/prompt boundary | Deterministic/verifiable/safety-critical behavior in code; open-ended judgment in prompts; the seam explicit, typed, testable. | ✍️ Drafted | [APR-003](../principles/APR-003-code-prompt-boundary.md) · issue #1 |
 | Canonical source + materialization | Author promptware once in a runtime-neutral canonical root; materialize each vendor home from it; never hand-edit the generated copies. | ✍️ Drafted | [APR-004](../principles/APR-004-canonical-source.md) · issue #2 |
 | Trust boundaries & untrusted input | Classify content by trust; untrusted is data, never instructions; category/author boundaries explicit and enforced, with provenance. | ✍️ Drafted | [APR-005](../principles/APR-005-trust-boundaries.md) · issue #3 |
-| Composition & delegation topology | Compose agents/skills into an explicit, bounded delegation graph — structured topology, depth/cycle/termination limits, composed blast radius. | 📋 Proposed | issue #4 |
+| Composition & delegation topology | Compose agents/skills into an explicit, bounded delegation graph — structured topology, depth/cycle/termination limits, composed blast radius. | ✍️ Drafted | [APR-006](../principles/APR-006-composition-topology.md) · issue #4 |
 
 ## Idea backlog (not yet proposed)
 
