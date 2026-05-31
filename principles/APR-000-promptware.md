@@ -126,7 +126,7 @@ PROMPTARCH publishes principles for the architectural concerns of promptware:
 - **Runtime architecture.** Schedulers, message buses, persistence layers, RAG infrastructure — out of scope.
 - **Provider choice.** Anthropic, OpenAI, open-weight models — the principles are vendor-neutral.
 - **Regulatory compliance frameworks.** PROMPTARCH produces audit-friendly structure that *supports* ISO 42001 / EU AI Act / similar audits, but does not by itself satisfy any regulatory obligation.
-- **Security frameworks.** Forensic traceability is in scope (see APR-002 §10); access control, signing, prompt-injection defence, and trust boundaries are not.
+- **Security frameworks.** Trust boundaries and prompt-injection defence are in scope (see [APR-005](APR-005-trust-boundaries.md)); forensic traceability is in scope (see [APR-002](APR-002-observe.md) §10). Generic platform security — access-control infrastructure, secrets management, cryptographic signing, transport security, sandboxing — is layered on top, not reinvented here.
 - **Evaluation tooling.** Where to put eval sets and what governance applies to them is in scope; the choice of eval framework (Braintrust, Promptfoo, custom) is platform-specific.
 - **Code-centric concerns.** Type systems, build systems, deployment pipelines — addressed by the existing software-engineering discipline; PROMPTARCH does not duplicate it.
 
