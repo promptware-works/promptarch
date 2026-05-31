@@ -25,6 +25,7 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Pattern mechanism | A reusable unit of behavior ("pattern") is a first-class, named, versioned artifact applied declaratively — defined once, never copy-pasted. | ✍️ Drafted | [APR-007](../principles/APR-007-pattern-mechanism.md) · issue #5 |
 | Artifact lifecycle & model migration | Runtime artifacts are versioned, status-tracked, and deprecated by discipline; they declare the model they're validated against, so upgrades trigger re-validation, not silent regression. | ✍️ Drafted | [APR-008](../principles/APR-008-artifact-lifecycle.md) · issue #6 |
 | Human-in-the-loop oversight | Place human oversight by reversibility/blast-radius — plan-and-approve (gate before) for irreversible/high-blast actions, fire-and-judge (review after) for reversible/low-blast ones. | ✍️ Drafted | [APR-009](../principles/APR-009-human-in-the-loop.md) · issue #7 |
+| Governance (conformance) | The reconstructed conformance safety net — two-tier model (CI fitness functions + human review), audit-binding, change-via-ADR — as the canonical source the domain APRs defer to. Repointing them is a staged follow-up. | ✍️ Drafted | [APR-010](../principles/APR-010-governance.md) · issue #8 |
 
 ## Idea backlog (not yet proposed)
 
