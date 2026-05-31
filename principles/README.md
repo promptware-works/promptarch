@@ -24,7 +24,7 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 | [APR-002](APR-002-observe.md) | **OBSERVE** | A Content-Organization Principle for Agentic Platforms | Draft | 0.1.5 |
 | [APR-003](APR-003-code-prompt-boundary.md) | — | A Code/Prompt Boundary Principle for Promptware | Draft | 0.1.3 |
 | [APR-004](APR-004-canonical-source.md) | — | A Canonical-Source and Materialization Principle for Runtime-Independent Promptware | Draft | 0.1.1 |
-| [APR-005](APR-005-trust-boundaries.md) | — | A Trust-Boundary and Untrusted-Input Principle for Promptware | Draft | 0.1.0 |
+| [APR-005](APR-005-trust-boundaries.md) | — | A Trust-Boundary and Untrusted-Input Principle for Promptware | Draft | 0.1.1 |
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 

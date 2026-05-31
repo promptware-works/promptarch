@@ -3,7 +3,7 @@ apr: 5
 title: "A Trust-Boundary and Untrusted-Input Principle for Promptware"
 abstract: "Classify every input and injected reference by trust; treat untrusted content as data, never instructions; make trust boundaries between content categories and between authors explicit and enforced, with recorded provenance — so promptware resists prompt injection and unauthorized behavior change."
 status: Draft
-version: 0.1.0
+version: 0.1.1
 principals:
   - D. Maxios
 generative-contributors:
@@ -72,6 +72,8 @@ This is the load-bearing rule. Untrusted content **MUST** be delivered to the mo
 
 *Enforcement is the platform's choice* — delimiting plus an explicit "treat as data" instruction, quarantine, a dual-LLM / CaMeL design (a privileged model never sees untrusted content directly), or capability limits on what untrusted-influenced steps may do. The principle mandates the **discipline**, not one architecture.
 
+**But enforcement strength MUST scale with blast radius.** Delimiting plus a "treat as data" instruction is the weakest form and is known to be bypassable; it MAY suffice for low-consequence, read-only paths, but it MUST NOT be the *only* safeguard on a safety-critical or high-blast-radius path. There, stronger isolation is required — quarantine, a dual-LLM / CaMeL design where the privileged path never acts on untrusted content directly, or capability limits on untrusted-influenced steps — composing with [APR-003](APR-003-code-prompt-boundary.md)'s deterministic gate and [ASPECT](APR-001-aspect.md)'s blast-radius declaration.
+
 ## Trust boundaries inside the platform
 
 Beyond ingress, two internal boundaries:
@@ -83,6 +85,7 @@ Beyond ingress, two internal boundaries:
 
 - All inputs and injected references **MUST** be classified trusted/untrusted at ingress, and the label **MUST** propagate with the content through every hop (injection, cross-reference, materialization).
 - Untrusted content **MUST** be delivered as delimited data, never via the instruction channel; the agent **MUST NOT** act on instructions found in untrusted content.
+- The **strength** of that enforcement **MUST** scale with blast radius: delimiting alone **MUST NOT** be the sole safeguard on a safety-critical or high-blast-radius path, which **MUST** use stronger isolation (quarantine, dual-LLM / CaMeL, or capability limits).
 - Consequential or safety-critical actions **MUST NOT** rest solely on untrusted content; a deterministic check or an authorized human **MUST** gate them (composes with [APR-003](APR-003-code-prompt-boundary.md)).
 - Authority to author/modify each reference category **MUST** be explicit and enforced; modifying safety-critical categories **MUST** require stricter authorization.
 - Every behavior-driving artifact **MUST** record provenance (origin + authorship); safety-critical or external content **SHOULD** carry verifiable (signed) provenance.
@@ -142,3 +145,4 @@ External sources referenced in this APR; see *Relationship to established patter
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-31 | Draft | Initial draft published as APR-005. |
+| 0.1.1 | 2026-05-31 | Draft | Enforcement strength of "untrusted = data" MUST scale with blast radius — delimiting alone is insufficient for safety-critical/high-blast-radius paths, which require stronger isolation (quarantine, dual-LLM, capability limits). |
