@@ -1,9 +1,9 @@
 ---
 apr: 6
 title: "A Composition and Delegation-Topology Principle for Multi-Agent Promptware"
-abstract: "Compose agents and skills into an explicit, bounded delegation graph: prefer skills, prefer a DAG, declare the allowed edges and traverse them dynamically, guarantee termination, and attenuate authority down every edge — so multi-agent control flow is legible, terminating, and auditable."
+abstract: "Compose agents and skills into a bounded delegation graph: prefer skills, keep delegation acyclic with bounded feedback loops, declare the edges and traverse them dynamically, guarantee termination, and narrow authority along each edge — so control flow stays legible, terminating, and auditable."
 status: Draft
-version: 0.1.0
+version: 0.1.1
 principals:
   - D. Maxios
 generative-contributors:
@@ -65,10 +65,14 @@ Reuse ASPECT's distinction — an **agent** is a stateful actor with identity, a
 - A unit of behavior **SHOULD** be a skill *unless* it genuinely needs identity, authority, or routing among multiple skills — in which case it is an agent.
 - Spawning an agent adds a node with its own authority and blast radius; skills are leaves. **Prefer the smallest graph** that does the work; this fights both god-agents and skill sprawl.
 
-## Topology: prefer a DAG
+## Topology: acyclic delegation with bounded feedback
 
-- The delegation graph **SHOULD** be a **directed acyclic graph** — supervisor/worker, flowing down from coordinators to specialists.
-- Cycles or peer-to-peer delegation (debate, iterative refinement) **MUST** be an *explicit, declared exception*, each carrying its own termination bound (§ *Termination*). They are permitted, not default — a DAG is legible and terminates by shape; a cyclic graph must earn its keep and prove it halts.
+Two kinds of edge, governed differently:
+
+- **Forward delegation** (a coordinator calling a specialist) **SHOULD** form a **directed acyclic graph**, flowing down from coordinators to leaves. Forward delegation does not loop.
+- **Feedback loops** — iterative-refinement patterns where output cycles back for another pass (generator–critic / reflexion, plan–act–observe / ReAct, evaluator–optimizer, debate) — are **first-class, not exceptions**. Each feedback loop **MUST** be *explicitly declared* and carry a **termination condition** (max iterations, a convergence test, or a budget; see § *Termination*).
+
+The line is **bounded loop vs. uncontrolled cycle**: a declared, bounded feedback loop is supported; an unbounded cycle — a back-edge with no termination condition — is forbidden. Feedback is welcome; unbounded recursion is not. Because every loop is declared in the envelope (§ *The delegation graph*), the graph stays legible and terminates by construction.
 
 ## The delegation graph: declared envelope, dynamic path
 
@@ -99,7 +103,7 @@ Tripping any bound **MUST** halt that path with an audit-logged error — it **M
 ## Prescription
 
 - A unit of behavior **SHOULD** be a skill unless it needs identity, authority, or routing; prefer the smallest graph.
-- The delegation graph **SHOULD** be a DAG; cycles/peer-to-peer **MUST** be declared exceptions with explicit termination bounds.
+- Forward delegation **SHOULD** form a DAG; feedback loops are first-class but **MUST** be explicitly declared and carry a termination condition; unbounded cycles are forbidden.
 - The allowed delegation edges **MUST** be declared; runtime delegations **MUST** stay within the declared envelope; the actual path **MAY** be dynamic.
 - Every actual delegation **MUST** be audit-logged (`caller`, `callee`, input reference, timestamp).
 - Termination **MUST** be guaranteed by composing depth, cycle-detection, and budget bounds; tripping any **MUST** halt with an audit-logged error.
@@ -111,7 +115,7 @@ Tripping any bound **MUST** halt that path with an audit-logged error — it **M
 A conformant platform checks, in review or CI:
 
 - **Declared envelope present** — the allowed-edge set exists and is reviewed; no agent may delegate outside it.
-- **Acyclicity** — the envelope is a DAG except where a cycle is explicitly declared with a bound.
+- **Acyclicity** — forward delegation is acyclic; every feedback loop in the envelope is explicitly declared with a termination condition; no unbounded cycles.
 - **Termination bounds configured** — depth, cycle-detection, and budget are set and enforced.
 - **Authority monotonicity** — no declared edge grants a delegate more authority than its caller; escalations are explicit.
 - **Delegation audit log** — actual delegations are logged and reconcilable against the envelope.
@@ -161,3 +165,4 @@ External sources referenced in this APR; see *Relationship to established patter
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-05-31 | Draft | Initial draft published as APR-006. |
+| 0.1.1 | 2026-05-31 | Draft | Topology reframed: feedback loops are first-class (acyclic forward delegation + bounded feedback loops), not "cycles by exception"; the line is bounded loop vs. unbounded cycle (the latter forbidden). |
