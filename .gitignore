@@ -31,3 +31,6 @@ venv/
 # Build artefacts (none today, but reserve)
 dist/
 build/
+
+# extra
+tmp/

@@ -27,6 +27,7 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Human-in-the-loop oversight | Place human oversight by reversibility/blast-radius — plan-and-approve (gate before) for irreversible/high-blast actions, fire-and-judge (review after) for reversible/low-blast ones. | ✍️ Drafted | [APR-009](../principles/APR-009-human-in-the-loop.md) · issue #7 |
 | Governance (conformance) | The reconstructed conformance safety net — two-tier model (CI fitness functions + human review), audit-binding, change-via-ADR — as the canonical source the domain APRs defer to. Repointing them is a staged follow-up. | ✍️ Drafted | [APR-010](../principles/APR-010-governance.md) · issue #8 |
 | Observability & cost | End-to-end traces over the delegation graph linking behavior to artifact/model versions and injected content, with cost as a first-class attributed, budgeted dimension. | ✍️ Drafted | [APR-011](../principles/APR-011-observability.md) · issue #9 |
+| Federated composition (cross-domain) | Composition *across* a trust/identity boundary (farms → federation): governed membership, authenticated participants, least-privilege non-ambient cross-domain trust. Forward-looking (emerging scale); L3-centered, L4 noted. | 📋 Proposed | issue #10 |
 
 ## Idea backlog (not yet proposed)
 
