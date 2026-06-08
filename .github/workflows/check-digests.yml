@@ -1,0 +1,24 @@
+name: check-digests
+
+# Gate: every APR digest must state the same version as its source APR
+# (tools/digests/check-digests.ts). Runs on pushes and PRs to the long-lived branches.
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  check-digests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24" # Node >= 23.6 runs the .ts directly (native type stripping)
+      - name: Verify APR digests are in sync with their sources
+        run: node tools/digests/check-digests.ts

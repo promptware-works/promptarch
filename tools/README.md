@@ -10,7 +10,7 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
   node digests/check-digests.ts      # or:  npm run check:digests
   ```
 
-  Exits non-zero on drift, so it can gate CI.
+  Exits non-zero on drift, so it gates CI — [`.github/workflows/check-digests.yml`](../.github/workflows/check-digests.yml) runs it on pushes and PRs to `main` and `develop`.
 
 - [`release.ts`](release.ts) — cuts a release per the branching model: fast-forwards `develop` → `main`, tags `main`, and publishes a GitHub release. Run from this directory (`tools/`):
 
