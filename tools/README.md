@@ -12,6 +12,15 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
 
   Exits non-zero on drift, so it can gate CI.
 
+- [`release.ts`](release.ts) — cuts a release per the branching model: fast-forwards `develop` → `main`, tags `main`, and publishes a GitHub release. Run from this directory (`tools/`):
+
+  ```bash
+  node release.ts v0.2.0 --prerelease        # or:  npm run release -- v0.2.0 --prerelease
+  node release.ts v0.2.0 --dry-run           # preview the steps, change nothing
+  ```
+
+  Use `--prerelease` while APRs are still `Draft`; drop it once they reach `Accepted`. `--notes <file>` supplies release notes (otherwise GitHub auto-generates them). It refuses to run on a dirty tree, if `develop` is behind its remote, or if `main` has commits not on `develop`. (It prints the active `gh` account first — check it's the right one, since the push/publish use it.)
+
 ## In scoping
 
 - [`digests/digest-generator.scope.md`](digests/digest-generator.scope.md) — design for regenerating the digests from their source APRs. `check-digests.ts` is its first (deterministic) increment; the extractor (MVP) and the LLM condensation pass (full) follow.

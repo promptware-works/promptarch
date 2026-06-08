@@ -5,7 +5,8 @@
   "type": "module",
   "description": "PROMPTARCH repository tooling (TypeScript/Node per ADR-003).",
   "scripts": {
-    "check:digests": "node digests/check-digests.ts"
+    "check:digests": "node digests/check-digests.ts",
+    "release": "node release.ts"
   },
   "devDependencies": {
     "@types/node": "^22"
