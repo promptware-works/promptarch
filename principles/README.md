@@ -32,6 +32,7 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 | [APR-010](APR-010-governance.md) | — | A Governance Principle for Promptware Conformance | Draft | 0.1.0 |
 | [APR-011](APR-011-observability.md) | — | An Observability and Cost-Governance Principle for Promptware | Draft | 0.1.0 |
 | [APR-012](APR-012-federated-composition.md) | — | A Federated-Composition Principle for Promptware Across Trust Domains | Draft | 0.1.0 |
+| [APR-013](APR-013-artifact-graph.md) | — | An Artifact-Graph Principle for Promptware | Draft | 0.1.0 |
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 
@@ -43,7 +44,7 @@ The numbers above are stable citation IDs assigned in drafting order (RFC-style)
 
 - **Foundations** — [APR-000](APR-000-promptware.md) (what promptware is) · [APR-010](APR-010-governance.md) (how conformance is governed)
 - **Specifying a component** — [APR-001](APR-001-aspect.md) ASPECT · [APR-003](APR-003-code-prompt-boundary.md) code/prompt boundary · [APR-007](APR-007-pattern-mechanism.md) patterns
-- **Organizing the platform** — [APR-002](APR-002-observe.md) OBSERVE · [APR-004](APR-004-canonical-source.md) canonical source · [APR-006](APR-006-composition-topology.md) composition
+- **Organizing the platform** — [APR-002](APR-002-observe.md) OBSERVE · [APR-004](APR-004-canonical-source.md) canonical source · [APR-006](APR-006-composition-topology.md) composition · [APR-013](APR-013-artifact-graph.md) artifact graph
 - **Operating safely over time** — [APR-005](APR-005-trust-boundaries.md) trust boundaries · [APR-008](APR-008-artifact-lifecycle.md) lifecycle · [APR-009](APR-009-human-in-the-loop.md) human-in-the-loop
 
 This grouping is a navigation aid; the numbered index above remains authoritative.

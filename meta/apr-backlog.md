@@ -28,6 +28,7 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Governance (conformance) | The reconstructed conformance safety net — two-tier model (CI fitness functions + human review), audit-binding, change-via-ADR — as the canonical source the domain APRs defer to. Repointing them is a staged follow-up. | ✍️ Drafted | [APR-010](../principles/APR-010-governance.md) · issue #8 |
 | Observability & cost | End-to-end traces over the delegation graph linking behavior to artifact/model versions and injected content, with cost as a first-class attributed, budgeted dimension. | ✍️ Drafted | [APR-011](../principles/APR-011-observability.md) · issue #9 |
 | Federated composition (cross-domain) | Composition *across* a trust/identity boundary (farms → federation): governed membership, authenticated participants, least-privilege non-ambient cross-domain trust. Forward-looking (emerging scale); L3-centered, L4 noted. | ✍️ Drafted | [APR-012](../principles/APR-012-federated-composition.md) · issue #10 |
+| Artifact graph (single source of truth) | A project's canonical state is one append-only, typed artifact graph across the lifecycle; traceability is a path through edges emitted as a side effect of production; tools are projections, not parallel systems of record; baselines are signed checkpoints. | ✍️ Drafted | [APR-013](../principles/APR-013-artifact-graph.md) · draft (no issue yet) |
 
 ## Idea backlog (not yet proposed)
 
