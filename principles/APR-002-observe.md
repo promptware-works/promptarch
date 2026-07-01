@@ -3,13 +3,14 @@ apr: 002
 title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 abstract: "Organizes an agentic platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — as seven first-class artifact types, each with a single canonical source, a declarative manifest, selective runtime injection, and audit-logged provenance."
 status: Draft
-version: 0.1.5
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.7 (Anthropic; 1M context)"
+  - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-05-01
-last-updated: 2026-05-30
+last-updated: 2026-07-01
 audience: Architects and framework authors of agentic AI platforms
 supersedes: []
 superseded-by: []
@@ -116,36 +117,39 @@ description: "Short description..."
 
 metadata:
   observe:
-    consumes_ontology:
-      - ontology/concepts.yaml#severity
-      - ontology/concepts.yaml#evidence
-    consumes_config:
-      - config/enums.yaml#severity
-      - config/thresholds.yaml#confidence
-    consumes_policies:
-      - policies/severity-criteria.yaml
-    consumes_contracts:
-      - contracts/Evidence.schema.yaml
-    produces_contracts:
-      - contracts/Finding.schema.yaml
-    consumes_examples:
-      - examples/severity-classification.yaml
-    # consumes_counter_examples:                  # opt-in: surface what-NOT-to-do cases
-    #   - examples/severity-classification.yaml#case-bad-7
-    evaluated_by:
-      - evals/severity-classification.yaml
-    min_eval_score: 0.85
-    safety_critical: false                        # true ⇒ requires ≥1 human-authored eval case
+    consumes:                                     # sub-cluster: runtime input references
+      ontology:
+        - ontology/concepts.yaml#severity
+        - ontology/concepts.yaml#evidence
+      config:
+        - config/enums.yaml#severity
+        - config/thresholds.yaml#confidence
+      policies:
+        - policies/severity-criteria.yaml
+      contracts:
+        - contracts/Evidence.schema.yaml
+      examples:
+        - examples/severity-classification.yaml
+      # counter_examples:                         # opt-in: surface what-NOT-to-do cases
+      #   - examples/severity-classification.yaml#case-bad-7
+    produces:                                     # sub-cluster: output references
+      contracts:
+        - contracts/Finding.schema.yaml
+    evals:                                        # sub-cluster: validation-time gating
+      evaluated_by:
+        - evals/severity-classification.yaml
+      min_eval_score: 0.85
+    safety_critical: false                        # loose field ⇒ true requires ≥1 human-authored eval case
 ---
 ```
 
 Field summary:
 
-- `consumes_<category>:` — declared runtime references. The loader injects only what is declared (§7's selective injection rule).
-- `produces_contracts:` — output shapes the skill emits; parent agents MAY use this to validate return values.
-- `evaluated_by:` + `min_eval_score:` — the quality SLO and the gate that enforces it (§9).
+- `consumes.<category>:` (ontology, config, policies, contracts, examples, counter_examples) — declared runtime input references. The loader injects only what is declared (§7's selective injection rule).
+- `produces.contracts:` — output shapes the skill emits; parent agents MAY use this to validate return values.
+- `evals.evaluated_by:` + `evals.min_eval_score:` — the quality SLO and the gate that enforces it (§9).
 - `safety_critical:` — when `true`, the skill is subject to stricter governance: it MUST have at least one human-authored eval case (§9 Content provenance) and breaking changes to its dependencies require explicit human review (§9 Schema evolution).
-- `consumes_counter_examples:` — opt-in surface for what-NOT-to-do cases; see §9 Example/eval coherence.
+- `consumes.counter_examples:` — opt-in surface for what-NOT-to-do cases; see §9 Example/eval coherence.
 
 The `metadata.observe:` namespace also future-proofs against further extensions: a hypothetical platform-specific extension could live under `metadata.platform:`, an audit-specific extension under `metadata.audit:`, etc. The convention is "the host runtime sees `metadata:` as opaque; each consumer reads its own namespace inside it."
 
@@ -170,8 +174,9 @@ Three mechanisms keep manifest size and maintenance cost manageable:
     observe:
       includes:
         - bundles/severity-classification.bundle.yaml
-      consumes_examples:
-        - examples/skill-specific.yaml   # only the skill-unique bit
+      consumes:
+        examples:
+          - examples/skill-specific.yaml   # only the skill-unique bit
   ```
 
   One edit to the bundle propagates to every including skill. Bundles MAY themselves include other bundles, but circular includes are a governance error. This is also the right answer when a manifest starts feeling large — extract the shared refs to a bundle rather than splitting the manifest into a sibling file (which fragments the skill, breaks atomicity, and creates a pairing invariant that nothing enforces).
@@ -195,7 +200,7 @@ When a parent agent delegates to a skill:
        ↓
 2. Orchestrator looks up skill X's metadata.observe manifest
        ↓
-3. Loader resolves each consumes_* entry:
+3. Loader resolves each consumes.* entry:
    • reads the referenced file (or #fragment)
    • walks cross-references transitively
    • emits an audit-log entry per resolution {path, commit_sha, fragment, ts}
@@ -213,14 +218,14 @@ When a parent agent delegates to a skill:
 6. Sub-LLM does the work using the injected context;
    it never sees the manifest itself
        ↓
-7. Return path: output MAY be validated against `produces_contracts`
+7. Return path: output MAY be validated against `produces.contracts`
    before returning to the parent agent
 ```
 
 Three consequences follow from this separation:
 
 - **OBSERVE-conformance is a platform property, not a model property.** The LLM does not need to understand OBSERVE semantics. As long as a platform has *some* orchestrator step between "decide to delegate" and "send prompt to LLM," OBSERVE can be inserted there. No retraining or fine-tuning is required.
-- **Parent agents MAY inspect manifests.** A parent deciding whether to delegate may check `produces_contracts` (to know the output shape), `safety_critical` (to apply extra wrapping), or `min_eval_score` (to confirm the skill is well-tested). This is a parent-side concern, separate from the running-skill concern.
+- **Parent agents MAY inspect manifests.** A parent deciding whether to delegate may check `produces.contracts` (to know the output shape), `safety_critical` (to apply extra wrapping), or `min_eval_score` (to confirm the skill is well-tested). This is a parent-side concern, separate from the running-skill concern.
 - **A loader is a hard prerequisite.** Platforms that let an LLM read a skill file *directly* with no resolution step (some bare-bones agentic setups) cannot adopt OBSERVE without first adding a loader. The loader is where selective injection, cross-reference resolution, and audit-binding happen — there is no out-of-process alternative.
 
 ---
@@ -275,7 +280,7 @@ An OBSERVE-conformant platform requires governance / CI validation across all si
 - **Impact analysis** — when a concept, contract field, policy rule, or eval threshold changes, governance flags all consuming or evaluated skills.
 - **Audit-log binding** — every runtime injection event MUST record `{file_path, commit_sha, fragment, timestamp}` in the audit log. Every CI eval run MUST record `{eval_file_path, commit_sha, score, threshold, pass/fail}` similarly. Git history alone is insufficient for compliance: the binding from a decision (or a quality gate) to its source version must be captured *at the moment of consumption*, not reconstructed retrospectively.
 - **Quality gate enforcement** — every skill declared in `skills/` MUST have an `evaluated_by` declaration pointing to at least one eval set, and a `min_eval_score`. PRs that drop the skill's eval score below its declared threshold are blocked unless an ADR explicitly accepts the regression.
-- **Example/eval coherence** — examples used as few-shot context (runtime) and examples used as eval cases (validation) MAY share a file but MUST be tagged with `purpose: training | test | both | counter-example`; no example case may be used to both train and grade the same skill. Counter-examples are never used as positive few-shot demonstrations and never used as the assertion target of an eval case — they teach what NOT to do, and are surfaced only when a skill explicitly opts in via a `consumes_counter_examples:` declaration.
+- **Example/eval coherence** — examples used as few-shot context (runtime) and examples used as eval cases (validation) MAY share a file but MUST be tagged with `purpose: training | test | both | counter-example`; no example case may be used to both train and grade the same skill. Counter-examples are never used as positive few-shot demonstrations and never used as the assertion target of an eval case — they teach what NOT to do, and are surfaced only when a skill explicitly opts in via a `consumes.counter_examples:` declaration.
 - **Eval staleness** — every eval file carries a `last_reviewed: YYYY-MM-DD` field. Governance flags eval files untouched for more than N months (platform-configurable, default 6) and gates merges that depend on stale eval sets until they are reviewed and re-affirmed (or refreshed). Without this, "all green CI" eventually means "you've stopped looking."
 - **Content provenance** — examples and eval cases declare `provenance: human | synthetic | hybrid`. Synthetic-only cases MAY NOT be the sole grading basis for safety-critical skills (those declaring `safety_critical: true`); at least one human-authored case must be present. Hybrid cases (human-edited synthetic) are treated as synthetic for this rule unless reviewer attribution is recorded.
 - **Schema evolution discipline** — `contracts/` changes are classified additive (new optional field, no consumer impact), evolutionary (deprecation with a window), or breaking (removed/renamed field). Breaking changes require an ADR plus a deprecation window before removal; governance flags all consuming and producing skills at each transition so refactors can be batched rather than scrambled. The same classification applies to `policies/`, `ontology/`, and `evals/` schema-level changes that affect skill manifests.
@@ -388,7 +393,7 @@ Farms or platforms adopting OBSERVE after the fact (rather than greenfield) typi
 5. **Extract shapes** — populate `contracts/`.
 6. **Extract examples** — populate `examples/`; tag each case as `training | test | both | counter-example` and `provenance: human | synthetic | hybrid`.
 7. **Build initial eval sets** — populate `evals/` per skill, starting with the most safety-critical skills; set initial `min_eval_score` thresholds and `last_reviewed` dates.
-8. **Refactor skills** — add `consumes_*`, `evaluated_by`, `min_eval_score` manifests; remove inline duplications.
+8. **Refactor skills** — add `consumes.*`, `evaluated_by`, `min_eval_score` manifests; remove inline duplications.
 9. **Governance** — extend validation to cover the new directories, the cross-reference resolver, and the quality-gate enforcement.
 10. **Documentation** — update pattern catalog and onboarding.
 
@@ -398,12 +403,21 @@ Platform-specific adoption plans provide concrete examples of this pattern. Phas
 
 ## Metadata registrations
 
-Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+Component-metadata fields this APR owns — the `observe` namespace — registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `evaluated_by` | evaluation | ref-list | — | active |
-| `min_eval_score` | evaluation | number | — | active |
+| `ontology` | observe.consumes | ref-list | — | active |
+| `config` | observe.consumes | ref-list | — | active |
+| `policies` | observe.consumes | ref-list | — | active |
+| `contracts` | observe.consumes | ref-list | — | active |
+| `examples` | observe.consumes | ref-list | — | active |
+| `counter_examples` | observe.consumes | ref-list | — | active |
+| `contracts` | observe.produces | ref-list | — | active |
+| `evaluated_by` | observe.evals | ref-list | — | active |
+| `min_eval_score` | observe.evals | number | — | active |
+| `includes` | observe | ref-list | — | active |
+| `safety_critical` | observe | boolean | — | active |
 
 ## References
 
@@ -439,3 +453,4 @@ External sources referenced in this APR; see §13 *Relationship to Established P
 | 0.1.3 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
 | 0.1.4 | 2026-05-30 | Draft | Added opening principle callout, for consistency with APR-000/003. No semantic change. |
 | 0.1.5 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |
+| 0.2.0 | 2026-07-01 | Draft | Restructured the `metadata.observe` manifest (§5) into **sub-clusters** — `consumes.<category>`, `produces.<category>`, `evals.*` — retiring the `consumes_*` / `produces_*` name prefixes; `safety_critical` / `includes` stay as namespace-loose fields. Registered all 11 OBSERVE fields (paths under the `observe` namespace) per APR-014 0.4.0's namespace/path model. Semantic change to the manifest shape. |

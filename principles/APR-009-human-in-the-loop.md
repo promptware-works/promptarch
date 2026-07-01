@@ -150,12 +150,12 @@ The novel contribution is a **promptware-specific oversight-placement principle*
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `max_autonomy_level` | classification | enum | `L1, L2, L3, L4, L5` | active |
-| `max_blast_radius` | classification | enum | `local-only, project-scoped, cross-project, external` | active |
-| `escalation_triggers` | composition | list | — | active |
-| `escalation_path` | composition | string | — | active |
+| `max_autonomy_level` | core.classification | enum | `L1, L2, L3, L4, L5` | active |
+| `max_blast_radius` | core.classification | enum | `local-only, project-scoped, cross-project, external` | active |
+| `escalation_triggers` | core.composition | list | — | active |
+| `escalation_path` | core.composition | string | — | active |
 
 ## References
 

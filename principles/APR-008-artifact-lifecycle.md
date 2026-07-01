@@ -130,11 +130,11 @@ The novel contribution is a **promptware-specific lifecycle principle** that uni
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `version` | provenance | string | — | active |
-| `supersedes` | provenance | string | — | active |
-| `model_pin` | evaluation | string | — | active |
+| `version` | core.provenance | string | — | active |
+| `supersedes` | core.provenance | string | — | active |
+| `model_pin` | core.evaluation | string | — | active |
 
 ## References
 

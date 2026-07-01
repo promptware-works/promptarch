@@ -153,9 +153,9 @@ The novel contribution is a **promptware-specific placement principle**: classif
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `exec_form` | classification | enum | `code, prompt` | active |
+| `exec_form` | core.classification | enum | `code, prompt` | active |
 
 ## References
 

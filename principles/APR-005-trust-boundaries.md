@@ -128,9 +128,9 @@ The novel contribution is a **promptware-specific trust discipline** unifying in
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `trust_level` | classification | enum | `trusted, semi-trusted, untrusted` | active |
+| `trust_level` | core.classification | enum | `trusted, semi-trusted, untrusted` | active |
 
 ## References
 

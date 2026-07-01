@@ -126,9 +126,9 @@ Tips for adopters: phased migration patterns, common pitfalls, measurement proto
 
 If this APR introduces or owns any component-metadata field (a frontmatter attribute governed by [APR-014 DECLARE](APR-014-declare.md)), register it here — one row per field — and add the matching entries to [`registries/component-metadata.yaml`](../../registries/component-metadata.yaml). Do **not** edit APR-014 to add a field.
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `<field>` | classification | enum | `x, y, z` | active |
+| `<field>` | core.classification | enum | `x, y, z` | active |
 
 Custom / platform-specific fields that no principle owns are **not** registered — they live under the frontmatter `metadata` object as namespaced keys (`x-<vendor>-*`).
 

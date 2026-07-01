@@ -1,6 +1,6 @@
 # APR-002 OBSERVE — Digest
 
-> **Generated digest of [APR-002 OBSERVE](../APR-002-observe.md) v0.1.5.** The full APR is authoritative — read it for motivation, rationale, scope, and limits. This is the token-efficient injectable for AI-assisted development. Do not edit by hand.
+> **Generated digest of [APR-002 OBSERVE](../APR-002-observe.md) v0.2.0.** The full APR is authoritative — read it for motivation, rationale, scope, and limits. This is the token-efficient injectable for AI-assisted development. Do not edit by hand.
 
 **Abstract.** Organizes an agentic platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — as seven first-class artifact types, each with a single canonical source, a declarative manifest, selective runtime injection, and audit-logged provenance.
 
@@ -26,7 +26,7 @@ Categories are mutually exclusive by *dominant change lifecycle*; file an artifa
 - Selective injection is MANDATORY — blanket-loading all refs is an architectural violation.
 - Skills MUST NOT carry inline concept definitions, value lists, rule restatements, schema fragments, or few-shot examples — not even as fallback hints. Exactly one canonical source per artifact.
 - If a required runtime injection fails, the delegation MUST halt with an audit-logged error (strict mode = CI/staging/prod). Permissive mode (local dev only) MAY log-and-continue with an `[INJECTION_FALLBACK]` marker.
-- Every skill MUST declare `evaluated_by` + `min_eval_score`; a skill lacking them is blocked from merge.
+- Every skill MUST declare `evals.evaluated_by` + `evals.min_eval_score`; a skill lacking them is blocked from merge.
 - `safety_critical` skills MUST have ≥1 human-authored eval case; synthetic-only cases MUST NOT be the sole grading basis.
 - Every runtime injection MUST record `{file_path, commit_sha, fragment, timestamp}`; every eval run MUST record `{eval_file_path, commit_sha, score, threshold, pass/fail}`. Binding happens *at consumption*, not retrospectively — cached reads still emit an audit entry.
 - Cross-references between reference files are resolved transitively by the loader and audit-logged at each hop; keep chains shallow.
@@ -44,16 +44,19 @@ OBSERVE is **not** a runtime, a behavior framework, an eval framework, a knowled
 ```yaml
 metadata:
   observe:
-    consumes_ontology: [ontology/concepts.yaml#severity]
-    consumes_config:   [config/enums.yaml#severity]
-    consumes_policies: [policies/severity-criteria.yaml]
-    consumes_contracts: [contracts/Evidence.schema.yaml]
-    produces_contracts: [contracts/Finding.schema.yaml]
-    consumes_examples: [examples/severity-classification.yaml]
-    evaluated_by:      [evals/severity-classification.yaml]
-    min_eval_score: 0.85
+    consumes:
+      ontology:  [ontology/concepts.yaml#severity]
+      config:    [config/enums.yaml#severity]
+      policies:  [policies/severity-criteria.yaml]
+      contracts: [contracts/Evidence.schema.yaml]
+      examples:  [examples/severity-classification.yaml]
+    produces:
+      contracts: [contracts/Finding.schema.yaml]
+    evals:
+      evaluated_by:   [evals/severity-classification.yaml]
+      min_eval_score: 0.85
     safety_critical: false
 ```
 
 ---
-*Source: [APR-002 OBSERVE](../APR-002-observe.md) v0.1.5 · regenerate this digest whenever the source changes.*
+*Source: [APR-002 OBSERVE](../APR-002-observe.md) v0.2.0 · regenerate this digest whenever the source changes.*

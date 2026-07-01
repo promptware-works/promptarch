@@ -158,10 +158,10 @@ The novel contribution is a **promptware-specific pattern mechanism**: reusable 
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `skill_kind` | classification | enum | `capability, pattern` | active |
-| `applies_patterns` | composition | list | — | active |
+| `skill_kind` | core.classification | enum | `capability, pattern` | active |
+| `applies_patterns` | core.composition | list | — | active |
 
 ## References
 

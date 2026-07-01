@@ -133,10 +133,10 @@ The novel contribution is a **promptware-specific governance principle**: the re
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `principals` | provenance | list | — | active |
-| `status` | provenance | enum | `Draft, Stable, Deprecated` | active |
+| `principals` | core.provenance | list | — | active |
+| `status` | core.provenance | enum | `Draft, Stable, Deprecated` | active |
 
 ## References
 

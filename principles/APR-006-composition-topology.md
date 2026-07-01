@@ -147,10 +147,10 @@ The novel contribution is a **promptware-specific composition principle**: agent
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `agency` | classification | enum | `leaf, coordinator` | active |
-| `delegation_envelope` | composition | object | `{ max_depth, allowed_skills }` | active |
+| `agency` | core.classification | enum | `leaf, coordinator` | active |
+| `delegation_envelope` | core.composition | object | `{ max_depth, allowed_skills }` | active |
 
 ## References
 

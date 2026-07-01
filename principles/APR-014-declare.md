@@ -3,7 +3,7 @@ apr: 14
 title: "DECLARE — The Frontmatter Contract for Promptware Components"
 abstract: "Every packaged promptware component is governed by a two-layer contract: a structured frontmatter block that holds all machine-readable metadata — organized into typed scope clusters — and a body restricted to functional prose only. Tooling, dispatch, governance, and audit derive from the frontmatter; the body is the only layer injected into an LLM context. Classification, operability, provenance, evaluation, and composition attributes each live in their owning cluster; the component's format, name, or folder never implies any of them."
 status: Draft
-version: 0.3.0
+version: 0.4.0
 principals:
   - D. Maxios
 generative-contributors:
@@ -97,9 +97,15 @@ If information is machine-readable, structured, or consumed by tooling — it be
 
 ## The frontmatter skeleton
 
-A component's frontmatter carries the **host runtime's own standard keys** (e.g. `name`, `description`, `tools`) at the top level; the entire DECLARE-governed layer lives beside them under a single top-level **`metadata`** object. Within `metadata`, attributes are organized into **scope clusters** — named groups, each governed by one or more owning principles — and any non-owned custom fields sit directly alongside the clusters. Platforms SHOULD use the canonical cluster names below for interoperability. Each owning principle defines which of its fields are required on a given component type; DECLARE defines the structural home. *(The cluster blocks below are shown bare for brevity; on a real component they are nested under `metadata` — see* Putting it together *.)*
+A component's frontmatter carries the **host runtime's own standard keys** (e.g. `name`, `description`, `tools`) at the top level; the entire DECLARE-governed layer lives beside them under a single top-level **`metadata`** object, organized as a small tree:
 
-### Canonical clusters
+- **`metadata.<namespace>`** (L1) — a subsystem / consumer section. **`core`** is the required namespace (the cross-cutting clusters below); cohesive subsystems add their own opt-in namespace, e.g. **`observe`** (owned by [APR-002](APR-002-observe.md), read by the OBSERVE loader), and future `platform` / `audit`. A component's governance tooling reads `metadata.core`; each subsystem reads its own namespace.
+- **`metadata.<namespace>.<cluster>`** (L2) — a scope group of related fields (e.g. `core.classification`, `observe.consumes`). A namespace MAY also hold non-owned custom fields directly.
+- **field** (L3) — the leaf. Full paths look like `metadata.core.classification.exec_form` and `metadata.observe.consumes.ontology`.
+
+Platforms SHOULD use the canonical namespace/cluster names for interoperability. Each owning principle defines which of its fields are required on a given component type; DECLARE defines the structural home. *(The `core` cluster blocks below are shown bare for brevity; on a real component they nest under `metadata.core` — see* Putting it together *.)*
+
+### The `core` namespace — canonical clusters
 
 **`classification`** — what kind of thing this component is architecturally. Governed by [APR-003](APR-003-code-prompt-boundary.md), [APR-005](APR-005-trust-boundaries.md), [APR-006](APR-006-composition-topology.md), [APR-007](APR-007-pattern-mechanism.md), [APR-009](APR-009-human-in-the-loop.md).
 
@@ -117,11 +123,7 @@ classification:
 
 ```yaml
 operability:
-  version: 1.2.0
-  ticket: "jira:PLAT-441"
-  resolution: "loader://skills/summarise"
-  trace_anchor: "skill.summarise"
-  direction: "Summarise a document into key decisions and open questions"
+  trace_anchor: "skill.summarise"   # (APR-011)
 ```
 
 **`provenance`** — who made it and when. Governed by [APR-010](APR-010-governance.md).
@@ -132,16 +134,16 @@ provenance:
     - D. Maxios
   created: 2026-06-26
   last-updated: 2026-06-26
-  status: Draft            # Draft | Stable | Deprecated
+  status: Draft            # Draft | Stable | Deprecated  (APR-010)
+  version: 1.2.0           # (APR-008)
+  supersedes: prior-skill  # (APR-008)
 ```
 
-**`evaluation`** — quality gates and model provenance. Governed by [APR-002](APR-002-observe.md), [APR-008](APR-008-artifact-lifecycle.md).
+**`evaluation`** — model provenance. Governed by [APR-008](APR-008-artifact-lifecycle.md). *(Eval gating — `evaluated_by`, `min_eval_score` — is owned by OBSERVE and lives in its namespace, `metadata.observe.evals`, not here — see [APR-002](APR-002-observe.md).)*
 
 ```yaml
 evaluation:
-  evaluated_by: evals/summarise.yaml
-  min_eval_score: 0.85
-  model_pin: claude-sonnet-4-6
+  model_pin: claude-sonnet-4-6   # (APR-008)
 ```
 
 **`composition`** — how this component relates to other components. Governed by [APR-006](APR-006-composition-topology.md), [APR-007](APR-007-pattern-mechanism.md), [APR-009](APR-009-human-in-the-loop.md).
@@ -163,22 +165,26 @@ composition:
 
 ### Putting it together
 
-On a concrete component the host's standard keys stay top-level, and the whole DECLARE layer — the clusters plus any non-owned custom fields — is carried under one top-level **`metadata`** object:
+On a concrete component the host's standard keys stay top-level, and the whole DECLARE layer — namespaces, their clusters, and any non-owned custom fields — is carried under one top-level **`metadata`** object:
 
 ```yaml
 name: summarise-decisions          # host-standard keys (host-defined, top-level)
 description: …
 tools: [...]
-metadata:                          # the DECLARE-governed layer
-  classification: { skill_kind: capability, trust_level: trusted, … }
-  composition:    { applies_patterns: [...], delegation_envelope: {...} }
-  evaluation:     { evaluated_by: [...], min_eval_score: 0.85 }
-  provenance:     { version: 1.2.0, supersedes: … }
-  domain: security                 # non-owned custom field — sits alongside the clusters
-  team: platform-core              # non-owned custom field
+metadata:
+  core:                            # REQUIRED namespace — cross-cutting clusters
+    classification: { skill_kind: capability, trust_level: trusted, … }
+    composition:    { applies_patterns: [...], delegation_envelope: {...} }
+    provenance:     { version: 1.2.0, status: Draft }
+  observe:                         # OPT-IN subsystem namespace (APR-002)
+    consumes: { ontology: [...], policies: [...] }
+    produces: { contracts: [...] }
+    evals:    { evaluated_by: [...], min_eval_score: 0.85 }
+    safety_critical: false         # loose field — directly under the namespace
+  x-acme-team: platform-core       # non-owned custom key (namespaced)
 ```
 
-`metadata` **is** the container: principle-owned fields belong in their cluster; non-owned custom fields sit directly under `metadata`. The standard/custom boundary is simply cluster-membership vs. loose key — there is no separate bucket.
+`metadata` is the container; each child is a **namespace**. Within a namespace, principle-owned fields sit in their cluster (or directly, for a namespace-loose field); non-owned custom keys are namespaced (`x-…`). The standard/custom boundary is registry-membership at a path, not a separate bucket.
 
 ### Suggested cluster → component-kind mapping
 
@@ -194,24 +200,24 @@ The table below is **non-normative** — a navigation aid showing which clusters
 
 ## The metadata registry
 
-The canonical fields — their names, clusters, owning principles, and value sets — are **not enumerated in this principle**. They live in a machine-readable **registry**, [`registries/component-metadata.yaml`](../registries/component-metadata.yaml), which is authoritative. DECLARE defines the registry's *existence and rules*; the registry holds the *data* — the same separation IANA uses between a protocol spec and its parameter registries ([RFC 8126](https://datatracker.ietf.org/doc/html/rfc8126)). This keeps DECLARE **closed for modification, open for extension**: a new field is added by the APR that owns it, never by editing DECLARE.
+The canonical fields — their names, paths, owning principles, and value sets — are **not enumerated in this principle**. They live in a machine-readable **registry**, [`registries/component-metadata.yaml`](../registries/component-metadata.yaml), which is authoritative. DECLARE defines the registry's *existence and rules*; the registry holds the *data* — the same separation IANA uses between a protocol spec and its parameter registries ([RFC 8126](https://datatracker.ietf.org/doc/html/rfc8126)). This keeps DECLARE **closed for modification, open for extension**: a new field is added by the APR that owns it, never by editing DECLARE.
 
 **Registration policy**
 
-- **Canonical fields** are registered by their **owning APR** ("APR Review"): the APR introducing a field carries a *Metadata registrations* section (name · cluster · type · values), and on acceptance the entry is added to the registry. Registration MUST NOT edit DECLARE or another APR.
-- **Ownership & collision.** Each canonical field has exactly one owning APR; field names MUST be unique across the registry. A duplicate is a validation error.
+- **Canonical fields** are registered by their **owning APR** ("APR Review"): the APR introducing a field carries a *Metadata registrations* section (name · path · type · values), and on acceptance the entry is added to the registry. Registration MUST NOT edit DECLARE or another APR.
+- **Ownership & collision.** Each canonical field has exactly one owning APR; the full key (`path` + `name`, e.g. `observe.consumes.contracts`) MUST be unique across the registry. A duplicate is a validation error.
 - **Custom / platform fields** are **not** registered. They live under the `metadata` object as namespaced custom keys (e.g. `x-<vendor>-*` / reverse-DNS), un-governed by the corpus — DECLARE's analogue of IANA's `x-`/vendor tree.
 
-A conformant platform MAY validate components against the registry: every canonical field a component declares is registered (or is a namespaced custom key) and sits in its registered cluster.
+A conformant platform MAY validate components against the registry: every canonical field a component declares is registered (or is a namespaced custom key) and sits at its registered path.
 
 ## Prescription
 
 - The frontmatter MUST be the **single authoritative source** for all machine-readable metadata about a component. It MUST NOT be inferred from the packaging format, the file name, or the directory location.
 - The body MUST contain **functional prose only** — behavioral instructions for an LLM. Classification, operational, governance, composition, and evaluation metadata MUST NOT appear in the body.
 - Each **independent** attribute is its **own field** in the frontmatter. Orthogonal attributes MUST NOT be fused into one overloaded label or enum.
-- The DECLARE layer MUST be carried under a single top-level **`metadata`** object, beside the host runtime's standard keys. Within it, attributes MUST be **organized into scope clusters** using the canonical cluster names (§ *The frontmatter skeleton*). **Non-owned custom fields** — platform-specific attributes no principle owns — sit directly under `metadata`, never inside a canonical cluster. Additional platform-specific clusters MAY be defined but MUST NOT reuse a canonical cluster name for a different scope.
+- The DECLARE layer MUST be carried under a single top-level **`metadata`** object, beside the host runtime's standard keys, organized into **namespaces** (L1) → **clusters** (L2) → fields (L3). The **`core`** namespace is REQUIRED; a cohesive subsystem MAY define its own opt-in namespace (§ *The frontmatter skeleton*). **Non-owned custom fields** MUST be namespaced custom keys (`x-…`), never placed inside a canonical cluster. A namespace or cluster name MUST NOT be reused for a different scope.
 - The frontmatter declaration is **authoritative**. Folders, names, loaders, dispatch switches, and approval/audit surfaces MUST derive from declared fields. On conflict between a folder/name encoding and the declaration, the declaration wins and the divergence is a validation error.
-- Field values MUST defer to their **owning principle**; DECLARE MUST NOT redefine them, and MUST NOT enumerate them. The canonical fields, their clusters, and owning principles are recorded in the **registry** ([`registries/component-metadata.yaml`](../registries/component-metadata.yaml)), not inline in this principle (§ *The metadata registry*).
+- Field values MUST defer to their **owning principle**; DECLARE MUST NOT redefine them, and MUST NOT enumerate them. The canonical fields, their paths, and owning principles are recorded in the **registry** ([`registries/component-metadata.yaml`](../registries/component-metadata.yaml)), not inline in this principle (§ *The metadata registry*).
 - A new canonical metadata field MUST be **registered** by the APR that owns it — via that APR's *Metadata registrations* section, which adds the entry to the registry — and MUST NOT be added by editing DECLARE or another APR. Field names MUST be unique across the registry.
 - A component that **composes or governs other components** MUST declare its delegation statically in the `composition` cluster, so its fan-out is visible at review. **Agency is declared, never discovered at runtime.**
 - The frontmatter MUST NOT be injected into an LLM context. The body MUST NOT be parsed by governance tooling to extract metadata.
@@ -223,7 +229,7 @@ The shared governance model — two-tier enforcement, audit-log binding, change-
 - **Body purity** — the body contains only behavioral prose; no structured metadata, classification attributes, or typed schemas are embedded in it. This check is deterministic and requires no LLM.
 - **Frontmatter completeness** — every packaged component declares the clusters required by its applicable owning principles; an undeclared required field is a defect, not a default.
 - **No conflation** — no single field stands in for two independent attributes; orthogonal axes are separate fields in their owning cluster.
-- **Cluster placement** — the DECLARE layer lives under a top-level `metadata` object; each owned field lives in its canonical cluster and non-owned custom fields sit directly under `metadata`, never inside a canonical cluster; misplacements (e.g., `version` in `classification`, or a custom field added to `classification`) are flagged.
+- **Path placement** — the DECLARE layer lives under `metadata`, organized as namespace → cluster → field; each owned field sits at its **registered path** (e.g. `core.classification.exec_form`, `observe.consumes.ontology`), and non-owned custom fields are namespaced `x-` keys, never inside a canonical cluster; misplacements (e.g. `version` under `core.classification`, or a custom field inside a cluster) are flagged.
 - **Declaration is authoritative** — any folder/name class-encoding is reconciled against the frontmatter; mismatches fail.
 - **Agency is declared** — coordinator components declare their delegation envelope in `composition`; no component dispatches outside its declared envelope.
 - **Tooling reads the field, not the path** — loaders, dispatch, and approval surfaces key on frontmatter fields; name/extension/folder sniffing for role is flagged.
@@ -285,3 +291,4 @@ External sources cited in this APR; see *Relationship to established patterns* f
 | 0.2.1 | 2026-07-01 | Draft | Renamed the `exec_form` values `script`→`code` and `llm`→`prompt` in the classification-cluster example, component-kind mapping, and axis-owner list, tracking the APR-003/APR-000 harmonization (`exec_form: code \| prompt`). No change to the contract. |
 | 0.2.2 | 2026-07-01 | Draft | Ratified the autonomy/escalation vocabulary (surfaced by the APR-001 ASPECT reconciliation) in the cluster catalog: added `max_autonomy_level` + `max_blast_radius` to `classification` and `escalation_triggers` + `escalation_path` to `composition`, both owned by [APR-009](APR-009-human-in-the-loop.md); added the axis to the owner list. Established **`metadata`** as the single top-level container for the whole DECLARE layer, beside the host's standard keys (name/description/tools): the canonical clusters nest inside it, and non-owned custom fields (e.g. `domain`) sit directly under `metadata` (new prescription rule + governance check + *Putting it together* example). Additive; clarifies serialization, no change to the contract. |
 | 0.3.0 | 2026-07-01 | Draft | Introduced the component-metadata **registry** ([`registries/component-metadata.yaml`](../registries/component-metadata.yaml)) and an RFC-8126-style registration policy: canonical fields are registered by their **owning APR** (via a *Metadata registrations* section), not enumerated in DECLARE. Replaced the inline axis-owner list with a registry pointer; added the *metadata registry* section, a registration prescription rule, and a *not the registry itself* scope note. Makes DECLARE closed-for-modification / open-for-extension. |
+| 0.4.0 | 2026-07-01 | Draft | Gave `metadata` a **namespace layer**: `metadata` → namespaces (L1) → clusters (L2) → fields (L3). The canonical clusters become the required **`core`** namespace; cohesive subsystems get their own opt-in namespace (e.g. **`observe`**, APR-002). Fields are addressed by dotted **`path`** (`core.classification`, `observe.consumes`); the registry entry's `cluster` became `path`, uniqueness moved to the full path+name. Resolved the eval double-placement (eval gating is OBSERVE's, under `observe.evals`; `core.evaluation` keeps `model_pin`). Updated skeleton, *Putting it together*, prescription, governance, and the registry/schema/checker. |

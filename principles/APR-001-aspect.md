@@ -3,7 +3,7 @@ apr: 001
 title: "ASPECT — A Prompt Framework for Agent & Skill Specifications"
 abstract: "A body-level prompt framework for specifying LLM agents and skills as two variants (ASPECT-A, ASPECT-S), with type-driven mandatory sections, negative scoping required for agents, and a stricter mode for security-sensitive components — making agent and skill spec corpora auditable."
 status: Draft
-version: 0.3.1
+version: 0.3.2
 principals:
   - D. Maxios
 generative-contributors:
@@ -115,19 +115,20 @@ name: <Agent Name>
 description: <one-line role + primary mission>
 tools: [<tool>, <tool>, <tool>]
 user-invocable: <true|false>
-metadata:                          # all non-standard attributes live here, per APR-014 DECLARE
-  classification:
-    agency: <leaf | coordinator>
-    trust_level: <trusted | semi-trusted | untrusted>
-    max_autonomy_level: <L1 advisory … L5 unsupervised>
-    max_blast_radius: <local-only | project-scoped | cross-project | external>
-  composition:
-    applies_patterns: [<governance-pattern>, …]
-    escalation_triggers: [<action> (level), …]
-    escalation_path: <next-agent or human approver>
-  provenance:
-    version: 0.1.0
-    supersedes: —                  # change log is metadata, not a body section
+metadata:                          # per APR-014 DECLARE: namespaces → clusters → fields
+  core:                            # required namespace
+    classification:
+      agency: <leaf | coordinator>
+      trust_level: <trusted | semi-trusted | untrusted>
+      max_autonomy_level: <L1 advisory … L5 unsupervised>
+      max_blast_radius: <local-only | project-scoped | cross-project | external>
+    composition:
+      applies_patterns: [<governance-pattern>, …]
+      escalation_triggers: [<action> (level), …]
+      escalation_path: <next-agent or human approver>
+    provenance:
+      version: 0.1.0
+      supersedes: —                # change log is metadata, not a body section
 ---
 
 # <Agent Name>
@@ -237,24 +238,28 @@ Skills do not have the routing problem agents do — the input schema enforces t
 name: <skill-name>
 description: <one-line purpose>
 user-invocable: <true|false>
-metadata:                          # all non-standard attributes live here, per APR-014 DECLARE
-  classification:
-    skill_kind: <capability | pattern>
-    trust_level: <trusted | semi-trusted | untrusted>
-  inputs: [<input-schema-ref>]       # typed I/O contracts (schema is canonical)
-  outputs: [<output-schema-ref>]
-  policies: [<policy-ref>]
-  composition:
-    applies_patterns: [<pattern-name>]
-    delegation_envelope:
-      allowed_skills: [<other-skill>]  # other skills this one may invoke
-  evaluation:
-    evaluated_by: [<eval-set>]
-    min_eval_score: 0.85
-  provenance:
-    version: 0.1.0
-    supersedes: —                    # change log is metadata, not a body section
-  domain: <functional area, e.g. security>   # custom, no owning principle
+metadata:                          # per APR-014 DECLARE: namespaces → clusters → fields
+  core:                            # required namespace (governance-read)
+    classification:
+      skill_kind: <capability | pattern>
+      trust_level: <trusted | semi-trusted | untrusted>
+    composition:
+      applies_patterns: [<pattern-name>]
+      delegation_envelope:
+        allowed_skills: [<other-skill>]  # other skills this one may invoke
+    provenance:
+      version: 0.1.0
+      supersedes: —                # change log is metadata, not a body section
+  observe:                         # OBSERVE content refs + eval gating (APR-002)
+    consumes:
+      contracts: [<input-schema-ref>]    # typed inputs (schema is canonical)
+      policies:  [<policy-ref>]
+    produces:
+      contracts: [<output-schema-ref>]   # typed outputs
+    evals:
+      evaluated_by:   [<eval-set>]
+      min_eval_score: 0.85
+  x-domain: <functional area, e.g. security>   # non-owned custom key
 ---
 
 # Skill: <skill-name>
@@ -470,3 +475,4 @@ External sources referenced in this APR; see *Relationship to established patter
 | 0.2.4 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |
 | 0.3.0 | 2026-07-01 | Draft | Reconciled with [APR-014 DECLARE](APR-014-declare.md): moved declarative metadata out of the ASPECT body into the frontmatter — Autonomy Profile (agency, blast radius, escalation), Version & Lineage, skill category (`domain`), and `Dependencies` (`composition`). The body is now functional prose only; ASPECT-A is 8 body sections, ASPECT-S is 6. Updated the division-of-concerns table, both skeletons, the situational-section and security-sensitive guidance, and the frontmatter-sibling framing to defer to DECLARE. Semantic change. |
 | 0.3.1 | 2026-07-01 | Draft | Renamed reconciled frontmatter fields for consistency with DECLARE (`default_blast_radius`→`max_blast_radius`, `actions_requiring_escalation`→`escalation_triggers`, skill `category`→`domain`, `calls`→`delegation_envelope.allowed_skills`, `replaces`→`supersedes`), and nested the skeletons' DECLARE clusters under a single top-level `metadata` object — host-standard keys (`name`/`description`/`tools`/`user-invocable`) stay top-level — matching APR-014's `metadata`-container model. |
+| 0.3.2 | 2026-07-01 | Draft | Re-pathed the ASPECT-A/S skeletons to APR-014 0.4.0's namespace model: DECLARE clusters nest under `metadata.core.*`; a skill's I/O schema refs, policies, and eval gating move to their true OBSERVE home (`metadata.observe.consumes` / `produces` / `evals`); `domain` becomes a namespaced custom key (`x-domain`). |

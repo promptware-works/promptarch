@@ -129,9 +129,9 @@ The novel contribution is a **promptware-specific observability+cost principle**
 
 Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
 
-| Field | Cluster | Type | Values | Status |
+| Field | Path | Type | Values | Status |
 |---|---|---|---|---|
-| `trace_anchor` | operability | string | — | active |
+| `trace_anchor` | core.operability | string | — | active |
 
 ## References
 
