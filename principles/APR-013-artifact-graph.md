@@ -3,7 +3,7 @@ apr: 13
 title: "An Artifact-Graph Principle for Promptware"
 abstract: "A project's canonical state is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record."
 status: Draft
-version: 0.2.0
+version: 0.2.1
 principals:
   - D. Maxios
 generative-contributors:
@@ -68,6 +68,8 @@ Two halves: a **structural** claim (the graph is the system of record — typed 
 ## The artifact-graph config
 
 The graph's **vocabulary and scan rules** are declared in a project-level config, [`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml): the `node-types` and `edge-types` a project allows, the `node-attributes` every node declares (`id` + `type` + `title` are the mandatory identity, plus optional `description` and its typed `edges`), the `roots` exempt from the no-orphan rule, and the `include` / `ignore` globs the kernel scans. It is the **artifact-side sibling** of the component-metadata registry ([APR-014](APR-014-declare.md)): that one governs a *component's* frontmatter fields; this one governs the *artifact graph* across all node types — most of which (requirements, tests, run logs) are not components. Adopters extend the vocabulary by editing this config, not this principle, and it is validated in CI (`tools/graph/check-graph.ts`).
+
+**Node attributes are top-level on every artifact.** A node declares its `id`, `type`, `title`, and `edges` at the **top level** of its own frontmatter — uniformly, whether or not it is a promptware component. A component is *both* a node and a component: its node attributes sit top-level (governed here), **beside — not inside** — its component `metadata` block (governed by [APR-014](APR-014-declare.md)). The graph kernel therefore reads `id` / `type` / `edges` identically from every scanned file (a bare `requirement.md` has no `metadata` block at all), and the edge vocabulary is never duplicated into the component-metadata registry.
 
 `supersedes` appears in the edge-type vocabulary but is **not** redefined here: it is `core.provenance.supersedes` (owned by [APR-008](APR-008-artifact-lifecycle.md)), recorded as a graph edge — the graph *derives* the edge from the provenance field rather than owning a second copy.
 
@@ -163,3 +165,4 @@ External sources cited in this APR; see *Relationship to established patterns* f
 |---|---|---|---|
 | 0.1.0 | 2026-06-20 | Draft | Initial draft published as APR-013. |
 | 0.2.0 | 2026-07-01 | Draft | Added §The artifact-graph config: the graph's vocabulary and node model live in a project-level config ([`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml)) — `node-types`, `edge-types`, `node-attributes` (`id`/`type`/`title`/`description`/`edges`), `roots`, `include`/`ignore` — the artifact-side sibling of the component-metadata registry (APR-014), with its own schema + CI checker (`tools/graph/check-graph.ts`). Noted `supersedes` derives from `core.provenance` (APR-008), not redefined. |
+| 0.2.1 | 2026-07-01 | Draft | Clarified that node attributes (`id` / `type` / `title` / `edges`) are declared **top-level** on every artifact — uniform across all node types; for a component they sit beside, not inside, its `metadata` block, so the edge vocabulary is never duplicated into the component-metadata registry. |
