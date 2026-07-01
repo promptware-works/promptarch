@@ -20,6 +20,14 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
 
   Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-registry.yml`](../.github/workflows/check-registry.yml) runs it on pushes and PRs to `main` and `develop`.
 
+- [`graph/check-graph.ts`](graph/check-graph.ts) — validates the [artifact-graph config](../registries/artifact-graph.yaml) against [`../schemas/artifact-graph.schema.yaml`](../schemas/artifact-graph.schema.yaml): non-empty node/edge types (valid slugs), `roots` that reference declared node-types, non-empty `include` globs. Governed by [APR-013](../principles/APR-013-artifact-graph.md). Run from this directory (`tools/`):
+
+  ```bash
+  node graph/check-graph.ts          # or:  npm run check:graph
+  ```
+
+  Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-graph.yml`](../.github/workflows/check-graph.yml) runs it on pushes and PRs to `main` and `develop`.
+
 - [`release.ts`](release.ts) — cuts a release per the branching model: fast-forwards `develop` → `main`, tags `main`, and publishes a GitHub release. Run from this directory (`tools/`):
 
   ```bash

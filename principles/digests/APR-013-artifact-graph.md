@@ -1,6 +1,6 @@
 # APR-013 — Artifact Graph — Digest
 
-> **Generated digest of [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.1.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.2.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
 **Abstract.** A project's canonical state is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record.
 
@@ -40,4 +40,4 @@ No orphans (every non-root node has an inbound edge) · edge legality + checkabi
 Not APR-006's runtime *delegation* graph · not APR-011's *runtime execution* traceability (this is authoring/derivation lineage) · not APR-008's per-artifact lifecycle (this is the edges between nodes) · not OBSERVE's content SoT (this is the cross-artifact layer above it) · not a mandate for RDF/triplestore/graph-DB · not a version-control system.
 
 ---
-*Source: [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.1.0 · regenerate this digest whenever the source changes.*
+*Source: [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.2.0 · regenerate this digest whenever the source changes.*

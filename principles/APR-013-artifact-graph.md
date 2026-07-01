@@ -3,7 +3,7 @@ apr: 13
 title: "An Artifact-Graph Principle for Promptware"
 abstract: "A project's canonical state is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record."
 status: Draft
-version: 0.1.0
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
@@ -63,7 +63,13 @@ Two halves: a **structural** claim (the graph is the system of record — typed 
 ## Nodes and typed edges
 
 - **Nodes** are versioned, individually addressable lifecycle artifacts: *intent*, *requirements / use cases*, *decision records* and the *studies* that ground them, *design*, *code* (in promptware, the [APR-001 ASPECT](APR-001-aspect.md) components and [APR-002 OBSERVE](APR-002-observe.md) content), *tests* and results, *deployment specs*, and *run logs*. Each node's version, status, and lineage are governed by [APR-008](APR-008-artifact-lifecycle.md); this APR governs the edges *between* nodes.
-- **Edges** are typed and directional. The baseline vocabulary: `derives-from`, `satisfies`, `verifies`, `justified-by` / `informed-by` (a node justified by a decision record, itself informed by studies and requirements), `supersedes` (the [APR-008](APR-008-artifact-lifecycle.md) lineage pointer, recorded as a graph edge), and `depends-on` / `contradicts` for impact analysis and conflict detection. Adopters MAY extend the vocabulary; they MUST declare it.
+- **Edges** are typed and directional. The baseline vocabulary: `derives-from`, `satisfies`, `verifies`, `justified-by` / `informed-by` (a node justified by a decision record, itself informed by studies and requirements), `supersedes` (the [APR-008](APR-008-artifact-lifecycle.md) lineage pointer, recorded as a graph edge), and `depends-on` / `contradicts` for impact analysis and conflict detection. Adopters MAY extend the vocabulary; they MUST declare it in the artifact-graph config (below).
+
+## The artifact-graph config
+
+The graph's **vocabulary and scan rules** are declared in a project-level config, [`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml): the `node-types` and `edge-types` a project allows, the `node-attributes` every node declares (`id` + `type` + `title` are the mandatory identity, plus optional `description` and its typed `edges`), the `roots` exempt from the no-orphan rule, and the `include` / `ignore` globs the kernel scans. It is the **artifact-side sibling** of the component-metadata registry ([APR-014](APR-014-declare.md)): that one governs a *component's* frontmatter fields; this one governs the *artifact graph* across all node types — most of which (requirements, tests, run logs) are not components. Adopters extend the vocabulary by editing this config, not this principle, and it is validated in CI (`tools/graph/check-graph.ts`).
+
+`supersedes` appears in the edge-type vocabulary but is **not** redefined here: it is `core.provenance.supersedes` (owned by [APR-008](APR-008-artifact-lifecycle.md)), recorded as a graph edge — the graph *derives* the edge from the provenance field rather than owning a second copy.
 
 ## Traceability by construction
 
@@ -156,3 +162,4 @@ External sources cited in this APR; see *Relationship to established patterns* f
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-06-20 | Draft | Initial draft published as APR-013. |
+| 0.2.0 | 2026-07-01 | Draft | Added §The artifact-graph config: the graph's vocabulary and node model live in a project-level config ([`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml)) — `node-types`, `edge-types`, `node-attributes` (`id`/`type`/`title`/`description`/`edges`), `roots`, `include`/`ignore` — the artifact-side sibling of the component-metadata registry (APR-014), with its own schema + CI checker (`tools/graph/check-graph.ts`). Noted `supersedes` derives from `core.provenance` (APR-008), not redefined. |

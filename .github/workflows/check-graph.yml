@@ -1,0 +1,26 @@
+name: check-graph
+
+# Gate: the artifact-graph config (registries/artifact-graph.yaml) must be internally
+# consistent — non-empty node/edge types (valid slugs), roots that reference declared
+# node-types, non-empty include globs (tools/graph/check-graph.ts). Governed by APR-013.
+# Runs on pushes and PRs to the long-lived branches.
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  check-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24" # Node >= 23.6 runs the .ts directly (native type stripping)
+      - name: Validate the artifact-graph config
+        run: node tools/graph/check-graph.ts

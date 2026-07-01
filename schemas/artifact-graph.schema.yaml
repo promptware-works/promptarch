@@ -1,0 +1,78 @@
+# Artifact Graph Config Schema (JSON Schema, expressed in YAML).
+#
+# Validates registries/artifact-graph.yaml — the project-level schema + scan rules for
+# the append-only, typed artifact graph. Governed by APR-013. The zero-dependency checker
+# tools/graph/check-graph.ts enforces the key structural + semantic constraints below in CI.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/promptware-works/promptarch/blob/main/schemas/artifact-graph.schema.yaml
+title: Artifact Graph Config
+type: object
+additionalProperties: false
+required:
+  - version
+  - node-types
+  - edge-types
+  - node-attributes
+  - roots
+  - include
+properties:
+  version:
+    description: Schema/format version of the config file itself.
+    type: integer
+    minimum: 1
+  node-types:
+    description: The node types allowed in this project's graph.
+    type: array
+    minItems: 1
+    items:
+      type: string
+      pattern: '^[a-z][a-z0-9-]*$'
+  edge-types:
+    description: >
+      Typed, directional edges. Each key is an edge-type name; its value is an
+      (optional) object that MAY constrain allowed source/target node types.
+    type: object
+    minProperties: 1
+    propertyNames:
+      pattern: '^[a-z][a-z0-9-]*$'
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      properties:
+        from:
+          type: array
+          items: { type: string }
+        to:
+          type: array
+          items: { type: string }
+  node-attributes:
+    description: >
+      The attributes every node declares in its frontmatter. `id`, `type`, `title`
+      are the mandatory node identity; each value is an object with a `required` flag.
+    type: object
+    minProperties: 1
+    propertyNames:
+      pattern: '^[a-z][a-z0-9_-]*$'
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      properties:
+        required:
+          type: boolean
+  roots:
+    description: >
+      Node types (or ids) exempt from the no-orphan rule — the graph's entry points.
+    type: array
+    minItems: 1
+    items:
+      type: string
+  include:
+    description: Globs the graph kernel scans.
+    type: array
+    minItems: 1
+    items: { type: string }
+  ignore:
+    description: Globs the graph kernel ignores.
+    type: array
+    items: { type: string }
