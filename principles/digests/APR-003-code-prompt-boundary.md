@@ -1,6 +1,6 @@
 # APR-003 — Code/Prompt Boundary — Digest
 
-> **Generated digest of [APR-003 — A Code/Prompt Boundary Principle for Promptware](../APR-003-code-prompt-boundary.md) v0.1.3.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-003 — A Code/Prompt Boundary Principle for Promptware](../APR-003-code-prompt-boundary.md) v0.1.5.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
 **Abstract.** Places deterministic, verifiable, or safety-critical behavior in code and open-ended judgment in prompts, with an explicit, typed, testable seam at every code/prompt crossing — so each behavior is verified the right way and no safety decision rests silently on a model.
 
@@ -13,6 +13,14 @@
 | One correct output a closed-form algorithm could produce | A good output given open-ended input / ambiguity |
 | arithmetic, routing on a fixed key, schema validation, dedup, idempotent transforms, access checks, parsing a known grammar | classification of ambiguous text, summarization, synthesis, intent extraction, drafting, judgment under uncertainty |
 | Verified by **unit/property tests** | Verified by **evals** (golden sets + graders) |
+
+## Declaration: `exec_form`
+
+The assurance mode is exposed as the `exec_form` axis every packaged component MUST declare ([APR-014](../APR-014-declare.md)):
+- `exec_form: code` — Deterministic; executes as code, verified by unit/property tests.
+- `exec_form: prompt` — Probabilistic; executes via a language model, verified by evals.
+
+Both values name the same axis (content form), matching this principle's *Code/Prompt* title and the APR-000 codeware/promptware dyad. A component split across both modes carries its **dominant** mode's value; `exec_form` is orthogonal to `skill_kind` ([APR-007](../APR-007-pattern-mechanism.md)).
 
 ## Drawing the seam (decide where logic lives)
 
@@ -42,4 +50,4 @@
 Not "minimize AI" (it's mode-matching — forcing genuine judgment into brittle rules violates it too) · not a runtime/execution model · not a tool-use spec (function-calling is one *mechanism* for the seam) · not a verification framework (it says *which* test/eval, not the tooling) · not a security framework (it gates safety-critical decisions but doesn't provide access control or injection defense).
 
 ---
-*Source: [APR-003 — A Code/Prompt Boundary Principle for Promptware](../APR-003-code-prompt-boundary.md) v0.1.3 · regenerate this digest whenever the source changes.*
+*Source: [APR-003 — A Code/Prompt Boundary Principle for Promptware](../APR-003-code-prompt-boundary.md) v0.1.5 · regenerate this digest whenever the source changes.*

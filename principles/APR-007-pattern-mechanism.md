@@ -3,13 +3,13 @@ apr: 7
 title: "A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior"
 abstract: "A reusable unit of agent/skill behavior — a pattern — is a first-class, named, versioned artifact applied declaratively (via applies_patterns): behavioral prose plus optional structural obligations, defined once in patterns/, composed orthogonally, and never copy-pasted into prose."
 status: Draft
-version: 0.1.0
+version: 0.1.2
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-05-31
-last-updated: 2026-05-31
+last-updated: 2026-07-01
 audience: Architects and framework authors of agentic AI platforms; anyone maintaining several skills/agents that share behavioral conventions
 supersedes: []
 superseded-by: []
@@ -18,12 +18,16 @@ related:
   - APR-002
   - APR-004
   - APR-005
+  - APR-006
+  - APR-014
 tags:
   - patterns
   - reuse
   - behavior
   - aspect-oriented
   - composition
+  - skill_kind
+  - classification
 ---
 
 # APR-007 — A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior
@@ -64,6 +68,22 @@ A pattern is **applied**, not **invoked** — that is the line that separates it
 - **Prose plus structural obligations.** A pattern carries reusable behavioral prose/guardrails, **and MAY impose structural requirements on its host** — e.g., "any component applying `evidence-grounding` MUST have an `evidence[]` output field," or "MUST include a `When NOT to Apply` section." Those obligations are enforced by governance. (This makes a pattern a *superset* of a vendor instruction file like a Copilot instruction or Cursor rule, which carries prose but cannot require host structure.)
 - **Named and single-concern.** Each pattern addresses one concern and has a stable name used in `applies_patterns`.
 
+## Skill kind: capability and pattern
+
+Every packaged promptware component belongs to one of two canonical kinds, declared as `skill_kind` per [APR-014 DECLARE](APR-014-declare.md):
+
+- **`skill_kind: capability`** — an **invocable** unit with its own typed I/O contract; a node in the delegation graph ([APR-006](APR-006-composition-topology.md)) that is *called* at runtime. APR-006's agents and skill leaves are both capabilities.
+- **`skill_kind: pattern`** — an **applied** unit with no independent I/O contract; woven into a host component at load or materialization time (§ *Applying a pattern*) to shape the host's behavior without being called directly.
+
+The test is identical to the applied/invoked distinction above: if you would *call* it → `capability`; if you would *attach* it to augment another component → `pattern`.
+
+`skill_kind` is orthogonal to `exec_form` ([APR-003](APR-003-code-prompt-boundary.md)): a capability may execute as `code` or `prompt`; a pattern likewise. The cross-product has concrete verification and dispatch implications:
+
+| | `exec_form: prompt` | `exec_form: code` |
+| --- | --- | --- |
+| **`skill_kind: capability`** | invocable skill, model-run — eval-gated | invocable tool/function, code-run — unit-tested |
+| **`skill_kind: pattern`** | behavioral prose woven at load — eval-gated on host | code hook woven at load — unit-tested independently |
+
 ## Applying a pattern
 
 - A component declares the patterns it applies in frontmatter: `applies_patterns: [evidence-grounding, untrusted-input-tagging]`. It **MUST NOT** inline a pattern's text.
@@ -99,6 +119,7 @@ Patterns reuse OBSERVE's discipline wholesale:
 - Patterns **SHOULD** be orthogonal; stacked patterns apply in **declared order**; contradictory patterns are a governance error.
 - Patterns **MUST** be versioned; changes follow OBSERVE's additive/evolutionary/breaking classification with impact analysis over all appliers; each application is audit-logged with the consumed version.
 - Application resolves from the single canonical source — injected at load time (loader runtimes) or woven at materialization (static runtimes); never copy-pasted.
+- A component's `skill_kind` **MUST** be declared in machine-readable frontmatter (`skill_kind: capability | pattern`) per [APR-014](APR-014-declare.md); the declared value MUST match the component's actual role (invocable with I/O contract vs. applied/woven augmentation).
 
 ## Governance and validation
 
@@ -112,6 +133,7 @@ A conformant platform checks, in review or CI:
 - **No orphans** — every pattern is applied by at least one component.
 - **Versioned propagation** — pattern changes run impact analysis over appliers; breaking changes carry an ADR + deprecation window.
 - **Audit binding** — each application records the consumed pattern version.
+- **`skill_kind` declared.** Every packaged component carries `skill_kind: capability` or `skill_kind: pattern`; its declared value agrees with whether it is invoked with its own I/O contract or applied/woven into a host.
 
 ## What this principle is NOT
 
@@ -124,7 +146,7 @@ A conformant platform checks, in review or CI:
 ## Relationship to established patterns
 
 | Pattern | What it shares with this APR | What this APR adds |
-|---|---|---|
+| --- | --- | --- |
 | **Aspect-oriented programming** (AspectJ) | Cross-cutting concerns applied declaratively, not scattered | The "advice" is reusable *behavioral prose* woven into LLM-agent specs; governed, versioned, conflict-checked |
 | **Design patterns** (GoF) | Named, reusable solutions to recurring problems | Patterns are *applied artifacts*, not documentation — referenced and woven in, not re-implemented |
 | **Policy-as-code admission control** (OPA Gatekeeper) | Declarative constraints applied to many resources | Constraints are behavioral + structural obligations on promptware components |
@@ -152,5 +174,7 @@ External sources referenced in this APR; see *Relationship to established patter
 ## Change log
 
 | Version | Date | Status | Change |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 0.1.0 | 2026-05-31 | Draft | Initial draft published as APR-007. |
+| 0.1.1 | 2026-06-26 | Draft | Added §"Skill kind: capability and pattern" naming `skill_kind: capability \| pattern` as the machine-readable declaration axis; added `skill_kind` to Prescription and Governance checks; cross-referenced APR-014 DECLARE and APR-003. |
+| 0.1.2 | 2026-07-01 | Draft | Renamed the `exec_form` values `script`→`code` and `llm`→`prompt` in the `skill_kind`×`exec_form` cross-product, tracking the APR-003/APR-000 harmonization (`exec_form: code \| prompt`). No semantic change to the pattern principle. |

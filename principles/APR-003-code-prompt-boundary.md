@@ -3,13 +3,13 @@ apr: 003
 title: "A Code/Prompt Boundary Principle for Promptware"
 abstract: "Places deterministic, verifiable, or safety-critical behavior in code and open-ended judgment in prompts, with an explicit, typed, testable seam at every code/prompt crossing — so each behavior is verified the right way and no safety decision rests silently on a model."
 status: Draft
-version: 0.1.3
+version: 0.1.5
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-05-29
-last-updated: 2026-05-30
+last-updated: 2026-07-01
 audience: Architects and framework authors of agentic AI platforms; anyone deciding whether logic executes as code or as a prompt
 supersedes: []
 superseded-by: []
@@ -17,12 +17,15 @@ related:
   - APR-000
   - APR-001
   - APR-002
+  - APR-014
 tags:
   - determinism
   - code-prompt-boundary
   - architecture
   - verifiability
   - tool-use
+  - exec_form
+  - classification
 ---
 
 # APR-003 — A Code/Prompt Boundary Principle for Promptware
@@ -67,6 +70,15 @@ This is not "use less AI." It is "put each behavior where its guarantees can be 
 
 A behavior whose dominant mode is Deterministic but which is *currently* implemented as a prompt is a violation of this principle **only when a deterministic implementation is reasonably available**. When none exists (the deterministic version is itself an unsolved problem), the prompt is the legitimate home — see §4.
 
+## 3.1 The `exec_form` declaration axis
+
+The assurance mode is exposed as the `exec_form` declaration axis that every packaged component MUST carry per [APR-014 DECLARE](APR-014-declare.md):
+
+- `exec_form: code` — Deterministic mode; the component executes as code and is verified by unit/property tests.
+- `exec_form: prompt` — Probabilistic mode; the component executes via a language model and is verified by evals.
+
+A component decomposed into both modes (§4 point 3) carries the `exec_form` of its **dominant** mode; the seam between the two substrates is governed by §5. `exec_form` is orthogonal to `skill_kind` ([APR-007](APR-007-pattern-mechanism.md)): both a capability and a pattern may be `code` or `prompt`.
+
 ## 4. Drawing the seam
 
 To place a unit of behavior, apply this test in order:
@@ -96,6 +108,7 @@ A correctly drawn seam is what makes a behavior *swappable*: a prompt placeholde
 - Safety-critical decisions (allow/deny, severity, exposure, anything affecting access control, secrets, or audit) **MUST NOT** rest solely on a probabilistic substrate; a deterministic check **MUST** gate or bound the probabilistic judgment.
 - A component's [ASPECT](APR-001-aspect.md) `Procedure` / `Algorithm` section **SHOULD** mark, per step, whether the step is code or prompt, so the seam is visible in the spec, not just the implementation.
 - A behavior placed in `prompt` provisionally (§4.4) **SHOULD** record the intent to migrate and the contract the future code implementation will honor.
+- A component's `exec_form` **MUST** be declared in machine-readable frontmatter (`exec_form: code | prompt`) per [APR-014](APR-014-declare.md); the declared value MUST match the actual substrate.
 
 ## 7. Governance and validation
 
@@ -106,6 +119,7 @@ A conformant platform checks, in review or CI:
 - **Verification matches mode.** Deterministic behaviors have unit tests; probabilistic behaviors have evals. A behavior with neither, or the wrong one, is flagged.
 - **Safety gating.** Safety-critical paths show a deterministic check bounding any probabilistic step.
 - **Provisional placements are tracked.** §4.4 prompt-placeholders carry their migration intent and contract, so they are not forgotten.
+- **`exec_form` declared and consistent.** Every packaged component carries `exec_form: code` or `exec_form: prompt`; the declared value agrees with its actual verification discipline (unit test vs. eval gate).
 
 Two-tier enforcement, per [APR-010](APR-010-governance.md): schema/test presence is automatable; the *classification judgment* (is this behavior really probabilistic?) is a human review concern.
 
@@ -155,3 +169,5 @@ External sources referenced in this APR; see §9 *Relationship to established pa
 | 0.1.1 | 2026-05-30 | Draft | Added References section. No semantic change. |
 | 0.1.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
 | 0.1.3 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |
+| 0.1.4 | 2026-06-26 | Draft | Added §3.1 naming `exec_form: script \| llm` as the machine-readable declaration axis for the assurance mode; added `exec_form` to Prescription and Governance checks; cross-referenced APR-014 DECLARE and APR-007. |
+| 0.1.5 | 2026-07-01 | Draft | Renamed both `exec_form` values onto one consistent axis (content form): `script`→`code` and `llm`→`prompt`, so the pair matches this principle's "Code/Prompt" title and the APR-000 promptware/codeware dyad. Value set is now `exec_form: code \| prompt`. No change to the boundary rule. |

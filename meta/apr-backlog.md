@@ -29,6 +29,7 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Observability & cost | End-to-end traces over the delegation graph linking behavior to artifact/model versions and injected content, with cost as a first-class attributed, budgeted dimension. | ✍️ Drafted | [APR-011](../principles/APR-011-observability.md) · issue #9 |
 | Federated composition (cross-domain) | Composition *across* a trust/identity boundary (farms → federation): governed membership, authenticated participants, least-privilege non-ambient cross-domain trust. Forward-looking (emerging scale); L3-centered, L4 noted. | ✍️ Drafted | [APR-012](../principles/APR-012-federated-composition.md) · issue #10 |
 | Artifact graph (single source of truth) | A project's canonical state is one append-only, typed artifact graph across the lifecycle; traceability is a path through edges emitted as a side effect of production; tools are projections, not parallel systems of record; baselines are signed checkpoints. | ✍️ Drafted | [APR-013](../principles/APR-013-artifact-graph.md) · draft (no issue yet) |
+| Declared classification (DECLARE) | A packaged component declares its architectural classification as orthogonal machine-readable frontmatter; tooling/structure/dispatch derive from the declaration; format/name/location never imply role (the "costume" failure). The frontmatter sibling ASPECT defers. | ✍️ Drafted | [APR-014](../principles/APR-014-declare.md) · draft (no issue yet) |
 
 ## Idea backlog (not yet proposed)
 

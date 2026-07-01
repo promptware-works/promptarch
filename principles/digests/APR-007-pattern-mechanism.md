@@ -1,6 +1,6 @@
 # APR-007 — Pattern Mechanism — Digest
 
-> **Generated digest of [APR-007 — A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior](../APR-007-pattern-mechanism.md) v0.1.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-007 — A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior](../APR-007-pattern-mechanism.md) v0.1.2.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
 **Abstract.** A reusable unit of agent/skill behavior — a pattern — is a first-class, named, versioned artifact applied declaratively (via `applies_patterns`): behavioral prose plus optional structural obligations, defined once in `patterns/`, composed orthogonally, and never copy-pasted into prose.
 
@@ -11,6 +11,15 @@
 - **Applied, not invoked.** Woven into a component's spec; no independent I/O contract. Test: if you'd *call* it → skill; if you'd *attach* it → pattern.
 - **Prose + structural obligations.** Reusable behavioral prose/guardrails, AND it MAY require host structure (e.g., "appliers of `evidence-grounding` MUST have an `evidence[]` field"). A *superset* of a Copilot instruction / Cursor rule (which can't require host structure).
 - **Named, single-concern**, referenced in `applies_patterns`.
+
+## Declaration: `skill_kind` × `exec_form`
+
+`skill_kind: capability | pattern` is the declared axis ([APR-014](../APR-014-declare.md)) for applied-vs-invoked. It is **orthogonal** to `exec_form: code | prompt` ([APR-003](../APR-003-code-prompt-boundary.md)) — either kind may be either substrate:
+
+| | `exec_form: prompt` | `exec_form: code` |
+|---|---|---|
+| `skill_kind: capability` | invocable skill, model-run — eval-gated | invocable tool/function, code-run — unit-tested |
+| `skill_kind: pattern` | behavioral prose woven at load — eval-gated on host | code hook woven at load — unit-tested independently |
 
 ## Normative rules
 
@@ -34,4 +43,4 @@ No inline duplication (reference, don't embed) · structural obligations met by 
 Not a catalogue (defines the mechanism; patterns are governed content) · not a skill mechanism (skills are invoked graph nodes) · not an OBSERVE category (behavioral, not non-behavioral) · not a vendor instruction format (a Copilot instruction / Cursor rule is one *materialization* of a pattern) · not inheritance (composition by declarative application + orthogonality).
 
 ---
-*Source: [APR-007 — A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior](../APR-007-pattern-mechanism.md) v0.1.0 · regenerate this digest whenever the source changes.*
+*Source: [APR-007 — A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior](../APR-007-pattern-mechanism.md) v0.1.2 · regenerate this digest whenever the source changes.*

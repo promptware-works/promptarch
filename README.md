@@ -19,7 +19,7 @@ APRs differ from ADRs (*Architectural Decision Records*): an ADR captures a poin
 
 ## What is "promptware"?
 
-We use **promptware** to distinguish *content-centric* software — where the operative content is prose, prompts, specifications, ontology, examples, evals — from *code-centric*, deterministic software.
+We treat **software** as an umbrella over two classes. **Promptware**'s dominant runtime behaviour is shaped by *content* — prose, prompts, specifications, ontology, examples, evals — interpreted by LLM agents at execution time. **Codeware**'s is governed by formal instructions run under fixed semantics by a compiler or interpreter. What separates them is the *interpreter's semantics* (model-probabilistic vs. formal-mechanical), not merely prose-vs-code — see [APR-000](principles/APR-000-promptware.md).
 
 A promptware system is one where editing a Markdown file or a YAML file can materially change runtime behavior, because that file is loaded into an agent's context at execution time. This shifts the engineering discipline: drift is silent, audit becomes interpretation, change impact is invisible without governance. PROMPTARCH is the principles layer that addresses those shifts.
 
