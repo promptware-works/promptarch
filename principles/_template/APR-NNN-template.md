@@ -29,27 +29,37 @@ The body structure below is ADVISORY. APRs vary in shape — a framework spec
 (APR-002 OBSERVE). The "right" section ordering is the one that best serves
 the principle.
 
-What every APR MUST cover, in some recognisable form:
+What every APR MUST cover, in some recognisable form (content role in brackets
+per meta/apr-process.md §3.1 — this is authoring guidance; do NOT print the
+role tags in the APR itself):
 
-  ☐ MOTIVATION             — what goes wrong without this principle?
-  ☐ THE PRINCIPLE          — a one-line `>` callout immediately after the H1
-                             (per the skeleton), expanded later in the body
-  ☐ SCOPE                  — positive case (when this applies)
-  ☐ NEGATIVE SCOPE         — explicit "what this is NOT" / when it doesn't apply
-  ☐ PRESCRIPTION           — actionable content; tables/lists over prose
-  ☐ PRIOR ART              — honest accounting of related established patterns
-  ☐ CHANGE LOG             — version history at the bottom
+  ☐ MOTIVATION       (informative) — what goes wrong without this principle?
+  ☐ THE PRINCIPLE    (normative)   — a one-line `>` callout immediately after the
+                                     H1 (per the skeleton), expanded later
+  ☐ SCOPE            (normative)   — positive case (when this applies)
+  ☐ NEGATIVE SCOPE   (normative)   — explicit "what this is NOT" / when it doesn't apply
+  ☐ PRESCRIPTION     (normative)   — actionable requirements; tables/lists over prose
+  ☐ PRIOR ART        (informative) — honest accounting of related established patterns
+  ☐ CHANGE LOG       (metadata)    — version-history table at the BODY bottom: a
+                                     human-readable revision trail, not injected (§3.1)
 
 What every APR SHOULD cover when applicable:
 
-  ☐ GOVERNANCE             — what does a conformant adopter check / enforce?
-  ☐ ADOPTION NOTES         — phased migration, pitfalls, measurement protocols
-  ☐ WORKED VARIANTS        — if the principle has multiple variants, describe each
-  ☐ REFERENCES             — external sources cited with resolvable links (back the PRIOR ART claims)
+  ☐ GOVERNANCE       (normative)   — what a conformant adopter checks / enforces
+  ☐ ADOPTION NOTES   (informative) — phased migration, pitfalls, measurement protocols
+  ☐ WORKED VARIANTS  (informative) — if the principle has multiple variants, describe each
+  ☐ REFERENCES       (informative) — external sources cited with resolvable links
 
 Pick headings that fit your principle. Reviewers verify that the required
 concerns are addressed and findable, not that headings match this template
 verbatim.
+
+SIGNALLING NORMATIVITY — do NOT tag section headings in the APR (no
+"(Normative)"/"(Informative)" suffixes; they contaminate titles and heading
+anchors). The roles above are a fixed convention (meta/apr-process.md §3.1);
+binding force is carried inline by capitalised RFC 2119 keywords — MUST /
+SHOULD / MAY (RFC 8174: only the uppercase forms bind). The digest distils the
+normative sections and is the operational normative extract.
 
 The skeleton below is one workable shape — reorder, rename, or merge sections
 as the principle requires.

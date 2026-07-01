@@ -44,6 +44,16 @@ A draft APR is a PR against the `main` branch (or its successor) adding a new fi
 
 The APR file is created with `status: Draft`. Numbering follows [`apr-numbering.md`](apr-numbering.md). Frontmatter MUST conform to [`schemas/apr-frontmatter.schema.yaml`](../schemas/apr-frontmatter.schema.yaml).
 
+### 3.1 Content roles: normative, informative, metadata
+
+An APR is a *document*, not an injected prompt — the injectable artifact is its [digest](../principles/digests/), which is where the "functional-only, no metadata" discipline of [APR-014 DECLARE](../principles/APR-014-declare.md) actually bites. The APR body therefore legitimately carries rationale and a revision trail. Three content roles, each with a home and a signal — but the APR body is **never** mutated to label them:
+
+- **Normative** — the binding content: the `>` principle callout, *The principle* / *The position*, *Scope and applicability*, *Prescription*, *Governance and validation*, and *What this … is NOT*. Binding force is carried **inline by capitalised RFC 2119 keywords** (MUST / SHOULD / MAY); per RFC 8174 only the uppercase forms bind, so a lowercase "must" in prose is non-normative. These sections are the basis of the digest.
+- **Informative** — rationale and guidance: *Motivation*, *Relationship to established patterns*, *Adoption notes*, worked examples, naming discussion, *References*. Non-binding; a digest MAY omit them.
+- **Metadata** — `apr`, `version`, `status`, `principals`, dates, `supersedes` / `superseded-by`, `related`, `tags`: frontmatter only (DECLARE). The **change log stays in the body** as a human-readable revision trail — a document convention, not injected content, so it costs no runtime tokens.
+
+Sections are **not** tagged in the APR text (no `(Normative)` / `(Informative)` suffixes — they contaminate titles and heading anchors). The role list above is a fixed convention; normativity is visible from the RFC 2119 keywords. The **digest is the operational normative extract**: it distils the principle and prescription and drops the informative apparatus and the metadata.
+
 ## 4. Review
 
 When the author considers the draft complete, they update `status` to `Proposed` and request review. Reviewers check:
