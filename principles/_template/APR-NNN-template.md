@@ -48,6 +48,9 @@ What every APR SHOULD cover when applicable:
   ☐ GOVERNANCE       (normative)   — what a conformant adopter checks / enforces
   ☐ ADOPTION NOTES   (informative) — phased migration, pitfalls, measurement protocols
   ☐ WORKED VARIANTS  (informative) — if the principle has multiple variants, describe each
+  ☐ METADATA REGS    (normative)   — if the APR introduces frontmatter metadata fields,
+                                     register them here + in registries/component-metadata.yaml
+                                     (APR-014 §The metadata registry) — never edit APR-014
   ☐ REFERENCES       (informative) — external sources cited with resolvable links
 
 Pick headings that fit your principle. Reviewers verify that the required
@@ -118,6 +121,16 @@ The goal is contribution, not novelty for novelty's sake. Adopters evaluating th
 ## Adoption notes (if applicable)
 
 Tips for adopters: phased migration patterns, common pitfalls, measurement protocols.
+
+## Metadata registrations (if the APR introduces frontmatter fields)
+
+If this APR introduces or owns any component-metadata field (a frontmatter attribute governed by [APR-014 DECLARE](APR-014-declare.md)), register it here — one row per field — and add the matching entries to [`registries/component-metadata.yaml`](../../registries/component-metadata.yaml). Do **not** edit APR-014 to add a field.
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `<field>` | classification | enum | `x, y, z` | active |
+
+Custom / platform-specific fields that no principle owns are **not** registered — they live under the frontmatter `metadata` object as namespaced keys (`x-<vendor>-*`).
 
 ## References
 

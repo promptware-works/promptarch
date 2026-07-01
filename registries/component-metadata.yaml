@@ -1,0 +1,172 @@
+# Component Metadata Registry
+#
+# The authoritative list of CANONICAL frontmatter metadata fields for promptware
+# components (skills, agents, prompts). Governed by APR-014 DECLARE.
+#
+# - Each canonical field is owned by exactly one APR (the `owner`) and lives in one
+#   cluster. Field names MUST be unique across this registry (collision = error).
+# - A field is added HERE by the APR that introduces it (via that APR's "Metadata
+#   registrations" section) — never by editing APR-014 or other APRs.
+# - Non-owned / platform-specific fields are NOT registered here: they live under
+#   the frontmatter `metadata` object as namespaced custom keys (e.g. `x-<vendor>-*`),
+#   un-governed by the corpus. Example: `domain`.
+# - `status`: active (in use) | provisional (owner/cluster not yet ratified by an
+#   accepted APR "Metadata registrations" section) | deprecated | reserved.
+#
+# See docs/studies/metadata-extensibility.md for rationale and prior art (RFC 8126).
+
+registry_version: 1
+
+# Cluster set (the structural homes). Clusters nest under the top-level `metadata`
+# object per APR-014. New clusters are registered the same way as fields.
+clusters:
+  - name: classification
+    owners: [APR-003, APR-005, APR-006, APR-007, APR-009]
+  - name: operability
+    owners: [APR-008, APR-011]
+  - name: provenance
+    owners: [APR-010, APR-008]
+  - name: evaluation
+    owners: [APR-002, APR-008]
+  - name: composition
+    owners: [APR-006, APR-007, APR-009]
+
+# Canonical fields (seeded from the corpus as of v0.3.0; owning APRs confirm/correct
+# via their "Metadata registrations" section).
+fields:
+  # --- classification ---
+  - name: exec_form
+    cluster: classification
+    owner: APR-003
+    type: enum
+    values: [code, prompt]
+    status: active
+    since: "APR-003 0.1.5"
+  - name: skill_kind
+    cluster: classification
+    owner: APR-007
+    type: enum
+    values: [capability, pattern]
+    status: active
+    since: "APR-007 0.1.1"
+  - name: trust_level
+    cluster: classification
+    owner: APR-005
+    type: enum
+    values: [trusted, semi-trusted, untrusted]
+    status: active
+    since: "APR-005 0.1.0"
+  - name: agency
+    cluster: classification
+    owner: APR-006
+    type: enum
+    values: [leaf, coordinator]
+    status: active
+    since: "APR-006 0.1.0"
+  - name: max_autonomy_level
+    cluster: classification
+    owner: APR-009
+    type: enum
+    values: [L1, L2, L3, L4, L5]
+    status: provisional          # ratify when APR-009 adds its registrations section
+    since: "APR-014 0.2.2"
+  - name: max_blast_radius
+    cluster: classification
+    owner: APR-009
+    type: enum
+    values: [local-only, project-scoped, cross-project, external]
+    status: provisional
+    since: "APR-014 0.2.2"
+
+  # --- composition ---
+  - name: applies_patterns
+    cluster: composition
+    owner: APR-007
+    type: list                   # list of pattern ids
+    status: active
+    since: "APR-007 0.1.0"
+  - name: delegation_envelope
+    cluster: composition
+    owner: APR-006
+    type: object                 # { max_depth: int, allowed_skills: [skill-id] }
+    status: active
+    since: "APR-006 0.1.0"
+  - name: escalation_triggers
+    cluster: composition
+    owner: APR-009
+    type: list                   # list of "<action> (level)"
+    status: provisional
+    since: "APR-014 0.2.2"
+  - name: escalation_path
+    cluster: composition
+    owner: APR-009
+    type: string
+    status: provisional
+    since: "APR-014 0.2.2"
+
+  # --- evaluation ---
+  - name: evaluated_by
+    cluster: evaluation
+    owner: APR-002
+    type: ref-list               # references to eval sets
+    status: active
+    since: "APR-002 0.1.0"
+  - name: min_eval_score
+    cluster: evaluation
+    owner: APR-002
+    type: number
+    status: active
+    since: "APR-002 0.1.0"
+  - name: model_pin
+    cluster: evaluation
+    owner: APR-008
+    type: string
+    status: active
+    since: "APR-008 0.1.0"
+
+  # --- provenance ---
+  - name: version
+    cluster: provenance
+    owner: APR-008
+    type: string                 # semver
+    status: active
+    since: "APR-008 0.1.0"
+  - name: supersedes
+    cluster: provenance
+    owner: APR-008
+    type: string                 # prior component id
+    status: provisional
+    since: "APR-001 0.3.1"
+  - name: principals
+    cluster: provenance
+    owner: APR-010
+    type: list
+    status: active
+    since: "APR-010 0.1.0"
+  - name: status
+    cluster: provenance
+    owner: APR-010
+    type: enum
+    values: [Draft, Stable, Deprecated]
+    status: active
+    since: "APR-010 0.1.0"
+
+  # --- operability ---
+  - name: ticket
+    cluster: operability
+    owner: APR-008
+    type: string
+    status: provisional
+    since: "APR-014 0.2.0"
+  - name: resolution
+    cluster: operability
+    owner: APR-008
+    type: string
+    status: provisional
+    since: "APR-014 0.2.0"
+  - name: trace_anchor
+    cluster: operability
+    owner: APR-011
+    type: string
+    status: provisional
+    since: "APR-014 0.2.0"

@@ -54,6 +54,14 @@ An APR is a *document*, not an injected prompt — the injectable artifact is it
 
 Sections are **not** tagged in the APR text (no `(Normative)` / `(Informative)` suffixes — they contaminate titles and heading anchors). The role list above is a fixed convention; normativity is visible from the RFC 2119 keywords. The **digest is the operational normative extract**: it distils the principle and prescription and drops the informative apparatus and the metadata.
 
+### 3.2 Registering component-metadata fields
+
+If an APR introduces a **component-metadata field** (a frontmatter attribute for skills/agents/prompts, governed by [APR-014 DECLARE](../principles/APR-014-declare.md)), it registers the field **itself** — it does **not** edit APR-014 or another APR:
+
+- Add a **Metadata registrations** section to the APR listing each field (name, cluster, type, values, status).
+- On acceptance, add the matching entries to the registry, [`registries/component-metadata.yaml`](../registries/component-metadata.yaml). Field names are **unique** across the registry — a collision blocks acceptance (reviewers check this).
+- Custom / platform-specific fields that no principle owns are **not** registered; they live under the frontmatter `metadata` object as namespaced keys (`x-<vendor>-*`). See [APR-014 §The metadata registry](../principles/APR-014-declare.md).
+
 ## 4. Review
 
 When the author considers the draft complete, they update `status` to `Proposed` and request review. Reviewers check:
