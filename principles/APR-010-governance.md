@@ -129,6 +129,15 @@ This APR is the **source**; each domain APR's "Governance and validation" sectio
 
 The novel contribution is a **promptware-specific governance principle**: the reconstructed conformance safety net, defined as a two-tier apparatus (automatable fitness functions + human review) with universal audit-binding and change-control — the canonical model every domain APR instantiates, with RBAC, versioning, and telemetry explicitly delegated.
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `principals` | provenance | list | — | active |
+| `status` | provenance | enum | `Draft, Stable, Deprecated` | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.

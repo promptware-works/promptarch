@@ -146,6 +146,17 @@ A conformant platform checks, in review or CI:
 
 The novel contribution is a **promptware-specific oversight-placement principle**: two modes selected by reversibility, rigor tuned by blast radius, with declared (not guessed) reversibility, a concrete-diff approval payload, a judgment-feedback loop, and a fatigue discipline bounded by a hard safety floor — composing with ASPECT autonomy levels, APR-003 (the gate as a deterministic check), APR-005 (fail-safe escalation), and APR-006 (escalation up the graph).
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `max_autonomy_level` | classification | enum | `L1, L2, L3, L4, L5` | active |
+| `max_blast_radius` | classification | enum | `local-only, project-scoped, cross-project, external` | active |
+| `escalation_triggers` | composition | list | — | active |
+| `escalation_path` | composition | string | — | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.

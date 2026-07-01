@@ -154,6 +154,15 @@ A conformant platform checks, in review or CI:
 
 The novel contribution is a **promptware-specific pattern mechanism**: reusable behavior as a first-class, named, versioned, declaratively-applied artifact — prose plus structural obligations, composed orthogonally, audited — the behavioral complement to OBSERVE and the definition behind ASPECT's `applies_patterns`.
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `skill_kind` | classification | enum | `capability, pattern` | active |
+| `applies_patterns` | composition | list | — | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.

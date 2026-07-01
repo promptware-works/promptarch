@@ -143,6 +143,15 @@ A conformant platform checks, in review or CI:
 
 The novel contribution is a **promptware-specific composition principle**: agent-vs-skill granularity, a DAG-default bounded topology, a declared-envelope/dynamic-path graph, termination by construction, and authority that only narrows down each edge — composing with ASPECT (per-edge contracts), APR-003 (router determinism), and APR-005 (delegate output as untrusted input).
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `agency` | classification | enum | `leaf, coordinator` | active |
+| `delegation_envelope` | composition | object | `{ max_depth, allowed_skills }` | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.

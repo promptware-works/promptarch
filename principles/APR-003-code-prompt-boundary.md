@@ -149,6 +149,14 @@ The novel contribution is a **promptware-specific placement principle**: classif
 - **Introduce the seam contract before relocating logic** — type the crossing first, then move the implementation behind it, so consumers never see churn.
 - **Expect decomposition.** Many "single" behaviors are a probabilistic judgment plus a deterministic computation fused together; adopting this principle surfaces and splits them, which usually clarifies the spec.
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `exec_form` | classification | enum | `code, prompt` | active |
+
 ## References
 
 External sources referenced in this APR; see §9 *Relationship to established patterns* for how each relates.

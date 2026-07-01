@@ -125,6 +125,14 @@ A conformant platform checks, in review or CI:
 
 The novel contribution is a **promptware-specific observability+cost principle**: a single instrumentation serving both the immutable audit record and a delegation-graph trace, carrying content/model versions and per-call cost that rolls up the graph, with tiered cost budgets and production drift-monitoring against the eval baseline — distinct from, and built on, the audit-binding APR-010 defines.
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `trace_anchor` | operability | string | — | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.

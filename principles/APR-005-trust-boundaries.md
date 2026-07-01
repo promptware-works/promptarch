@@ -124,6 +124,14 @@ A conformant platform checks, in review or CI:
 
 The novel contribution is a **promptware-specific trust discipline** unifying ingress classification, the untrusted-as-data rule, category/author authority boundaries, and provenance — composing with ASPECT (security-sensitive specs), OBSERVE (the RBAC/injection/provenance gaps §10 lists), APR-003 (deterministic gating of safety decisions), and APR-004 (provenance of materialized content).
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `trust_level` | classification | enum | `trusted, semi-trusted, untrusted` | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.

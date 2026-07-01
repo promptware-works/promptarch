@@ -396,6 +396,15 @@ Platform-specific adoption plans provide concrete examples of this pattern. Phas
 
 ---
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `evaluated_by` | evaluation | ref-list | — | active |
+| `min_eval_score` | evaluation | number | — | active |
+
 ## References
 
 External sources referenced in this APR; see §13 *Relationship to Established Patterns* for how each relates.

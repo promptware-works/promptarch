@@ -68,14 +68,14 @@ fields:
     owner: APR-009
     type: enum
     values: [L1, L2, L3, L4, L5]
-    status: provisional          # ratify when APR-009 adds its registrations section
+    status: active
     since: "APR-014 0.2.2"
   - name: max_blast_radius
     cluster: classification
     owner: APR-009
     type: enum
     values: [local-only, project-scoped, cross-project, external]
-    status: provisional
+    status: active
     since: "APR-014 0.2.2"
 
   # --- composition ---
@@ -95,13 +95,13 @@ fields:
     cluster: composition
     owner: APR-009
     type: list                   # list of "<action> (level)"
-    status: provisional
+    status: active
     since: "APR-014 0.2.2"
   - name: escalation_path
     cluster: composition
     owner: APR-009
     type: string
-    status: provisional
+    status: active
     since: "APR-014 0.2.2"
 
   # --- evaluation ---
@@ -135,7 +135,7 @@ fields:
     cluster: provenance
     owner: APR-008
     type: string                 # prior component id
-    status: provisional
+    status: active
     since: "APR-001 0.3.1"
   - name: principals
     cluster: provenance
@@ -152,21 +152,9 @@ fields:
     since: "APR-010 0.1.0"
 
   # --- operability ---
-  - name: ticket
-    cluster: operability
-    owner: APR-008
-    type: string
-    status: provisional
-    since: "APR-014 0.2.0"
-  - name: resolution
-    cluster: operability
-    owner: APR-008
-    type: string
-    status: provisional
-    since: "APR-014 0.2.0"
   - name: trace_anchor
     cluster: operability
     owner: APR-011
     type: string
-    status: provisional
+    status: active
     since: "APR-014 0.2.0"

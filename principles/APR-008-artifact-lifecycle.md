@@ -126,6 +126,16 @@ A conformant platform checks, in review or CI:
 
 The novel contribution is a **promptware-specific lifecycle principle** that unifies versioning/deprecation/supersession across all runtime artifacts **and** treats the model as a pinned, eval-validated dependency — so model upgrades are disciplined, tiered-gated migrations rather than silent regressions, with the migration surface bounded to the prompt substrate by APR-003.
 
+## Metadata registrations
+
+Component-metadata fields this APR owns, registered per [APR-014 §The metadata registry](APR-014-declare.md) in [`registries/component-metadata.yaml`](../registries/component-metadata.yaml):
+
+| Field | Cluster | Type | Values | Status |
+|---|---|---|---|---|
+| `version` | provenance | string | — | active |
+| `supersedes` | provenance | string | — | active |
+| `model_pin` | evaluation | string | — | active |
+
 ## References
 
 External sources referenced in this APR; see *Relationship to established patterns* for how each relates.
