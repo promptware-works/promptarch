@@ -1,0 +1,78 @@
+# Component Metadata Registry Schema (JSON Schema, expressed in YAML).
+#
+# Validates registries/component-metadata.yaml — the authoritative list of canonical
+# frontmatter metadata fields for promptware components. Governed by APR-014 DECLARE
+# (§ The metadata registry). The zero-dependency checker tools/registry/check-registry.ts
+# enforces the key structural + semantic constraints below in CI.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/promptware-works/promptarch/blob/main/schemas/component-metadata.schema.yaml
+title: Component Metadata Registry
+type: object
+additionalProperties: false
+required:
+  - registry_version
+  - clusters
+  - fields
+properties:
+  registry_version:
+    description: Schema/format version of the registry file itself.
+    type: integer
+    minimum: 1
+  clusters:
+    description: >
+      The cluster set — the structural homes that nest under a component's top-level
+      `metadata` object. Each cluster is owned by one or more principles.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [name, owners]
+      properties:
+        name:
+          type: string
+          pattern: '^[a-z][a-z0-9_]*$'
+        owners:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            pattern: '^APR-\d{3,}$'
+  fields:
+    description: >
+      Canonical fields. Each is owned by exactly one APR and lives in one cluster.
+      Field `name` values MUST be unique across the array (collision = error).
+      Registered by the owning APR's "Metadata registrations" section, never by
+      editing APR-014.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [name, cluster, owner, type, status]
+      properties:
+        name:
+          description: Frontmatter field name (snake_case).
+          type: string
+          pattern: '^[a-z][a-z0-9_]*$'
+        cluster:
+          description: Must be one of the declared cluster names.
+          type: string
+          pattern: '^[a-z][a-z0-9_]*$'
+        owner:
+          description: The single owning APR.
+          type: string
+          pattern: '^APR-\d{3,}$'
+        type:
+          type: string
+          enum: [enum, list, ref-list, object, string, number]
+        values:
+          description: Permitted values (for enum-typed fields).
+          type: array
+        status:
+          type: string
+          enum: [active, provisional, deprecated, reserved]
+        since:
+          description: Free-form provenance, e.g. "APR-003 0.1.5".
+          type: string

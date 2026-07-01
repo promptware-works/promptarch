@@ -12,6 +12,14 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
 
   Exits non-zero on drift, so it gates CI — [`.github/workflows/check-digests.yml`](../.github/workflows/check-digests.yml) runs it on pushes and PRs to `main` and `develop`.
 
+- [`registry/check-registry.ts`](registry/check-registry.ts) — validates the [component-metadata registry](../registries/component-metadata.yaml) against [`../schemas/component-metadata.schema.yaml`](../schemas/component-metadata.schema.yaml): unique field names (the APR-014 collision policy), declared clusters, APR-id owners, and valid types/statuses. Run from this directory (`tools/`):
+
+  ```bash
+  node registry/check-registry.ts    # or:  npm run check:registry
+  ```
+
+  Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-registry.yml`](../.github/workflows/check-registry.yml) runs it on pushes and PRs to `main` and `develop`.
+
 - [`release.ts`](release.ts) — cuts a release per the branching model: fast-forwards `develop` → `main`, tags `main`, and publishes a GitHub release. Run from this directory (`tools/`):
 
   ```bash

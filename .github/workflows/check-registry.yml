@@ -1,0 +1,26 @@
+name: check-registry
+
+# Gate: the component-metadata registry (registries/component-metadata.yaml) must be
+# internally consistent — unique field names, declared clusters, APR-id owners, valid
+# types/statuses (tools/registry/check-registry.ts). Enforces APR-014's registration
+# policy. Runs on pushes and PRs to the long-lived branches.
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  check-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24" # Node >= 23.6 runs the .ts directly (native type stripping)
+      - name: Validate the component-metadata registry
+        run: node tools/registry/check-registry.ts

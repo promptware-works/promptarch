@@ -6,6 +6,7 @@
   "description": "PROMPTARCH repository tooling (TypeScript/Node per ADR-003).",
   "scripts": {
     "check:digests": "node digests/check-digests.ts",
+    "check:registry": "node registry/check-registry.ts",
     "release": "node release.ts"
   },
   "devDependencies": {
