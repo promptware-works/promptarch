@@ -97,7 +97,7 @@ If information is machine-readable, structured, or consumed by tooling — it be
 
 ## The frontmatter skeleton
 
-The frontmatter is organized into **scope clusters** — named groups of related attributes, each governed by one or more owning principles. Platforms SHOULD use the canonical cluster names below for interoperability; they MAY add platform-specific clusters. Each owning principle defines which of its fields are required on a given component type; DECLARE defines the structural home.
+A component's frontmatter carries the **host runtime's own standard keys** (e.g. `name`, `description`, `tools`) at the top level; the entire DECLARE-governed layer lives beside them under a single top-level **`metadata`** object. Within `metadata`, attributes are organized into **scope clusters** — named groups, each governed by one or more owning principles — and any non-owned custom fields sit directly alongside the clusters. Platforms SHOULD use the canonical cluster names below for interoperability. Each owning principle defines which of its fields are required on a given component type; DECLARE defines the structural home. *(The cluster blocks below are shown bare for brevity; on a real component they are nested under `metadata` — see* Putting it together *.)*
 
 ### Canonical clusters
 
@@ -161,13 +161,24 @@ composition:
   escalation_path: "orchestrator or human approver"   # (APR-009)
 ```
 
-**`metadata`** — the reserved home for **non-standard** attributes: platform-specific or custom fields that no principle owns. Standard, principle-owned fields live in the canonical clusters above; everything else lives here, so the standard/custom boundary stays unambiguous and the canonical clusters can be validated against a closed schema.
+### Putting it together
+
+On a concrete component the host's standard keys stay top-level, and the whole DECLARE layer — the clusters plus any non-owned custom fields — is carried under one top-level **`metadata`** object:
 
 ```yaml
-metadata:
-  domain: security            # custom: functional area (no owning principle)
-  team: platform-core         # custom: org attribution
+name: summarise-decisions          # host-standard keys (host-defined, top-level)
+description: …
+tools: [...]
+metadata:                          # the DECLARE-governed layer
+  classification: { skill_kind: capability, trust_level: trusted, … }
+  composition:    { applies_patterns: [...], delegation_envelope: {...} }
+  evaluation:     { evaluated_by: [...], min_eval_score: 0.85 }
+  provenance:     { version: 1.2.0, supersedes: … }
+  domain: security                 # non-owned custom field — sits alongside the clusters
+  team: platform-core              # non-owned custom field
 ```
+
+`metadata` **is** the container: principle-owned fields belong in their cluster; non-owned custom fields sit directly under `metadata`. The standard/custom boundary is simply cluster-membership vs. loose key — there is no separate bucket.
 
 ### Suggested cluster → component-kind mapping
 
@@ -186,7 +197,7 @@ The table below is **non-normative** — a navigation aid showing which clusters
 - The frontmatter MUST be the **single authoritative source** for all machine-readable metadata about a component. It MUST NOT be inferred from the packaging format, the file name, or the directory location.
 - The body MUST contain **functional prose only** — behavioral instructions for an LLM. Classification, operational, governance, composition, and evaluation metadata MUST NOT appear in the body.
 - Each **independent** attribute is its **own field** in the frontmatter. Orthogonal attributes MUST NOT be fused into one overloaded label or enum.
-- Frontmatter attributes MUST be **organized into scope clusters** using the canonical cluster names (§ *The frontmatter skeleton*). **Non-standard fields** — platform-specific or custom attributes that no principle owns — MUST be placed under the reserved **`metadata`** cluster; they MUST NOT be added to a canonical cluster. Additional platform-specific clusters MAY be defined but MUST NOT reuse a canonical cluster name for a different scope.
+- The DECLARE layer MUST be carried under a single top-level **`metadata`** object, beside the host runtime's standard keys. Within it, attributes MUST be **organized into scope clusters** using the canonical cluster names (§ *The frontmatter skeleton*). **Non-owned custom fields** — platform-specific attributes no principle owns — sit directly under `metadata`, never inside a canonical cluster. Additional platform-specific clusters MAY be defined but MUST NOT reuse a canonical cluster name for a different scope.
 - The frontmatter declaration is **authoritative**. Folders, names, loaders, dispatch switches, and approval/audit surfaces MUST derive from declared fields. On conflict between a folder/name encoding and the declaration, the declaration wins and the divergence is a validation error.
 - Field values MUST defer to their **owning principle**; DECLARE MUST NOT redefine them. The defined axes and their owners: `exec_form` (`code | prompt`) — [APR-003](APR-003-code-prompt-boundary.md); `skill_kind` (`capability | pattern`) — [APR-007](APR-007-pattern-mechanism.md); trust — [APR-005](APR-005-trust-boundaries.md); agency — [APR-006](APR-006-composition-topology.md); invocability/handoff — [APR-001](APR-001-aspect.md); applied-pattern set — [APR-007](APR-007-pattern-mechanism.md); evaluation gates — [APR-002](APR-002-observe.md); version/lifecycle — [APR-008](APR-008-artifact-lifecycle.md); autonomy & escalation (`max_autonomy_level`, `max_blast_radius`, `escalation_triggers`, `escalation_path`) — [APR-009](APR-009-human-in-the-loop.md).
 - A component that **composes or governs other components** MUST declare its delegation statically in the `composition` cluster, so its fan-out is visible at review. **Agency is declared, never discovered at runtime.**
@@ -199,7 +210,7 @@ The shared governance model — two-tier enforcement, audit-log binding, change-
 - **Body purity** — the body contains only behavioral prose; no structured metadata, classification attributes, or typed schemas are embedded in it. This check is deterministic and requires no LLM.
 - **Frontmatter completeness** — every packaged component declares the clusters required by its applicable owning principles; an undeclared required field is a defect, not a default.
 - **No conflation** — no single field stands in for two independent attributes; orthogonal axes are separate fields in their owning cluster.
-- **Cluster placement** — each field lives in its canonical owning cluster, and non-owned (non-standard) fields live under `metadata`, not a canonical cluster; misplacements (e.g., `version` in `classification`, or a custom field added to `classification`) are flagged.
+- **Cluster placement** — the DECLARE layer lives under a top-level `metadata` object; each owned field lives in its canonical cluster and non-owned custom fields sit directly under `metadata`, never inside a canonical cluster; misplacements (e.g., `version` in `classification`, or a custom field added to `classification`) are flagged.
 - **Declaration is authoritative** — any folder/name class-encoding is reconciled against the frontmatter; mismatches fail.
 - **Agency is declared** — coordinator components declare their delegation envelope in `composition`; no component dispatches outside its declared envelope.
 - **Tooling reads the field, not the path** — loaders, dispatch, and approval surfaces key on frontmatter fields; name/extension/folder sniffing for role is flagged.
@@ -258,4 +269,4 @@ External sources cited in this APR; see *Relationship to established patterns* f
 | 0.1.1 | 2026-06-26 | Draft | Named `exec_form` and `skill_kind` as the two minimum required axes in Prescription and Governance; updated axis-deferral bullet to list axis names and values explicitly. |
 | 0.2.0 | 2026-06-26 | Draft | Major rewrite. Broadened scope from classification-only to the full two-layer frontmatter contract. Added: body-restriction rule (body = functional prose only), structured scope clusters (classification, operability, provenance, evaluation, composition) with examples and component-kind mapping, two new failure modes (metadata bleed, prose-locked governance), HTTP header/body and YAML front-matter in established-patterns table. Moved exec_form/skill_kind minimum-required mandates back to APR-003/APR-007 where they already live. |
 | 0.2.1 | 2026-07-01 | Draft | Renamed the `exec_form` values `script`→`code` and `llm`→`prompt` in the classification-cluster example, component-kind mapping, and axis-owner list, tracking the APR-003/APR-000 harmonization (`exec_form: code \| prompt`). No change to the contract. |
-| 0.2.2 | 2026-07-01 | Draft | Ratified the autonomy/escalation vocabulary (surfaced by the APR-001 ASPECT reconciliation) in the cluster catalog: added `max_autonomy_level` + `max_blast_radius` to `classification` and `escalation_triggers` + `escalation_path` to `composition`, both owned by [APR-009](APR-009-human-in-the-loop.md); added the axis to the owner list. Added a reserved **`metadata`** cluster for non-standard / platform-specific fields — non-owned fields MUST live there, never in a canonical cluster (new prescription rule + governance check). Additive; extends the catalog and placement rules. |
+| 0.2.2 | 2026-07-01 | Draft | Ratified the autonomy/escalation vocabulary (surfaced by the APR-001 ASPECT reconciliation) in the cluster catalog: added `max_autonomy_level` + `max_blast_radius` to `classification` and `escalation_triggers` + `escalation_path` to `composition`, both owned by [APR-009](APR-009-human-in-the-loop.md); added the axis to the owner list. Established **`metadata`** as the single top-level container for the whole DECLARE layer, beside the host's standard keys (name/description/tools): the canonical clusters nest inside it, and non-owned custom fields (e.g. `domain`) sit directly under `metadata` (new prescription rule + governance check + *Putting it together* example). Additive; clarifies serialization, no change to the contract. |

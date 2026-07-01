@@ -20,14 +20,14 @@ Each field defers to its **owning principle**; DECLARE defines only the structur
 - **`provenance`** — principals, created, last-updated, status (APR-010).
 - **`evaluation`** — evaluated_by, min_eval_score, model_pin (APR-002, APR-008).
 - **`composition`** — applies_patterns, delegation_envelope, escalation_triggers / escalation_path (APR-006, APR-007, APR-009).
-- **`metadata`** — reserved bag for **non-standard** / platform-specific fields (no owning principle), e.g. `domain`, `team`. Non-owned fields go here, never in a canonical cluster.
+- **`metadata`** — the single top-level **container** for the whole DECLARE layer (beside host-standard keys `name`/`description`/`tools`). The clusters above nest inside it; non-owned custom fields (e.g. `domain`, `team`) sit directly under `metadata`.
 
 ## Normative rules
 
 - Frontmatter is the **single authoritative source** for machine-readable metadata; MUST NOT be inferred from format, file name, or folder.
 - Body is **functional prose only**; classification/operational/governance/composition/evaluation metadata MUST NOT appear in it.
 - Each **independent** attribute is its **own** field; orthogonal attributes MUST NOT be fused into one overloaded label.
-- Fields live in canonical clusters; **non-standard / non-owned fields MUST go under the reserved `metadata` cluster, never in a canonical one**. Further platform-specific clusters MAY be added but MUST NOT reuse a canonical name for a different scope.
+- The DECLARE layer lives under a top-level **`metadata`** object (beside host-standard keys); owned fields go in their canonical cluster, non-owned custom fields sit directly under `metadata`, never inside a canonical cluster.
 - Field values **defer to the owning principle**; DECLARE MUST NOT redefine them.
 - A component that composes/governs others MUST declare its delegation in `composition`. **Agency is declared, never discovered at runtime.**
 - Frontmatter MUST NOT be injected into an LLM; the body MUST NOT be parsed by governance to extract metadata.

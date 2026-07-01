@@ -105,7 +105,7 @@ Rule of thumb: a value tooling reads to route, govern, or audit is **declared** 
 | 7 | Handoff Contract | `## Handoff Contract` with sub-sections `### Artifacts Produced` and `### Handoff Report Format` | Always | Two distinct outputs: artifacts written to the workspace + a structured report returned to the caller. |
 | 8 | Guardrails | `## Guardrails` | Always | Active-voice rules. One line each. Forbidden actions, untrusted-input handling, evidence requirements. |
 
-> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the agent's **agency / autonomy** (max autonomy level, max blast radius, escalation triggers, escalation path), its **classification** (trust level), its **applied patterns**, and its **version & lineage** — machine-readable metadata that governance reads and approves directly. Declared, never narrated. A functional rule that *depends* on them (e.g., "escalate before any `external` action") still belongs in *Guardrails*.
+> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the agent's **agency / autonomy** (max autonomy level, max blast radius, escalation triggers, escalation path), its **classification** (trust level), its **applied patterns**, and its **version & lineage** — all under the frontmatter's `metadata` object, machine-readable metadata that governance reads and approves directly. Declared, never narrated. A functional rule that *depends* on them (e.g., "escalate before any `external` action") still belongs in *Guardrails*.
 
 ### Skeleton — ASPECT-A
 
@@ -115,20 +115,19 @@ name: <Agent Name>
 description: <one-line role + primary mission>
 tools: [<tool>, <tool>, <tool>]
 user-invocable: <true|false>
-# Metadata declared per APR-014 DECLARE (not narrated in the body):
-classification:
-  agency: <leaf | coordinator>
-  trust_level: <trusted | semi-trusted | untrusted>
-  max_autonomy_level: <L1 advisory … L5 unsupervised>
-  max_blast_radius: <local-only | project-scoped | cross-project | external>
-composition:
-  applies_patterns: [<governance-pattern>, …]
-  escalation_triggers: [<action> (level), …]
-  escalation_path: <next-agent or human approver>
-provenance:
-  version: 0.1.0
-  supersedes: —
-  # change log is metadata (frontmatter / VCS), not a body section
+metadata:                          # all non-standard attributes live here, per APR-014 DECLARE
+  classification:
+    agency: <leaf | coordinator>
+    trust_level: <trusted | semi-trusted | untrusted>
+    max_autonomy_level: <L1 advisory … L5 unsupervised>
+    max_blast_radius: <local-only | project-scoped | cross-project | external>
+  composition:
+    applies_patterns: [<governance-pattern>, …]
+    escalation_triggers: [<action> (level), …]
+    escalation_path: <next-agent or human approver>
+  provenance:
+    version: 0.1.0
+    supersedes: —                  # change log is metadata, not a body section
 ---
 
 # <Agent Name>
@@ -211,7 +210,7 @@ Before handling any invocation, the agent MUST load:
 | 5 | Output Contract | `## Output Contract` | Always | References the output schema declared in frontmatter. The schema is canonical; the body documents semantics. |
 | 6 | Quality Gates & Rules | `## Quality Gates` + `## Shared Rules` | Always | Acceptance thresholds (table) + immutable rules (active-voice list). |
 
-> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the skill's **classification** (`skill_kind`, trust level), any **non-standard** fields (e.g. `domain`) under `metadata`, its **composition** (applied patterns and any other skills it calls), its **evaluation** pins (eval set, min score), and its **version & lineage**. The body documents *semantics and procedure*; what the skill *is* and *depends on* is declared.
+> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the skill's frontmatter `metadata` object — its **classification** (`skill_kind`, trust level), **composition** (applied patterns and any skills it calls), **evaluation** pins (eval set, min score), **version & lineage**, and any non-owned custom fields (e.g. `domain`). The body documents *semantics and procedure*; what the skill *is* and *depends on* is declared.
 
 ### A note on declared dependencies (`composition`)
 
@@ -237,27 +236,25 @@ Skills do not have the routing problem agents do — the input schema enforces t
 ---
 name: <skill-name>
 description: <one-line purpose>
-
-# Metadata declared per APR-014 DECLARE (cluster shape is DECLARE's concern; host runtimes may differ):
-classification:
-  skill_kind: <capability | pattern>
-  trust_level: <trusted | semi-trusted | untrusted>
-inputs: [<input-schema-ref>]        # typed I/O contracts (schema is canonical)
-outputs: [<output-schema-ref>]
-policies: [<policy-ref>]
-composition:
-  applies_patterns: [<pattern-name>]
-  delegation_envelope:
-    allowed_skills: [<other-skill>]  # other skills this one may invoke
-evaluation:
-  evaluated_by: [<eval-set>]
-  min_eval_score: 0.85
-provenance:
-  version: 0.1.0
-  supersedes: —                       # change log is metadata, not a body section
-metadata:                            # non-standard / platform-specific fields (per APR-014 DECLARE)
-  domain: <functional area, e.g. security>
 user-invocable: <true|false>
+metadata:                          # all non-standard attributes live here, per APR-014 DECLARE
+  classification:
+    skill_kind: <capability | pattern>
+    trust_level: <trusted | semi-trusted | untrusted>
+  inputs: [<input-schema-ref>]       # typed I/O contracts (schema is canonical)
+  outputs: [<output-schema-ref>]
+  policies: [<policy-ref>]
+  composition:
+    applies_patterns: [<pattern-name>]
+    delegation_envelope:
+      allowed_skills: [<other-skill>]  # other skills this one may invoke
+  evaluation:
+    evaluated_by: [<eval-set>]
+    min_eval_score: 0.85
+  provenance:
+    version: 0.1.0
+    supersedes: —                    # change log is metadata, not a body section
+  domain: <functional area, e.g. security>   # custom, no owning principle
 ---
 
 # Skill: <skill-name>
@@ -472,4 +469,4 @@ External sources referenced in this APR; see *Relationship to established patter
 | 0.2.3 | 2026-05-30 | Draft | Added opening principle callout, for consistency with APR-000/003. No semantic change. |
 | 0.2.4 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |
 | 0.3.0 | 2026-07-01 | Draft | Reconciled with [APR-014 DECLARE](APR-014-declare.md): moved declarative metadata out of the ASPECT body into the frontmatter — Autonomy Profile (agency, blast radius, escalation), Version & Lineage, skill category (`domain`), and `Dependencies` (`composition`). The body is now functional prose only; ASPECT-A is 8 body sections, ASPECT-S is 6. Updated the division-of-concerns table, both skeletons, the situational-section and security-sensitive guidance, and the frontmatter-sibling framing to defer to DECLARE. Semantic change. |
-| 0.3.1 | 2026-07-01 | Draft | Renamed reconciled frontmatter fields for consistency with DECLARE: `default_blast_radius`→`max_blast_radius` (parallels `max_autonomy_level` / `max_depth`), `actions_requiring_escalation`→`escalation_triggers` (pairs with `escalation_path`), skill `category`→`domain`, `calls`→`delegation_envelope.allowed_skills` (reuses DECLARE's vocabulary), and `replaces`→`supersedes` (aligns with the APR lifecycle terms). Naming only. |
+| 0.3.1 | 2026-07-01 | Draft | Renamed reconciled frontmatter fields for consistency with DECLARE (`default_blast_radius`→`max_blast_radius`, `actions_requiring_escalation`→`escalation_triggers`, skill `category`→`domain`, `calls`→`delegation_envelope.allowed_skills`, `replaces`→`supersedes`), and nested the skeletons' DECLARE clusters under a single top-level `metadata` object — host-standard keys (`name`/`description`/`tools`/`user-invocable`) stay top-level — matching APR-014's `metadata`-container model. |
