@@ -3,7 +3,7 @@ apr: 14
 title: "DECLARE — The Frontmatter Contract for Promptware Components"
 abstract: "Every packaged promptware component is governed by a two-layer contract: a structured frontmatter block that holds all machine-readable metadata — organized into typed scope clusters — and a body restricted to functional prose only. Tooling, dispatch, governance, and audit derive from the frontmatter; the body is the only layer injected into an LLM context. Classification, operability, provenance, evaluation, and composition attributes each live in their owning cluster; the component's format, name, or folder never implies any of them."
 status: Draft
-version: 0.2.1
+version: 0.2.2
 principals:
   - D. Maxios
 generative-contributors:
@@ -101,7 +101,7 @@ The frontmatter is organized into **scope clusters** — named groups of related
 
 ### Canonical clusters
 
-**`classification`** — what kind of thing this component is architecturally. Governed by [APR-003](APR-003-code-prompt-boundary.md), [APR-005](APR-005-trust-boundaries.md), [APR-006](APR-006-composition-topology.md), [APR-007](APR-007-pattern-mechanism.md).
+**`classification`** — what kind of thing this component is architecturally. Governed by [APR-003](APR-003-code-prompt-boundary.md), [APR-005](APR-005-trust-boundaries.md), [APR-006](APR-006-composition-topology.md), [APR-007](APR-007-pattern-mechanism.md), [APR-009](APR-009-human-in-the-loop.md).
 
 ```yaml
 classification:
@@ -109,6 +109,8 @@ classification:
   skill_kind: capability   # capability | pattern  (APR-007)
   trust_level: trusted     # trusted | semi-trusted | untrusted  (APR-005)
   agency: leaf             # leaf | coordinator  (APR-006)
+  max_autonomy_level: L1        # L1 advisory … L5 unsupervised  (APR-009)
+  max_blast_radius: local-only  # local-only | project-scoped | cross-project | external  (APR-009)
 ```
 
 **`operability`** — what the component needs and tracks to run. Governed by [APR-008](APR-008-artifact-lifecycle.md), [APR-011](APR-011-observability.md).
@@ -142,7 +144,7 @@ evaluation:
   model_pin: claude-sonnet-4-6
 ```
 
-**`composition`** — how this component relates to other components. Governed by [APR-006](APR-006-composition-topology.md), [APR-007](APR-007-pattern-mechanism.md).
+**`composition`** — how this component relates to other components. Governed by [APR-006](APR-006-composition-topology.md), [APR-007](APR-007-pattern-mechanism.md), [APR-009](APR-009-human-in-the-loop.md).
 
 ```yaml
 composition:
@@ -154,6 +156,17 @@ composition:
     allowed_skills:
       - extract-entities
       - format-output
+  escalation_triggers:                                # actions that require escalation  (APR-009)
+    - "delete-shared-state (L3)"
+  escalation_path: "orchestrator or human approver"   # (APR-009)
+```
+
+**`metadata`** — the reserved home for **non-standard** attributes: platform-specific or custom fields that no principle owns. Standard, principle-owned fields live in the canonical clusters above; everything else lives here, so the standard/custom boundary stays unambiguous and the canonical clusters can be validated against a closed schema.
+
+```yaml
+metadata:
+  domain: security            # custom: functional area (no owning principle)
+  team: platform-core         # custom: org attribution
 ```
 
 ### Suggested cluster → component-kind mapping
@@ -173,9 +186,9 @@ The table below is **non-normative** — a navigation aid showing which clusters
 - The frontmatter MUST be the **single authoritative source** for all machine-readable metadata about a component. It MUST NOT be inferred from the packaging format, the file name, or the directory location.
 - The body MUST contain **functional prose only** — behavioral instructions for an LLM. Classification, operational, governance, composition, and evaluation metadata MUST NOT appear in the body.
 - Each **independent** attribute is its **own field** in the frontmatter. Orthogonal attributes MUST NOT be fused into one overloaded label or enum.
-- Frontmatter attributes MUST be **organized into scope clusters** using the canonical cluster names (§ *The frontmatter skeleton*). Platform-specific clusters MAY be added; they MUST NOT reuse a canonical cluster name for a different scope.
+- Frontmatter attributes MUST be **organized into scope clusters** using the canonical cluster names (§ *The frontmatter skeleton*). **Non-standard fields** — platform-specific or custom attributes that no principle owns — MUST be placed under the reserved **`metadata`** cluster; they MUST NOT be added to a canonical cluster. Additional platform-specific clusters MAY be defined but MUST NOT reuse a canonical cluster name for a different scope.
 - The frontmatter declaration is **authoritative**. Folders, names, loaders, dispatch switches, and approval/audit surfaces MUST derive from declared fields. On conflict between a folder/name encoding and the declaration, the declaration wins and the divergence is a validation error.
-- Field values MUST defer to their **owning principle**; DECLARE MUST NOT redefine them. The defined axes and their owners: `exec_form` (`code | prompt`) — [APR-003](APR-003-code-prompt-boundary.md); `skill_kind` (`capability | pattern`) — [APR-007](APR-007-pattern-mechanism.md); trust — [APR-005](APR-005-trust-boundaries.md); agency — [APR-006](APR-006-composition-topology.md); invocability/handoff — [APR-001](APR-001-aspect.md); applied-pattern set — [APR-007](APR-007-pattern-mechanism.md); evaluation gates — [APR-002](APR-002-observe.md); version/lifecycle — [APR-008](APR-008-artifact-lifecycle.md).
+- Field values MUST defer to their **owning principle**; DECLARE MUST NOT redefine them. The defined axes and their owners: `exec_form` (`code | prompt`) — [APR-003](APR-003-code-prompt-boundary.md); `skill_kind` (`capability | pattern`) — [APR-007](APR-007-pattern-mechanism.md); trust — [APR-005](APR-005-trust-boundaries.md); agency — [APR-006](APR-006-composition-topology.md); invocability/handoff — [APR-001](APR-001-aspect.md); applied-pattern set — [APR-007](APR-007-pattern-mechanism.md); evaluation gates — [APR-002](APR-002-observe.md); version/lifecycle — [APR-008](APR-008-artifact-lifecycle.md); autonomy & escalation (`max_autonomy_level`, `max_blast_radius`, `escalation_triggers`, `escalation_path`) — [APR-009](APR-009-human-in-the-loop.md).
 - A component that **composes or governs other components** MUST declare its delegation statically in the `composition` cluster, so its fan-out is visible at review. **Agency is declared, never discovered at runtime.**
 - The frontmatter MUST NOT be injected into an LLM context. The body MUST NOT be parsed by governance tooling to extract metadata.
 
@@ -186,7 +199,7 @@ The shared governance model — two-tier enforcement, audit-log binding, change-
 - **Body purity** — the body contains only behavioral prose; no structured metadata, classification attributes, or typed schemas are embedded in it. This check is deterministic and requires no LLM.
 - **Frontmatter completeness** — every packaged component declares the clusters required by its applicable owning principles; an undeclared required field is a defect, not a default.
 - **No conflation** — no single field stands in for two independent attributes; orthogonal axes are separate fields in their owning cluster.
-- **Cluster placement** — each field lives in its canonical owning cluster; misplacements (e.g., `version` in `classification`) are flagged.
+- **Cluster placement** — each field lives in its canonical owning cluster, and non-owned (non-standard) fields live under `metadata`, not a canonical cluster; misplacements (e.g., `version` in `classification`, or a custom field added to `classification`) are flagged.
 - **Declaration is authoritative** — any folder/name class-encoding is reconciled against the frontmatter; mismatches fail.
 - **Agency is declared** — coordinator components declare their delegation envelope in `composition`; no component dispatches outside its declared envelope.
 - **Tooling reads the field, not the path** — loaders, dispatch, and approval surfaces key on frontmatter fields; name/extension/folder sniffing for role is flagged.
@@ -245,3 +258,4 @@ External sources cited in this APR; see *Relationship to established patterns* f
 | 0.1.1 | 2026-06-26 | Draft | Named `exec_form` and `skill_kind` as the two minimum required axes in Prescription and Governance; updated axis-deferral bullet to list axis names and values explicitly. |
 | 0.2.0 | 2026-06-26 | Draft | Major rewrite. Broadened scope from classification-only to the full two-layer frontmatter contract. Added: body-restriction rule (body = functional prose only), structured scope clusters (classification, operability, provenance, evaluation, composition) with examples and component-kind mapping, two new failure modes (metadata bleed, prose-locked governance), HTTP header/body and YAML front-matter in established-patterns table. Moved exec_form/skill_kind minimum-required mandates back to APR-003/APR-007 where they already live. |
 | 0.2.1 | 2026-07-01 | Draft | Renamed the `exec_form` values `script`→`code` and `llm`→`prompt` in the classification-cluster example, component-kind mapping, and axis-owner list, tracking the APR-003/APR-000 harmonization (`exec_form: code \| prompt`). No change to the contract. |
+| 0.2.2 | 2026-07-01 | Draft | Ratified the autonomy/escalation vocabulary (surfaced by the APR-001 ASPECT reconciliation) in the cluster catalog: added `max_autonomy_level` + `max_blast_radius` to `classification` and `escalation_triggers` + `escalation_path` to `composition`, both owned by [APR-009](APR-009-human-in-the-loop.md); added the axis to the owner list. Added a reserved **`metadata`** cluster for non-standard / platform-specific fields — non-owned fields MUST live there, never in a canonical cluster (new prescription rule + governance check). Additive; extends the catalog and placement rules. |

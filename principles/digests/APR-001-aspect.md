@@ -1,6 +1,6 @@
 # APR-001 ASPECT — Digest
 
-> **Generated digest of [APR-001 ASPECT](../APR-001-aspect.md) v0.3.0.** The full APR is authoritative — read it for rationale, per-section purpose, skeletons, and prior art. Do not edit by hand.
+> **Generated digest of [APR-001 ASPECT](../APR-001-aspect.md) v0.3.1.** The full APR is authoritative — read it for rationale, per-section purpose, skeletons, and prior art. Do not edit by hand.
 
 **Abstract.** A body-level prompt framework for specifying LLM agents and skills as two variants (ASPECT-A, ASPECT-S), with type-driven mandatory sections, negative scoping required for agents, and a stricter mode for security-sensitive components — making agent and skill spec corpora auditable.
 
@@ -38,4 +38,4 @@ ASPECT is **not** a runtime, a frontmatter schema, a prompt-template library, a 
 Stateful actor with identity/authority/routing → **ASPECT-A**. Stateless typed transform → **ASPECT-S**. Both → ASPECT-A with the transform under `Routing & Method`. Neither (pure prompt template, no I/O contract) → plain Markdown, ASPECT is overkill.
 
 ---
-*Source: [APR-001 ASPECT](../APR-001-aspect.md) v0.3.0 · regenerate this digest whenever the source changes.*
+*Source: [APR-001 ASPECT](../APR-001-aspect.md) v0.3.1 · regenerate this digest whenever the source changes.*

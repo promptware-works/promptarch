@@ -3,7 +3,7 @@ apr: 001
 title: "ASPECT — A Prompt Framework for Agent & Skill Specifications"
 abstract: "A body-level prompt framework for specifying LLM agents and skills as two variants (ASPECT-A, ASPECT-S), with type-driven mandatory sections, negative scoping required for agents, and a stricter mode for security-sensitive components — making agent and skill spec corpora auditable."
 status: Draft
-version: 0.3.0
+version: 0.3.1
 principals:
   - D. Maxios
 generative-contributors:
@@ -80,7 +80,7 @@ ASPECT governs the **body**. The frontmatter is the machine-readable metadata co
 | Classification (agency, trust, skill_kind) | Frontmatter (`classification`, DECLARE) |
 | Autonomy & blast radius (levels, escalation) | Frontmatter (`classification` / `composition`, DECLARE) |
 | Dependencies (called skills, applied patterns) | Frontmatter (`composition`, DECLARE) |
-| Version & lineage (version, replaces, change log) | Frontmatter (`provenance`, DECLARE) |
+| Version & lineage (version, supersedes, change log) | Frontmatter (`provenance`, DECLARE) |
 | Role / mission / access narrative | ASPECT body |
 | Routing logic | ASPECT body |
 | Procedure / algorithm | ASPECT body |
@@ -105,7 +105,7 @@ Rule of thumb: a value tooling reads to route, govern, or audit is **declared** 
 | 7 | Handoff Contract | `## Handoff Contract` with sub-sections `### Artifacts Produced` and `### Handoff Report Format` | Always | Two distinct outputs: artifacts written to the workspace + a structured report returned to the caller. |
 | 8 | Guardrails | `## Guardrails` | Always | Active-voice rules. One line each. Forbidden actions, untrusted-input handling, evidence requirements. |
 
-> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the agent's **agency / autonomy** (max autonomy level, default blast radius, actions requiring escalation, escalation path), its **classification** (trust level), its **applied patterns**, and its **version & lineage** — machine-readable metadata that governance reads and approves directly. Declared, never narrated. A functional rule that *depends* on them (e.g., "escalate before any `external` action") still belongs in *Guardrails*.
+> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the agent's **agency / autonomy** (max autonomy level, max blast radius, escalation triggers, escalation path), its **classification** (trust level), its **applied patterns**, and its **version & lineage** — machine-readable metadata that governance reads and approves directly. Declared, never narrated. A functional rule that *depends* on them (e.g., "escalate before any `external` action") still belongs in *Guardrails*.
 
 ### Skeleton — ASPECT-A
 
@@ -120,14 +120,14 @@ classification:
   agency: <leaf | coordinator>
   trust_level: <trusted | semi-trusted | untrusted>
   max_autonomy_level: <L1 advisory … L5 unsupervised>
-  default_blast_radius: <local-only | project-scoped | cross-project | external>
+  max_blast_radius: <local-only | project-scoped | cross-project | external>
 composition:
   applies_patterns: [<governance-pattern>, …]
-  actions_requiring_escalation: [<action> (level), …]
+  escalation_triggers: [<action> (level), …]
   escalation_path: <next-agent or human approver>
 provenance:
   version: 0.1.0
-  replaces: —
+  supersedes: —
   # change log is metadata (frontmatter / VCS), not a body section
 ---
 
@@ -211,7 +211,7 @@ Before handling any invocation, the agent MUST load:
 | 5 | Output Contract | `## Output Contract` | Always | References the output schema declared in frontmatter. The schema is canonical; the body documents semantics. |
 | 6 | Quality Gates & Rules | `## Quality Gates` + `## Shared Rules` | Always | Acceptance thresholds (table) + immutable rules (active-voice list). |
 
-> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the skill's **classification** (`skill_kind` / category, trust level), its **composition** (applied patterns and any other skills it calls), its **evaluation** pins (eval set, min score), and its **version & lineage**. The body documents *semantics and procedure*; what the skill *is* and *depends on* is declared.
+> **Declared in frontmatter, not the body** (per [APR-014 DECLARE](APR-014-declare.md)): the skill's **classification** (`skill_kind`, trust level), any **non-standard** fields (e.g. `domain`) under `metadata`, its **composition** (applied patterns and any other skills it calls), its **evaluation** pins (eval set, min score), and its **version & lineage**. The body documents *semantics and procedure*; what the skill *is* and *depends on* is declared.
 
 ### A note on declared dependencies (`composition`)
 
@@ -241,20 +241,22 @@ description: <one-line purpose>
 # Metadata declared per APR-014 DECLARE (cluster shape is DECLARE's concern; host runtimes may differ):
 classification:
   skill_kind: <capability | pattern>
-  category: <category>
   trust_level: <trusted | semi-trusted | untrusted>
 inputs: [<input-schema-ref>]        # typed I/O contracts (schema is canonical)
 outputs: [<output-schema-ref>]
 policies: [<policy-ref>]
 composition:
   applies_patterns: [<pattern-name>]
-  calls: [<other-skill>]            # other skills this one invokes
+  delegation_envelope:
+    allowed_skills: [<other-skill>]  # other skills this one may invoke
 evaluation:
   evaluated_by: [<eval-set>]
   min_eval_score: 0.85
 provenance:
   version: 0.1.0
-  replaces: —                       # change log is metadata, not a body section
+  supersedes: —                       # change log is metadata, not a body section
+metadata:                            # non-standard / platform-specific fields (per APR-014 DECLARE)
+  domain: <functional area, e.g. security>
 user-invocable: <true|false>
 ---
 
@@ -352,7 +354,7 @@ The semantics differ from a skill's Pre-Invocation Checklist: skills load for *o
 
 ### Autonomy declaration
 
-Populate the frontmatter autonomy fields (`max_autonomy_level`, `default_blast_radius`, escalation) for any agent that takes actions with blast radius beyond `local-only`. Typical cases:
+Populate the frontmatter autonomy fields (`max_autonomy_level`, `max_blast_radius`, escalation) for any agent that takes actions with blast radius beyond `local-only`. Typical cases:
 
 - **Always** for security-sensitive agents — any agent whose output influences a security decision, or whose actions affect access control, secrets, network exposure, or auditability.
 - **Always** when the host runtime enforces explicit autonomy levels (L0–L5 or similar).
@@ -387,7 +389,7 @@ For security-sensitive components, ASPECT becomes stricter — three slots that 
 
 | Slot | Default | For security-sensitive components |
 |---|---|---|
-| Autonomy declaration (agent frontmatter) | Recommended for consequential actions | **Required** — all autonomy fields (`max_autonomy_level`, `default_blast_radius`, escalation) filled in |
+| Autonomy declaration (agent frontmatter) | Recommended for consequential actions | **Required** — all autonomy fields (`max_autonomy_level`, `max_blast_radius`, escalation) filled in |
 | `Pre-Invocation Checklist` (skill) | Always required | **Stricter** — must enumerate every policy and pattern, and require a structured HALT-and-report on any missing item |
 | `Guardrails` (agent) | Active-voice rule list | **Must include**: untrusted-input handling, evidence-grounding requirement, no-exploit-code restriction (where relevant), and a clear statement of what the component will refuse to do |
 
@@ -469,4 +471,5 @@ External sources referenced in this APR; see *Relationship to established patter
 | 0.2.2 | 2026-05-30 | Draft | Added `abstract` frontmatter field. No semantic change. |
 | 0.2.3 | 2026-05-30 | Draft | Added opening principle callout, for consistency with APR-000/003. No semantic change. |
 | 0.2.4 | 2026-05-30 | Draft | Renamed `authors`→`principals` and `co-authors`→`generative-contributors`. No semantic change. |
-| 0.3.0 | 2026-07-01 | Draft | Reconciled with [APR-014 DECLARE](APR-014-declare.md): moved declarative metadata out of the ASPECT body into the frontmatter — Autonomy Profile (agency, blast radius, escalation), Version & Lineage, skill `Category` (`skill_kind`), and `Dependencies` (`composition`). The body is now functional prose only; ASPECT-A is 8 body sections, ASPECT-S is 6. Updated the division-of-concerns table, both skeletons, the situational-section and security-sensitive guidance, and the frontmatter-sibling framing to defer to DECLARE. Semantic change. |
+| 0.3.0 | 2026-07-01 | Draft | Reconciled with [APR-014 DECLARE](APR-014-declare.md): moved declarative metadata out of the ASPECT body into the frontmatter — Autonomy Profile (agency, blast radius, escalation), Version & Lineage, skill category (`domain`), and `Dependencies` (`composition`). The body is now functional prose only; ASPECT-A is 8 body sections, ASPECT-S is 6. Updated the division-of-concerns table, both skeletons, the situational-section and security-sensitive guidance, and the frontmatter-sibling framing to defer to DECLARE. Semantic change. |
+| 0.3.1 | 2026-07-01 | Draft | Renamed reconciled frontmatter fields for consistency with DECLARE: `default_blast_radius`→`max_blast_radius` (parallels `max_autonomy_level` / `max_depth`), `actions_requiring_escalation`→`escalation_triggers` (pairs with `escalation_path`), skill `category`→`domain`, `calls`→`delegation_envelope.allowed_skills` (reuses DECLARE's vocabulary), and `replaces`→`supersedes` (aligns with the APR lifecycle terms). Naming only. |
