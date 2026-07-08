@@ -30,30 +30,31 @@ These are *backlog* stages — distinct from an APR's lifecycle `status` (see [`
 | Federated composition (cross-domain) | Composition *across* a trust/identity boundary (farms → federation): governed membership, authenticated participants, least-privilege non-ambient cross-domain trust. Forward-looking (emerging scale); L3-centered, L4 noted. | ✍️ Drafted | [APR-012](../principles/APR-012-federated-composition.md) · issue #10 |
 | Artifact graph (single source of truth) | A project's canonical state is one append-only, typed artifact graph across the lifecycle; traceability is a path through edges emitted as a side effect of production; tools are projections, not parallel systems of record; baselines are signed checkpoints. | ✍️ Drafted | [APR-013](../principles/APR-013-artifact-graph.md) · draft (no issue yet) |
 | Declared classification (DECLARE) | A packaged component declares its architectural classification as orthogonal machine-readable frontmatter; tooling/structure/dispatch derive from the declaration; format/name/location never imply role (the "costume" failure). The frontmatter sibling ASPECT defers. | ✍️ Drafted | [APR-014](../principles/APR-014-declare.md) · draft (no issue yet) |
+| Context assembly & window discipline | The context window is a composed artifact: declared precedence order, per-class token budget, and a declared overflow-reduction policy with a non-evictable safety floor; assembly is deterministic, provenance-carrying, and audit-logged. Surfaced by the harness-coverage study. | ✍️ Drafted | [APR-015](../principles/APR-015-context-assembly.md) · issue #11 |
+| Memory & session state | Agent memory is tiered (working/session/long-term), trust-labeled, and scope-bound: recall never elevates trust (memory-poisoning defense), retention is bounded and forgettable, and behavior-shaping memory graduates into a governed artifact. Surfaced by the harness-coverage study. | ✍️ Drafted | [APR-016](../principles/APR-016-memory.md) · issue #12 |
+| Graceful degradation & failure handling | Failure handling selected by declared safety-criticality: fail closed for safety-critical/consequential/irreversible paths, declared bounded fallback elsewhere, never silent. Unifies the six local halt rules (APR-002/003/005/006/011/015) as one principle. Surfaced by the harness-coverage study. | ✍️ Drafted | [APR-017](../principles/APR-017-graceful-degradation.md) · issue #13 |
 
 ## Idea backlog (not yet proposed)
 
-Ranked by current priority. Each is a candidate, not a commitment.
+Ranked by current priority. Each is a candidate, not a commitment. All three
+promptware-architectural gaps surfaced by the [harness-coverage study](../docs/studies/harness-coverage.md)
+— context assembly, memory & session state, and graceful degradation — are now drafted as
+[APR-015](../principles/APR-015-context-assembly.md), [APR-016](../principles/APR-016-memory.md),
+and [APR-017](../principles/APR-017-graceful-degradation.md) respectively (see *In flight* above).
 
-### 1. Graceful degradation & failure handling — 💡 Idea (medium)
-
-- **One-liner:** When a tool errors, a delegate times out, an injection is missing, or a model is unavailable, the system degrades by discipline — fail-closed for safety-critical, degrade-gracefully elsewhere, with explicit fallbacks.
-- **Gap:** Failure handling is piecemeal (OBSERVE's halt-on-missing-injection, APR-006 termination) with no unifying degradation discipline.
-- **Relationship:** Composes with APR-005 (fail-closed for safety), APR-006 (delegate failure in the graph), APR-008 (model unavailability).
-
-### 2. Eval-driven development — 💡 Idea (low / hold)
+### 1. Eval-driven development — 💡 Idea (low / hold)
 
 - **One-liner:** Golden sets + graders + CI regression gates as a development *discipline* for promptware.
 - **Gap:** OBSERVE says *where* eval sets live and what governance applies; it does not prescribe the *methodology*.
 - **Hold:** Wait until APR-002 OBSERVE is `Accepted`, to avoid two `Draft` APRs contesting the eval territory.
 
-### 3. PII & sensitive data in promptware artifacts — 💡 Idea (low / maybe)
+### 2. PII & sensitive data in promptware artifacts — 💡 Idea (low / maybe)
 
 - **One-liner:** PII, credentials, and secrets that land in prompts, examples, eval cases, logs, and traces are classified, redacted, and access-controlled — content-centric data privacy.
 - **Gap:** OBSERVE §10 flags sensitive data in `examples/` as out of scope; nobody owns content privacy. The one genuinely promptware-specific slice of security not in APR-005.
 - **Relationship:** Complements APR-005 (trust) and ties to observability (PII in traces).
 
-### 4. Coordination mechanisms (beyond delegation) — 💡 Idea (low / maybe)
+### 3. Coordination mechanisms (beyond delegation) — 💡 Idea (low / maybe)
 
 - **One-liner:** How agents coordinate *without* a delegation edge — shared state (blackboard), broadcast/pub-sub, negotiation/market — under discipline.
 - **Gap:** APR-006 governs the delegation call-graph; coordination that isn't call→return is untouched.
@@ -61,7 +62,7 @@ Ranked by current priority. Each is a candidate, not a commitment.
 
 ## Considered, not pursued as standalone
 
-- **Prompt-caching discipline** — too tactical and provider-coupled to be a durable APR. Its durable kernel — *order injected context by volatility (stable/shared first, volatile/per-request last) for cache-stability* — should fold into OBSERVE's injection discipline (or the observability & cost idea) as a `SHOULD`, not a standalone APR.
+- **Prompt-caching discipline** — too tactical and provider-coupled to be a durable APR. Its durable kernel — *order injected context by volatility (stable/shared first, volatile/per-request last) for cache-stability* — is now absorbed as a subordinate `SHOULD` in [APR-015](../principles/APR-015-context-assembly.md) (context assembly), not a standalone APR.
 - **General security** — covered. The promptware-specific security concern (trust boundaries, untrusted input, prompt injection, RBAC on content, provenance) is [APR-005](../principles/APR-005-trust-boundaries.md); the rest (secrets, transport, sandboxing, authn/authz) is generic platform security the corpus deliberately delegates (APR-000 scope, APR-005 §What-this-is-NOT, OBSERVE §10). A general security APR would be generic advice, not a promptware principle.
 - **General orchestration / hub-spoke models** — covered by [APR-006](../principles/APR-006-composition-topology.md). Hub-spoke is its DAG-default supervisor/worker topology; specific orchestration patterns are *instances* (content), not principles — cataloguing them would repeat the mechanism-vs-catalogue trap.
 
