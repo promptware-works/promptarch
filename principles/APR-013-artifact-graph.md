@@ -3,6 +3,7 @@ apr: 13
 title: "An Artifact-Graph Principle for Promptware"
 abstract: "A project's canonical state is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record."
 status: Draft
+class: architectural
 version: 0.2.1
 principals:
   - D. Maxios

@@ -3,6 +3,7 @@ apr: 001
 title: "ASPECT — A Prompt Framework for Agent & Skill Specifications"
 abstract: "A body-level prompt framework for specifying LLM agents and skills as two variants (ASPECT-A, ASPECT-S), with type-driven mandatory sections, negative scoping required for agents, and a stricter mode for security-sensitive components — making agent and skill spec corpora auditable."
 status: Draft
+class: architectural
 version: 0.3.2
 principals:
   - D. Maxios

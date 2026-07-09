@@ -3,6 +3,7 @@ apr: 5
 title: "A Trust-Boundary and Untrusted-Input Principle for Promptware"
 abstract: "Classify every input and injected reference by trust; treat untrusted content as data, never instructions; make trust boundaries between content categories and between authors explicit and enforced, with recorded provenance — so promptware resists prompt injection and unauthorized behavior change."
 status: Draft
+class: architectural
 version: 0.2.0
 principals:
   - D. Maxios

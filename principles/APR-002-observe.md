@@ -3,6 +3,7 @@ apr: 002
 title: "OBSERVE — A Content-Organization Principle for Agentic Platforms"
 abstract: "Organizes an agentic platform's non-behavioral content — ontology, values, rules, shapes, examples, evals — as seven first-class artifact types, each with a single canonical source, a declarative manifest, selective runtime injection, and audit-logged provenance."
 status: Draft
+class: architectural
 version: 0.2.0
 principals:
   - D. Maxios

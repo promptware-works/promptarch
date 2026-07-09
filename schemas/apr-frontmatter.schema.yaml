@@ -15,6 +15,7 @@ required:
   - title
   - abstract
   - status
+  - class
   - version
   - principals
   - created
@@ -61,6 +62,20 @@ properties:
       - Deprecated
       - Superseded
       - Withdrawn
+  class:
+    description: >
+      Record class (PEP-style, for categorising the series). `architectural` — a design
+      principle for promptware; the default, since an APR is architectural by nature.
+      `implementation` — a concrete format / contract / profile / mechanism spec, if the
+      series ever carries one as its own record. `process` — governs the corpus or its
+      process. NB: the concrete formats and tooling an architectural APR prescribes live
+      as separate artifacts (registries/, schemas/, tools/), not as their own records —
+      so today every APR is `architectural`; the other values future-proof the enum.
+    type: string
+    enum:
+      - architectural
+      - implementation
+      - process
   version:
     description: >
       Semantic version of the APR. Pre-Accepted versions use 0.x; first

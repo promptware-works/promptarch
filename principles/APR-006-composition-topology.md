@@ -3,6 +3,7 @@ apr: 6
 title: "A Composition and Delegation-Topology Principle for Multi-Agent Promptware"
 abstract: "Compose agents and skills into a bounded delegation graph: prefer skills, keep delegation acyclic with bounded feedback loops, declare the edges and traverse them dynamically, guarantee termination, and narrow authority along each edge — so control flow stays legible, terminating, and auditable."
 status: Draft
+class: architectural
 version: 0.1.1
 principals:
   - D. Maxios

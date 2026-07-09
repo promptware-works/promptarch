@@ -3,6 +3,7 @@ apr: 8
 title: "An Artifact-Lifecycle and Model-Migration Principle for Promptware"
 abstract: "Runtime artifacts carry an explicit lifecycle — versioned, status-tracked, deprecated with lineage, never silently changed — and declare the model they're validated against, so a model upgrade re-validates the prompt substrate via evals and blocks regression in safety-critical artifacts."
 status: Draft
+class: architectural
 version: 0.1.0
 principals:
   - D. Maxios

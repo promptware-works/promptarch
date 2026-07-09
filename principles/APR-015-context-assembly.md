@@ -3,6 +3,7 @@ apr: 15
 title: "A Context-Assembly and Window-Discipline Principle for Promptware"
 abstract: "The context window is assembled, not accreted: every run composes its window from trust-labeled, canonically-sourced segments under a declared precedence order and per-class token budget, and reduces it on overflow by a declared, audit-logged policy that never evicts safety-critical content."
 status: Draft
+class: architectural
 version: 0.2.0
 principals:
   - D. Maxios

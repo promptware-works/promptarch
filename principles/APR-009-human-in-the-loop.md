@@ -3,6 +3,7 @@ apr: 9
 title: "A Human-in-the-Loop Oversight-Placement Principle for Promptware"
 abstract: "Place human oversight by reversibility and blast radius: irreversible/high-blast actions need plan-and-approve (gate before); reversible/low-blast use fire-and-judge (review after). Reversibility defaults to irreversible when unknown; safety-critical gates are never sampled away."
 status: Draft
+class: architectural
 version: 0.1.0
 principals:
   - D. Maxios

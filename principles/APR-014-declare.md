@@ -3,6 +3,7 @@ apr: 14
 title: "DECLARE — The Frontmatter Contract for Promptware Components"
 abstract: "Every packaged promptware component is governed by a two-layer contract: a structured frontmatter block that holds all machine-readable metadata — organized into typed scope clusters — and a body restricted to functional prose only. Tooling, dispatch, governance, and audit derive from the frontmatter; the body is the only layer injected into an LLM context. Classification, operability, provenance, evaluation, and composition attributes each live in their owning cluster; the component's format, name, or folder never implies any of them."
 status: Draft
+class: architectural
 version: 0.4.0
 principals:
   - D. Maxios

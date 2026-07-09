@@ -3,6 +3,7 @@ apr: 4
 title: "A Canonical-Source and Materialization Principle for Runtime-Independent Promptware"
 abstract: "Author promptware once in a runtime-neutral canonical location and materialize each AI environment's home (.claude/, .github/, .cursor/, …) from it — generated, never hand-edited — so promptware is portable across tools and outlives any single vendor's directory convention."
 status: Draft
+class: architectural
 version: 0.1.1
 principals:
   - D. Maxios
