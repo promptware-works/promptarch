@@ -38,6 +38,8 @@ One manifest per container (single source of truth; nodes/tools read, never copy
 
 Manifest valid (reverse-DNS id, title+owner) · sub-container id extends `parent` · every node declares `id` + `container-id` · cross-project edges name a declared dependency.
 
+**Runtime (APR-018 R14, owned here).** A harness references artifacts by canonical `container-id:id` in emitted lineage/audit records and resolves a cross-project reference only through a declared `dependency`. The sole runtime-facing slice; id assignment / provenance resolution are otherwise authoring-time.
+
 ## Scope limits — do NOT misapply
 
 Not the artifact graph (APR-013 = nodes/edges + containment *structure*); this APR = *identity* · not the component-metadata contract (APR-014 = component frontmatter; the project-metadata registry is a *sibling* of DECLARE's, not part of it) · not a package manager / registry service · not lifecycle (version/status/supersession = APR-008).

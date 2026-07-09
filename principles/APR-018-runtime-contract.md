@@ -4,7 +4,7 @@ title: "A Runtime-Conformance Profile for Promptware Harnesses"
 abstract: "The runtime obligations scattered across the corpus — inject only what's declared, halt-and-audit, propagate trust, enforce the delegation envelope, govern memory and failure — collected by reference into one checkable conformance profile for harnesses, so no APR becomes a runtime specification."
 status: Draft
 class: architectural
-version: 0.1.0
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
@@ -26,6 +26,7 @@ related:
   - APR-015
   - APR-016
   - APR-017
+  - APR-019
 tags:
   - runtime
   - harness
@@ -76,6 +77,7 @@ Each row is an obligation on the harness, owned by the cited principle. Verifica
 | R11 | **Emit derivation edges** as a side effect of producing each artifact node, so traceability is a byproduct of production. | [APR-013](APR-013-artifact-graph.md) |
 | R12 | Read machine-readable metadata **from frontmatter only**; never parse the injected body for metadata; never inject frontmatter into the model. | [APR-014](APR-014-declare.md) |
 | R13 | Across a federation boundary, **authenticate** participants and grant only least-privilege, **non-transitive** cross-domain trust. | [APR-012](APR-012-federated-composition.md) |
+| R14 | Reference every artifact by its **canonical `container-id:id`** in emitted lineage and audit records (so each is globally provenance-resolvable), and resolve a **cross-project** reference only when the target's project is a declared `dependency`. | [APR-019](APR-019-identity.md) |
 
 A harness declares which obligations it meets; **partial conformance is per-obligation and testable**, but a scope that adopts an owner APR inherits that APR's own "partial adoption surrenders the guarantee" rule (e.g. OBSERVE). Conformance of the whole = passing the union of the owners' runtime-facing governance checks.
 
@@ -101,7 +103,7 @@ New runtime obligations MUST enter the contract the way new metadata fields ente
 *(Shared conformance model — two-tier CI/human, audit-binding, change-via-ADR — per [APR-010](APR-010-governance.md).)*
 
 - **Profile completeness** — every obligation cites a live owner; no entry redefines its owner's rule (Tier 2 review against the owners).
-- **Conformance report** — a conformant harness produces a report listing each obligation (R1–R13), its owning-APR governance check, and pass/fail; the report is the artifact a certifier reads (Tier 1 that the report exists and covers the contract; Tier 2 judges completeness of the harness's declared set).
+- **Conformance report** — a conformant harness produces a report listing each obligation (R1–R14), its owning-APR governance check, and pass/fail; the report is the artifact a certifier reads (Tier 1 that the report exists and covers the contract; Tier 2 judges completeness of the harness's declared set).
 - **No new checks** — this APR MUST NOT introduce a verification not already owned elsewhere; it indexes existing governance sections (Tier 2).
 - **Owner-registered extensions** — a new obligation is registered by its owning APR, not added here (Tier 2 at owner-APR review).
 
@@ -124,7 +126,7 @@ New runtime obligations MUST enter the contract the way new metadata fields ente
 
 ## Adoption notes
 
-- **Start with a conformance report skeleton** — list R1–R13, link each to its owner's governance section, mark current pass/fail. The gaps in that first report *are* your harness backlog.
+- **Start with a conformance report skeleton** — list R1–R14, link each to its owner's governance section, mark current pass/fail. The gaps in that first report *are* your harness backlog.
 - **Prioritize the enforce-in-code obligations** (R2 per-call re-derivation, R3 taint, R7 memory scope, R9 fail-closed-in-code) — these are the ones a harness most often only *approximates*, and where the safety consequences of approximation are highest.
 - **Treat a missing owner as a finding.** If you can articulate a runtime obligation your harness needs that no APR owns, that is a gap to raise against the corpus, not a row to invent here.
 
@@ -140,3 +142,4 @@ New runtime obligations MUST enter the contract the way new metadata fields ente
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-07-09 | Draft | Initial draft. Collects the corpus's runtime obligations (R1–R13) into one conformance profile for harnesses, each deferring to its owning APR; verification delegated to owners' existing governance checks; closed-for-modification, extended by owner-registration. Surfaced by the harness-coverage study. |
+| 0.2.0 | 2026-07-09 | Draft | Registered **R14** (owner [APR-019](APR-019-identity.md)): the harness references artifacts by canonical `container-id:id` in emitted lineage/audit records and resolves cross-project references only through a declared `dependency` — the first owner-registered extension, exercising the extension model. Added APR-019 to `related`. |

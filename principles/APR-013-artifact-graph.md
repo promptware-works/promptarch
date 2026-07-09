@@ -146,7 +146,7 @@ A conformant platform checks, in review or CI:
 - **Not OBSERVE's content source of truth.** APR-002 makes *content* canonical and walks it for injection; this is the cross-artifact graph layer above it, and it claims the append-only/knowledge-graph slots OBSERVE deliberately left open.
 - **Not a mandate for RDF, a triplestore, or a graph database.** The graph is a set of properties; files with typed-edge frontmatter satisfy it.
 - **Not a version-control system.** Git remains the substrate; this is the discipline on top.
-- **Not a runtime container.** A "container" here is an authoring-time ownership scope for a subgraph — *not* an OCI/Docker sandbox an agent executes in (that is runtime isolation, [APR-018](APR-018-runtime-contract.md)). And a container's *identity* — its id, `parent`, owner — is [APR-019](APR-019-identity.md)'s; this APR owns only its structural role.
+- **Not a runtime container.** A "container" here is an authoring-time ownership scope for a subgraph — *not* an OCI/Docker sandbox an agent executes in (that is runtime isolation, a separate concern outside this corpus's authoring-time scope). And a container's *identity* — its id, `parent`, owner — is [APR-019](APR-019-identity.md)'s; this APR owns only its structural role.
 
 ## Relationship to established patterns
 

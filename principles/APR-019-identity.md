@@ -20,6 +20,7 @@ related:
   - APR-012
   - APR-013
   - APR-014
+  - APR-018
 tags:
   - identity
   - provenance
@@ -144,6 +145,10 @@ A conformant platform checks, in review or CI:
 - **Container nesting** — a nested container's `id` extends its `parent`'s id; provenance resolves by walking the chain to a stated `owner`.
 - **No foreign dangling** — a cross-project edge names a foreign `id` declared in `dependencies`.
 
+## Runtime obligations
+
+Identity is otherwise an authoring/audit-time concern, but it places one obligation on a runtime harness, registered as [APR-018](APR-018-runtime-contract.md) **R14** (owned here, indexed there): a conforming harness MUST reference every artifact by its canonical **`container-id : id`** in emitted lineage and audit records — so each is globally provenance-resolvable — and MUST resolve a **cross-project** reference only when the target's project is a declared `dependency`. This is the sole runtime-facing slice of this APR; assigning ids and resolving provenance are otherwise not harness concerns.
+
 ## What this principle is NOT
 
 - **Not the artifact graph.** [APR-013](APR-013-artifact-graph.md) defines nodes, edges, and the *structure* of container nesting (`part-of`, subgraphs); this APR defines their *identity and provenance* (ids, `parent`, owner, inheritance). Structure and identity are the two halves of one model.
@@ -178,4 +183,4 @@ The contribution is a **single, minimal manifest plus a project-qualified canoni
 |---|---|---|---|
 | 0.1.0 | 2026-07-09 | Draft | Initial draft: project manifest (`project.yaml`), reverse-DNS project ids, `project.id : node.id` canonical ids with `project-id` carried on every node (foreign key), provenance resolution to owner / institution (ORCID/ROR-friendly), and `dependencies`-gated cross-project edges. |
 | 0.2.0 | 2026-07-09 | Draft | Manifest fields moved into a **project-metadata field registry** (`registries/project-metadata.yaml`), the sibling of DECLARE's component registry: each field is a single-owner entry, `type` / `domain` carry their open `values` vocabulary, and other APRs MAY register project-level fields without editing APR-019. Retires the bespoke `project.schema.yaml`; adds `project-metadata.schema.yaml`. `check-project.ts` now validates the manifest against the registry. |
-| 0.3.0 | 2026-07-09 | Draft | Generalized identity to **two levels of granularity**: the **container** (graph-owning scope; a project is the root container) and the **artifact** (node). Containers **nest** via a new `parent` field (id extends the parent's), with provenance **inheritance** up the chain; added the explicit **containment (`part-of`) vs. dependency** distinction (same vs. crossing trust domains). Generalized the node FK `project-id` → **`container-id`** and the canonical id to `container.id : node.id`. Paired with [APR-013](APR-013-artifact-graph.md) 0.3.0 (the structure half). |
+| 0.3.0 | 2026-07-09 | Draft | Generalized identity to **two levels of granularity**: the **container** (graph-owning scope; a project is the root container) and the **artifact** (node). Containers **nest** via a new `parent` field (id extends the parent's), with provenance **inheritance** up the chain; added the explicit **containment (`part-of`) vs. dependency** distinction (same vs. crossing trust domains). Generalized the node FK `project-id` → **`container-id`** and the canonical id to `container.id : node.id`. Registered [APR-018](APR-018-runtime-contract.md) **R14** (the runtime slice: emit canonical ids; dependency-gated cross-project resolution). Paired with [APR-013](APR-013-artifact-graph.md) 0.3.0 (the structure half). |
