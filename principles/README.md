@@ -35,8 +35,9 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 | [APR-013](APR-013-artifact-graph.md) | — | An Artifact-Graph Principle for Promptware | Draft | 0.1.0 |
 | [APR-014](APR-014-declare.md) | **DECLARE** | A Declared-Classification Contract for Promptware Components | Draft | 0.1.0 |
 | [APR-015](APR-015-context-assembly.md) | — | A Context-Assembly and Window-Discipline Principle for Promptware | Draft | 0.2.0 |
-| [APR-016](APR-016-memory.md) | — | A Memory and State-Lifecycle Principle for Promptware | Draft | 0.2.0 |
+| [APR-016](APR-016-memory.md) | — | A Memory and State-Lifecycle Principle for Promptware | Draft | 0.2.1 |
 | [APR-017](APR-017-graceful-degradation.md) | — | A Graceful-Degradation and Failure-Handling Principle for Promptware | Draft | 0.2.0 |
+| [APR-018](APR-018-runtime-contract.md) | — | A Runtime-Conformance Profile for Promptware Harnesses | Draft | 0.1.0 |
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 
@@ -46,7 +47,7 @@ Each APR also has a token-efficient **[digest](digests/)** — an injectable sum
 
 The numbers above are stable citation IDs assigned in drafting order (RFC-style) — **not** a ranking or reading sequence, so an APR may reference a higher-numbered one (see [`meta/apr-numbering.md`](../meta/apr-numbering.md)). For a conceptual tour, the principles group into four layers:
 
-- **Foundations** — [APR-000](APR-000-promptware.md) (what promptware is) · [APR-010](APR-010-governance.md) (how conformance is governed)
+- **Foundations** — [APR-000](APR-000-promptware.md) (what promptware is) · [APR-010](APR-010-governance.md) (how conformance is governed) · [APR-018](APR-018-runtime-contract.md) (the runtime contract a harness must satisfy)
 - **Specifying a component** — [APR-001](APR-001-aspect.md) ASPECT · [APR-014](APR-014-declare.md) DECLARE (frontmatter classification) · [APR-003](APR-003-code-prompt-boundary.md) code/prompt boundary · [APR-007](APR-007-pattern-mechanism.md) patterns
 - **Organizing the platform** — [APR-002](APR-002-observe.md) OBSERVE · [APR-004](APR-004-canonical-source.md) canonical source · [APR-006](APR-006-composition-topology.md) composition · [APR-013](APR-013-artifact-graph.md) artifact graph · [APR-015](APR-015-context-assembly.md) context assembly
 - **Operating safely over time** — [APR-005](APR-005-trust-boundaries.md) trust boundaries · [APR-008](APR-008-artifact-lifecycle.md) lifecycle · [APR-009](APR-009-human-in-the-loop.md) human-in-the-loop · [APR-016](APR-016-memory.md) memory & state · [APR-017](APR-017-graceful-degradation.md) graceful degradation

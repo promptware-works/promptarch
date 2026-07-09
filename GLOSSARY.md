@@ -26,6 +26,10 @@ Prompts, skill prose, agent definitions — the imperative content an LLM reads 
 
 A generative (typically LLM-based) system that materially contributed to producing an APR's content, recorded in the optional `generative-contributors:` frontmatter field. A generative contributor is distinct from a **principal**: it generates content under a principal's direction but is not accountable for the work and is not an author. The distinction separates the *generation* axis (what produced the text) from the *accountability* axis (who is responsible).
 
+## Harness
+
+The runtime scaffolding around an LLM agent — the loop that assembles a context window, calls the model, dispatches tools, manages memory and state, enforces permissions, and orchestrates delegation. In promptware the harness *is* the runtime. PROMPTARCH does not specify how to build one; [APR-018](principles/APR-018-runtime-contract.md) collects the runtime obligations a conforming harness must satisfy. Broader than the **Loader / Orchestrator**, which is the injection/resolution slice of a harness.
+
 ## Loader / Orchestrator
 
 The runtime component that sits between "decide to delegate to a skill" and "send a prompt to the LLM." The loader resolves declared references, injects content, and writes audit-log entries. Several APRs assume a loader exists; platforms without one cannot conform to those APRs without first adding one.

@@ -3,7 +3,7 @@ apr: 16
 title: "A Memory and State-Lifecycle Principle for Promptware"
 abstract: "Agent memory is tiered, trust-labeled, and scope-bound: recall re-enters content at its origin trust and never elevates it, retention is bounded and forgettable, and memory that durably shapes behavior graduates into a governed, versioned artifact."
 status: Draft
-version: 0.2.0
+version: 0.2.1
 principals:
   - D. Maxios
 generative-contributors:
@@ -117,6 +117,7 @@ Whether the store is append-only is not a free "security vs performance" choice;
 - **Not [OBSERVE](APR-002-observe.md).** OBSERVE governs authored, canonical, human-curated content; memory is runtime-written, per-session, and low-trust by origin — until it *graduates*, at which point it becomes OBSERVE/APR-008/APR-013-governed. This principle owns memory's life up to that graduation.
 - **Not [APR-005](APR-005-trust-boundaries.md).** It composes it: memory is the persistence vector for taint, and this is where a trust label gets a *lifetime* and a recall rule.
 - **Not the PII principle** (proposed, backlog): memory is one place PII lands, and forgettability is the shared hook, but this is not content-privacy in general.
+- **Not a solver of downstream influence.** Cascading, tombstoned erasure invalidates memories *derived from* a forgotten item and the artifacts it *graduated into* — but it does not reach influence that has already left the memory system. The clearest case is a **model fine-tune** the memory shaped: no memory-layer erasure can un-train it. That training-data lineage is out of scope here and is a hook for the proposed PII / sensitive-data principle.
 - **Not a guarantee of correct memory.** It governs trust, scope, and lifecycle — not whether a remembered fact is true (a hallucinated memory is still governed; its truth is an eval concern).
 - **Not conversation-history compaction** — that is APR-015's reduction policy.
 
@@ -165,3 +166,4 @@ One case, however, is stronger here than in APR-015 and is flagged for review: *
 |---|---|---|---|
 | 0.1.0 | 2026-07-08 | Draft | Initial draft. Memory as tiered (working/session/long-term), trust-labeled, scope-bound, lifecycle-governed state; recall never elevates trust; bounded retention + forget path; graduation of behavior-shaping memory into a governed artifact. |
 | 0.2.0 | 2026-07-09 | Draft | Review-driven (feedback on the principle). Moved the emphasis to the **write path**: governed least-privilege admission, write-time stamping, and **monotone (min) derivation** including **self-authored** memory (compose APR-005 v0.2.0). **Scope** sharpened — named axes, **cross-tenant** called out, **default-deny enforced in code** (APR-003). Forgetting made **cascading + tombstoned**. **Graduation** reframed as the *single* sanctioned elevation channel (resolving the "never elevates" tension) and triggered against **laundering by repetition**. Added a **Storage model** section: append-only where integrity is load-bearing, mutable only for ephemeral / reconstructible-projection state (APR-013 pattern). Added `related:` APR-003. `writes_memory` field still deferred to review. |
+| 0.2.1 | 2026-07-09 | Draft | Recorded a scope boundary in *What this is NOT*: cascading erasure reaches derived memories and graduated artifacts but **not downstream influence that has left the memory system** (notably a model fine-tune the memory shaped) — that training-data lineage is a hook for the proposed PII / sensitive-data principle. |
