@@ -33,11 +33,12 @@ Start with **[APR-000 PROMPTWARE](principles/APR-000-promptware.md)** if you are
 
 ```text
 promptarch/
-├── principles/        # The APRs — the heart of the project
-├── meta/              # How the project itself works (process, statuses, numbering, project ADRs)
-├── docs/              # Supporting prose: why-promptware, audience, FAQ
-├── schemas/           # Machine-readable companions (APR frontmatter schema, etc.)
-├── tools/             # Linters and validators (deferred)
+├── principles/        # The APRs (+ token-efficient digests/) — the heart of the project
+├── meta/              # How the project itself works (process, statuses, numbering, release, project ADRs)
+├── docs/              # Supporting prose: why-promptware, audience, FAQ, and studies/
+├── schemas/           # Machine-readable schemas (APR frontmatter, component-metadata, artifact-graph)
+├── registries/        # Registry data governed by those schemas (component-metadata, artifact-graph)
+├── tools/             # CI validators (digests, registry, graph) + the release helper
 └── examples/          # Concrete applications of APRs (deferred)
 ```
 
@@ -54,7 +55,7 @@ It is *not* a tutorial on building your first agent — it assumes you've felt t
 
 ## Status
 
-**Pre-release.** APR-001 and APR-002 are at Draft status. The APR process itself (see [`meta/apr-process.md`](meta/apr-process.md)) is also in early iteration; expect refinement as the first few APRs land.
+**Pre-release.** Every APR is currently at `Draft` status — the [index](principles/README.md) lists each with its version. The APR process itself (see [`meta/apr-process.md`](meta/apr-process.md)) is still iterating; expect refinement as the series matures.
 
 ## Licensing
 

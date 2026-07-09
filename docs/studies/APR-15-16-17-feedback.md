@@ -1,5 +1,9 @@
 # Feedback on Principles of APR-15-16-17
 
+*Status: **Resolved** (2026-07-09). Every point below was incorporated into the APRs — the shared trust mechanics into [APR-005](../../principles/APR-005-trust-boundaries.md) v0.2.0, and the rest into [APR-015](../../principles/APR-015-context-assembly.md) v0.2.0, [APR-016](../../principles/APR-016-memory.md) v0.2.0–0.2.1, and [APR-017](../../principles/APR-017-graceful-degradation.md) v0.2.0 — shipped in release v0.5.0. One item is a recorded scope boundary rather than a fix: cascading erasure cannot reach a model fine-tune a memory shaped (APR-016 §What this principle is NOT). Retained as the historical review record that drove the v0.2.0 revisions; informative, not normative.*
+
+Creation DATE: 2026-07-09-DO-10:00
+
 A short discussion in a separate session leads to the results summarized below.
 NOTE that in that session I only posted the principles not the APRs.
 

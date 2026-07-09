@@ -28,14 +28,14 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
 
   Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-graph.yml`](../.github/workflows/check-graph.yml) runs it on pushes and PRs to `main` and `develop`.
 
-- [`release.ts`](release.ts) — cuts a release per the branching model: fast-forwards `develop` → `main`, tags `main`, and publishes a GitHub release. Run from this directory (`tools/`):
+- [`release.ts`](release.ts) — cuts a release from an already-promoted `main`, per the PR-based flow ([ADR-004](../meta/decisions/ADR-004-release-process.md); how-to in [`meta/release-process.md`](../meta/release-process.md)). Promotion is by PR (working → `develop` → `main`); this tool only verifies, tags, and publishes — it does **not** push commits to `main`. Run from this directory (`tools/`):
 
   ```bash
-  node release.ts v0.2.0 --prerelease        # or:  npm run release -- v0.2.0 --prerelease
-  node release.ts v0.2.0 --dry-run           # preview the steps, change nothing
+  node release.ts v0.6.0 --prerelease        # or:  npm run release -- v0.6.0 --prerelease
+  node release.ts v0.6.0 --dry-run           # preview the steps, change nothing
   ```
 
-  Use `--prerelease` while APRs are still `Draft`; drop it once they reach `Accepted`. `--notes <file>` supplies release notes (otherwise GitHub auto-generates them). It refuses to run on a dirty tree, if `develop` is behind its remote, or if `main` has commits not on `develop`. (It prints the active `gh` account first — check it's the right one, since the push/publish use it.)
+  Use `--prerelease` while APRs are still `Draft`; drop it once they reach `Accepted`. `--notes <file>` supplies release notes (otherwise GitHub auto-generates them). It refuses to run on a dirty tree, if `main` has local commits not on its remote, or if `develop` is not yet fully merged into `main` (merge the `develop → main` PR first). (It prints the active `gh` account first — check it's the right one, since the publish uses it.)
 
 ## In scoping
 
