@@ -1,6 +1,6 @@
 # APR-016 — Memory & State Lifecycle — Digest
 
-> **Generated digest of [APR-016 — A Memory and State-Lifecycle Principle for Promptware](../APR-016-memory.md) v0.2.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-016 — A Memory and State-Lifecycle Principle for Promptware](../APR-016-memory.md) v0.2.1.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
 **Abstract.** Agent memory is tiered, trust-labeled, and scope-bound: admission is governed (stamped at write time with its inputs' trust floor, by a least-privilege path; derived memory inherits its least-trusted ancestor), recall never elevates trust automatically, scope is enforced default-deny in code, retention is bounded and forgettable via cascading tombstones, and graduation is the single audited channel by which memory earns behavior-shaping trust.
 
@@ -44,7 +44,7 @@ Governed admission (write-time floor stamp, least-privilege path) · monotone de
 
 ## Scope limits — do NOT misapply
 
-Not a memory store/database (governs discipline, not the engine) · not APR-015 (that orders/budgets recalled memory as a window segment; this governs tier/trust/scope/lifecycle before it becomes one) · not OBSERVE (authored canonical content; memory is runtime-written, low-trust-by-origin, until graduation) · not APR-005 (composes it — memory is where a trust label gets a lifetime) · not the PII principle (memory is one place PII lands; forgettability is the shared hook) · not a guarantee of correct memory (governs trust/scope/lifecycle, not truth) · not conversation-history compaction (APR-015 reduction).
+Not a memory store/database (governs discipline, not the engine) · not APR-015 (that orders/budgets recalled memory as a window segment; this governs tier/trust/scope/lifecycle before it becomes one) · not OBSERVE (authored canonical content; memory is runtime-written, low-trust-by-origin, until graduation) · not APR-005 (composes it — memory is where a trust label gets a lifetime) · not the PII principle (memory is one place PII lands; forgettability is the shared hook) · not a guarantee of correct memory (governs trust/scope/lifecycle, not truth) · not conversation-history compaction (APR-015 reduction) · not a solver of downstream influence (cascading erasure reaches derived memories + graduated artifacts, but not a fine-tune the memory shaped — training-data lineage is a PII-principle hook).
 
 ---
-*Source: [APR-016 — A Memory and State-Lifecycle Principle for Promptware](../APR-016-memory.md) v0.2.0 · regenerate this digest whenever the source changes.*
+*Source: [APR-016 — A Memory and State-Lifecycle Principle for Promptware](../APR-016-memory.md) v0.2.1 · regenerate this digest whenever the source changes.*

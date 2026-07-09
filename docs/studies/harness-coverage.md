@@ -1,8 +1,12 @@
 # Study: Harness-standard coverage — what the APR corpus covers, and the gaps
 
-*Status: design study (informative). A coverage/gap analysis of the PROMPTARCH APR
-corpus against the concerns of an agentic-AI **harness**. Feeds candidate backlog
-items and a possible "runtime contract" consolidation. Not itself an APR.*
+*Status: **Actioned** (design study, informative). A coverage/gap analysis of the
+PROMPTARCH APR corpus against the concerns of an agentic-AI **harness**. All its
+recommendations are now drafted: the three gaps as [APR-015](../../principles/APR-015-context-assembly.md),
+[APR-016](../../principles/APR-016-memory.md), [APR-017](../../principles/APR-017-graceful-degradation.md)
+(shipped in v0.5.0), and the structural **Runtime Contract consolidation** as
+[APR-018](../../principles/APR-018-runtime-contract.md) (Draft). The coverage matrix is
+retained as a living reference. Not itself an APR.*
 
 ## Question
 
@@ -184,9 +188,9 @@ assumes but none states. The Glossary's "Loader / Orchestrator" entry gestures a
 ("several APRs assume a loader exists; platforms without one cannot conform"), but the
 obligations are never gathered.
 
-**Recommendation:** publish a *Runtime Contract* consolidation — either a short new
-APR ("A Runtime-Conformance Profile for Promptware Harnesses") or a `meta/` reference
-doc — that **collects** these obligations by reference (owning-APR-cited, not
+**Recommendation (done):** now drafted as
+[APR-018 — A Runtime-Conformance Profile for Promptware Harnesses](../../principles/APR-018-runtime-contract.md)
+(Draft) — a short APR that **collects** these obligations by reference (owning-APR-cited, not
 redefined, mirroring how APR-010 collects governance and APR-014 collects metadata).
 This lets a harness author read *one* checklist to answer "is my harness
 PROMPTARCH-conformant?" — without PROMPTARCH ever becoming a runtime spec. It respects
@@ -214,9 +218,11 @@ and "general orchestration" out of the backlog.
 3. **Graceful degradation — done.** Drafted as
    [APR-017](../../principles/APR-017-graceful-degradation.md) (Draft, v0.1.0); it
    unifies the six local halt rules as one discipline. All three gaps now filled.
-4. **Publish a Runtime Contract consolidation** (APR or `meta/` doc) that collects the
-   harness obligations the corpus already implies — the highest-leverage structural
-   move, and the honest answer to "approach the harness standard."
+4. **Runtime Contract consolidation — done.** Drafted as
+   [APR-018](../../principles/APR-018-runtime-contract.md) (Draft) — collects the harness
+   obligations the corpus already implies into one checkable profile; the
+   highest-leverage structural move, and the honest answer to "approach the harness
+   standard."
 5. **Hold** eval-methodology and PII at current backlog priority; keep the
    runtime-mechanism concerns explicitly out.
 

@@ -1,7 +1,12 @@
 # Study: Extensible component-metadata (a registry for DECLARE fields)
 
-*Status: design study (informative). Feeds the APR-014 amendment that introduces a
-component-metadata registry. Not itself an APR.*
+*Status: **Resolved / implemented** (design study, informative). The recommendation
+shipped: [APR-014 DECLARE](../../principles/APR-014-declare.md) v0.4.0 defines the
+registry, registration policy, and collision rule; [`registries/component-metadata.yaml`](../../registries/component-metadata.yaml)
+is the seeded source of truth (validated by [`tools/registry/check-registry.ts`](../../tools/registry/check-registry.ts));
+and each new APR registers its own fields via a "Metadata registrations" section
+([`meta/apr-process.md`](../../meta/apr-process.md) §3.2). Retained as the informative
+rationale behind that mechanism; not itself an APR.*
 
 ## Problem
 
