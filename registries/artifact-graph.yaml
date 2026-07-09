@@ -19,12 +19,15 @@ version: 1
 
 # node types allowed in this project (a component's `code` node = APR-001 ASPECT
 # components + APR-002 OBSERVE content). Each node's version/status/lineage is APR-008.
-node-types: [intent, requirement, decision, study, design, code, test, deploy-spec, run-log]
+# `container` is the optional graph-owning scope node (APR-013 §Containers and scope);
+# its payload is the container manifest (APR-019).
+node-types: [container, intent, requirement, decision, study, design, code, test, deploy-spec, run-log]
 
 # edge types: direction is implied by the type. The (optional) object per type MAY later
 # constrain allowed source/target node types, e.g. `satisfies: { from: [code], to: [requirement] }`,
 # without a schema change.
 edge-types:
+  part-of:      {}          # containment: a child container -> its parent container (APR-013/APR-019)
   derives-from: {}
   satisfies:    {}
   verifies:     {}
@@ -38,12 +41,12 @@ edge-types:
 # mandatory node identity; provenance (version, status, supersedes) is reused from
 # core.provenance (APR-008), not redefined here; edges reference the edge-types above.
 node-attributes:
-  id:          { required: true }     # local, project-unique, immutable node id
-  project-id:  { required: true }     # canonical project id (APR-019); global id = project-id:id
-  type:        { required: true }     # one of node-types
-  title:       { required: true }     # human-readable name
-  description: { required: false }    # short summary
-  edges:       { required: false }    # outbound typed edges: { <edge-type>: [<node-id>, …] }
+  id:           { required: true }     # local, container-unique, immutable node id
+  container-id: { required: true }     # innermost container's id (APR-019); global id = container-id:id
+  type:         { required: true }     # one of node-types
+  title:        { required: true }     # human-readable name
+  description:  { required: false }    # short summary
+  edges:        { required: false }    # outbound typed edges: { <edge-type>: [<node-id>, …] }
 
 # node-types (or ids) exempt from the no-orphan rule — the graph's entry points.
 roots: [intent]

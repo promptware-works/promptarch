@@ -1,15 +1,19 @@
 # APR-013 — Artifact Graph — Digest
 
-> **Generated digest of [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.2.2.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.3.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
-**Abstract.** A project's canonical state is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record.
+**Abstract.** A container's canonical state — a project at the root, optionally nested into sub-containers each owning a subgraph — is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record. This APR owns the graph's *structure*; identity of containers and nodes is APR-019's.
 
 **Principle.** Treat the project's canonical state as one append-only, typed graph of all lifecycle artifacts and the relationships between them. Produce the edges as a side effect of producing the nodes, and treat every tool as a projection of the graph rather than a second source of record.
 
 ## Nodes and typed edges
 
 - **Nodes** are versioned lifecycle artifacts: intent, requirements/use cases, decision records + the studies grounding them, design, code (in promptware: ASPECT components + OBSERVE content), tests, deployment specs, run logs. Each node's version/status/lineage is **APR-008's** job; this APR governs the edges between nodes.
-- **Edges** are typed and directional: `derives-from`, `satisfies`, `verifies`, `justified-by`/`informed-by`, `supersedes` (the APR-008 lineage pointer as an edge), `depends-on`/`contradicts`. Adopters MAY extend the vocabulary but MUST declare it.
+- **Edges** are typed and directional: `part-of` (containment tree), `derives-from`, `satisfies`, `verifies`, `justified-by`/`informed-by`, `supersedes` (the APR-008 lineage pointer as an edge), `depends-on`/`contradicts`. Adopters MAY extend the vocabulary but MUST declare it.
+
+## Containers and scope
+
+A graph belongs to a **container** — a **project** is the root; containers nest via `part-of`, each owning a **subgraph** (per-container roots + no-orphan rule). This is the *structure* half; **identity** (container id, `parent`, owner) is APR-019's — the 2×2 is container/artifact × structure/identity. A node attaches to its innermost container by the top-level **`container-id`** FK (canonical id `container-id:id`); nesting between containers is a `part-of` edge. An edge inside one root project is intra-domain; an edge to a **foreign** project is federation (APR-012), gated by declared dependencies (APR-019). "Container" here is an authoring-time scope, **not** an OCI/runtime sandbox.
 
 ## Traceability by construction
 
@@ -40,4 +44,4 @@ No orphans (every non-root node has an inbound edge) · edge legality + checkabi
 Not APR-006's runtime *delegation* graph · not APR-011's *runtime execution* traceability (this is authoring/derivation lineage) · not APR-008's per-artifact lifecycle (this is the edges between nodes) · not OBSERVE's content SoT (this is the cross-artifact layer above it) · not a mandate for RDF/triplestore/graph-DB · not a version-control system.
 
 ---
-*Source: [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.2.2 · regenerate this digest whenever the source changes.*
+*Source: [APR-013 — An Artifact-Graph Principle for Promptware](../APR-013-artifact-graph.md) v0.3.0 · regenerate this digest whenever the source changes.*
