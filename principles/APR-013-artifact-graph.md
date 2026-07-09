@@ -1,10 +1,10 @@
 ---
 apr: 13
 title: "An Artifact-Graph Principle for Promptware"
-abstract: "A project's canonical state is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record."
+abstract: "A container's canonical state — a project at the root, optionally nested into a tree of sub-containers, each owning a subgraph — is one append-only graph of versioned artifact nodes across the lifecycle, joined by checkable typed edges. Traceability is a path through them, emitted as a side effect of production; other tools are projections, not parallel systems of record. This APR owns the graph's structure; the identity of containers and nodes is APR-019's."
 status: Draft
 class: architectural
-version: 0.2.2
+version: 0.3.0
 principals:
   - D. Maxios
 generative-contributors:
@@ -31,7 +31,7 @@ tags:
 
 # APR-013 — An Artifact-Graph Principle for Promptware
 
-> **A project's canonical state is a single, append-only graph of versioned artifact nodes spanning the whole lifecycle, joined by checkable typed edges; traceability is a path through those edges, emitted as a side effect of producing each artifact, and every other tool is a projection of the graph rather than a parallel system of record.**
+> **A project's canonical state is a single, append-only graph of versioned artifact nodes spanning the whole lifecycle — nested into a tree of containers, each owning a subgraph, when the project is large enough to warrant it — joined by checkable typed edges; traceability is a path through those edges, emitted as a side effect of producing each artifact, and every other tool is a projection of the graph rather than a parallel system of record.**
 
 *Injectable summary (for feeding to an LLM): [`digests/APR-013-artifact-graph.md`](digests/APR-013-artifact-graph.md). This full APR is canonical.*
 
@@ -66,11 +66,30 @@ Two halves: a **structural** claim (the graph is the system of record — typed 
 - **Nodes** are versioned, individually addressable lifecycle artifacts: *intent*, *requirements / use cases*, *decision records* and the *studies* that ground them, *design*, *code* (in promptware, the [APR-001 ASPECT](APR-001-aspect.md) components and [APR-002 OBSERVE](APR-002-observe.md) content), *tests* and results, *deployment specs*, and *run logs*. Each node's version, status, and lineage are governed by [APR-008](APR-008-artifact-lifecycle.md); this APR governs the edges *between* nodes.
 - **Edges** are typed and directional. The baseline vocabulary: `derives-from`, `satisfies`, `verifies`, `justified-by` / `informed-by` (a node justified by a decision record, itself informed by studies and requirements), `supersedes` (the [APR-008](APR-008-artifact-lifecycle.md) lineage pointer, recorded as a graph edge), and `depends-on` / `contradicts` for impact analysis and conflict detection. Adopters MAY extend the vocabulary; they MUST declare it in the artifact-graph config (below).
 
+## Containers and scope
+
+A graph always belongs to a **container** — the unit that owns it. A **project** is the *root* container; larger efforts nest, so a container **MAY** be `part-of` a parent container, forming a **tree of containers** in which each owns a **subgraph**. A container's subgraph is exactly the set of nodes whose `container-id` names it (see below); a project's full state is the union of its own subgraph and its descendants'.
+
+This is the **structure** half of a two-level model; the **identity** half is [APR-019](APR-019-identity.md):
+
+| | **Structure — this APR** | **Identity — APR-019** |
+|---|---|---|
+| **Container / scope** | a container owns a (sub)graph; containers nest via `part-of` | the container's id (reverse-DNS), owner, institution, and its `parent` link |
+| **Artifact / node** | the node and its typed edges — its place in the graph | the node's `id` and canonical `container-id : id` |
+
+Concretely:
+
+- **Membership by attribute, nesting by edge.** A node attaches to its **innermost** container through the top-level `container-id` attribute (a foreign key, not an edge — so membership does not inflate the edge set). The **containment tree** itself is expressed with `part-of` edges between *container* nodes: a container **MAY** be represented as a node of `type: container` whose payload is its manifest ([APR-019](APR-019-identity.md)), letting `part-of` connect a child container to its parent like any other typed edge.
+- **The integrity guarantees are per-container.** `roots` (the no-orphan exemptions) and the no-orphan rule apply **within each subgraph**: every container has its own entry points. A node MUST have an inbound edge within its container's subgraph unless it is a declared root of that container.
+- **Intra-tree edges stay in one trust domain; cross-tree edges are federation.** An edge between two containers of the **same root project** is an ordinary intra-project edge (same trust domain). An edge whose target lives under a **foreign** root container is a cross-project reference — permitted only through a declared dependency, and governed as [federated composition](APR-012-federated-composition.md); [APR-019](APR-019-identity.md) draws this **containment-vs-dependency** line and supplies the identity that makes each addressable.
+
+Containment is thus a *structural* relation owned here; what a container **is** — its id, its `parent`, its owner — is declared once in its manifest and governed by [APR-019](APR-019-identity.md). A project with no sub-containers is simply the degenerate tree of one root container, and `container-id` equals its `project.id`.
+
 ## The artifact-graph config
 
-The graph's **vocabulary and scan rules** are declared in a project-level config, [`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml): the `node-types` and `edge-types` a project allows, the `node-attributes` every node declares (`id` + `project-id` + `type` + `title` are the mandatory identity — the globally-canonical id is `project-id:id`, governed by [APR-019](APR-019-identity.md) — plus optional `description` and its typed `edges`), the `roots` exempt from the no-orphan rule, and the `include` / `ignore` globs the kernel scans. It is the **artifact-side sibling** of the component-metadata registry ([APR-014](APR-014-declare.md)): that one governs a *component's* frontmatter fields; this one governs the *artifact graph* across all node types — most of which (requirements, tests, run logs) are not components. Adopters extend the vocabulary by editing this config, not this principle, and it is validated in CI (`tools/graph/check-graph.ts`).
+The graph's **vocabulary and scan rules** are declared in a project-level config, [`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml): the `node-types` (including the optional `container` type) and `edge-types` (including `part-of` for the containment tree) a project allows, the `node-attributes` every node declares (`id` + `container-id` + `type` + `title` are the mandatory identity — the globally-canonical id is `container-id:id`, governed by [APR-019](APR-019-identity.md) — plus optional `description` and its typed `edges`), the `roots` exempt from the no-orphan rule, and the `include` / `ignore` globs the kernel scans. It is the **artifact-side sibling** of the component-metadata registry ([APR-014](APR-014-declare.md)): that one governs a *component's* frontmatter fields; this one governs the *artifact graph* across all node types — most of which (requirements, tests, run logs) are not components. Adopters extend the vocabulary by editing this config, not this principle, and it is validated in CI (`tools/graph/check-graph.ts`).
 
-**Node attributes are top-level on every artifact.** A node declares its `id`, `project-id`, `type`, `title`, and `edges` at the **top level** of its own frontmatter — uniformly, whether or not it is a promptware component. Its globally-canonical id is `project-id:id` ([APR-019](APR-019-identity.md)). A component is *both* a node and a component: its node attributes sit top-level (governed here), **beside — not inside** — its component `metadata` block (governed by [APR-014](APR-014-declare.md)). The graph kernel therefore reads `id` / `project-id` / `type` / `edges` identically from every scanned file (a bare `requirement.md` has no `metadata` block at all), and neither the edge vocabulary nor the identity scheme is duplicated into the component-metadata registry.
+**Node attributes are top-level on every artifact.** A node declares its `id`, `container-id`, `type`, `title`, and `edges` at the **top level** of its own frontmatter — uniformly, whether or not it is a promptware component. `container-id` is the foreign key to its innermost container ([APR-019](APR-019-identity.md)), and its globally-canonical id is `container-id:id`. A component is *both* a node and a component: its node attributes sit top-level (governed here), **beside — not inside** — its component `metadata` block (governed by [APR-014](APR-014-declare.md)). The graph kernel therefore reads `id` / `container-id` / `type` / `edges` identically from every scanned file (a bare `requirement.md` has no `metadata` block at all), and neither the edge vocabulary nor the identity scheme is duplicated into the component-metadata registry.
 
 `supersedes` appears in the edge-type vocabulary but is **not** redefined here: it is `core.provenance.supersedes` (owned by [APR-008](APR-008-artifact-lifecycle.md)), recorded as a graph edge — the graph *derives* the edge from the provenance field rather than owning a second copy.
 
@@ -127,6 +146,7 @@ A conformant platform checks, in review or CI:
 - **Not OBSERVE's content source of truth.** APR-002 makes *content* canonical and walks it for injection; this is the cross-artifact graph layer above it, and it claims the append-only/knowledge-graph slots OBSERVE deliberately left open.
 - **Not a mandate for RDF, a triplestore, or a graph database.** The graph is a set of properties; files with typed-edge frontmatter satisfy it.
 - **Not a version-control system.** Git remains the substrate; this is the discipline on top.
+- **Not a runtime container.** A "container" here is an authoring-time ownership scope for a subgraph — *not* an OCI/Docker sandbox an agent executes in (that is runtime isolation, a separate concern outside this corpus's authoring-time scope). And a container's *identity* — its id, `parent`, owner — is [APR-019](APR-019-identity.md)'s; this APR owns only its structural role.
 
 ## Relationship to established patterns
 
@@ -138,6 +158,7 @@ A conformant platform checks, in review or CI:
 | **Event sourcing** (Fowler) | Append-only history, state as a fold over events | Applied to a heterogeneous artifact graph, with baselines as signed checkpoints |
 | **Build dependency graphs** (Bazel) | A typed DAG of artifacts driving derivation | Spans non-code artifacts (intent, decisions, requirements) and is authored by AI, not just compiled |
 | **Architecture Decision Records** (Nygard) | Durable, citable rationale | ADRs become first-class nodes with `informed-by` edges to the studies that ground them |
+| **Monorepo workspaces / nested modules** (Bazel packages, npm/Cargo workspaces, Maven multi-module) | A root that nests sub-units, each with its own scope and a shared root identity | Containers nest the *artifact graph* (not just code): each owns a subgraph with its own roots, joined by `part-of`, with identity governed by [APR-019](APR-019-identity.md) |
 
 The novel contribution is a **promptware-specific source-of-truth principle**: the canonical project state is one append-only, typed artifact graph spanning the lifecycle, whose edges are emitted by AI as a side effect of production and kept honest by no-orphan / checkable-edge / append-only guarantees — the cross-artifact layer that APR-002, APR-006, APR-008, and APR-011 each deliberately leave to a neighbor.
 
@@ -168,3 +189,4 @@ External sources cited in this APR; see *Relationship to established patterns* f
 | 0.2.0 | 2026-07-01 | Draft | Added §The artifact-graph config: the graph's vocabulary and node model live in a project-level config ([`registries/artifact-graph.yaml`](../registries/artifact-graph.yaml)) — `node-types`, `edge-types`, `node-attributes` (`id`/`type`/`title`/`description`/`edges`), `roots`, `include`/`ignore` — the artifact-side sibling of the component-metadata registry (APR-014), with its own schema + CI checker (`tools/graph/check-graph.ts`). Noted `supersedes` derives from `core.provenance` (APR-008), not redefined. |
 | 0.2.1 | 2026-07-01 | Draft | Clarified that node attributes (`id` / `type` / `title` / `edges`) are declared **top-level** on every artifact — uniform across all node types; for a component they sit beside, not inside, its `metadata` block, so the edge vocabulary is never duplicated into the component-metadata registry. |
 | 0.2.2 | 2026-07-09 | Draft | Added `project-id` to the mandatory node identity and the canonical-id rule `project-id:id`, governed by the new [APR-019](APR-019-identity.md) (Identity & Provenance); cross-referenced it from the config section and the top-level-attributes note. |
+| 0.3.0 | 2026-07-09 | Draft | Introduced **containers** as the graph-owning scope (a project is the root container; containers nest via `part-of`, each owning a subgraph, with per-container roots and the intra-tree vs cross-tree/federation distinction). Added §Containers and scope with the structure-vs-identity (container/artifact) 2×2. Generalized the node identity FK `project-id` → **`container-id`** (canonical id `container-id:id`); added the optional `container` node-type and `part-of` edge-type. Container *identity* (id, `parent`, owner) is [APR-019](APR-019-identity.md)'s; disambiguated from OCI/runtime containers. |
