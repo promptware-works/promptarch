@@ -28,7 +28,7 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
 
   Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-graph.yml`](../.github/workflows/check-graph.yml) runs it on pushes and PRs to `main` and `develop`.
 
-- [`project/check-project.ts`](project/check-project.ts) — validates the [project manifest](../project.yaml) against [`../schemas/project.schema.yaml`](../schemas/project.schema.yaml): reverse-DNS `project.id`, required `title` + `owner`, reverse-DNS dependency ids. Governed by [APR-019](../principles/APR-019-identity.md). Run from this directory (`tools/`):
+- [`project/check-project.ts`](project/check-project.ts) — validates the [project manifest](../project.yaml) against the [project-metadata registry](../registries/project-metadata.yaml) (its shape fixed by [`../schemas/project-metadata.schema.yaml`](../schemas/project-metadata.schema.yaml)): the registry is well-formed (unique fields, APR owners, valid types), and the manifest carries every `required` field, no unregistered keys, values in vocabulary (`type` / `domain`), and reverse-DNS where declared (`id`, `dependencies`). Governed by [APR-019](../principles/APR-019-identity.md). Run from this directory (`tools/`):
 
   ```bash
   node project/check-project.ts      # or:  npm run check:project

@@ -1,0 +1,100 @@
+# Project Metadata Registry
+#
+# The authoritative list of fields in a project manifest (project.yaml). Governed by
+# APR-019 (Identity & Provenance). SIBLING of the component-metadata registry
+# (registries/component-metadata.yaml, APR-014): that one lists a *component's*
+# frontmatter fields; this one lists a *project's* manifest fields. Same shape — one
+# entry per field, owned by exactly one APR — so other APRs MAY register project-level
+# fields (e.g. a federation tier, a conformance profile) without editing APR-019.
+#
+# Field entry:
+#   name      manifest key (snake/kebab leaf)
+#   owner     the single owning APR
+#   required  MUST be present in every project.yaml
+#   type      enum | list | ref-list | string | number | boolean
+#   values    permitted values (enum) / permitted items (list) — an OPEN vocabulary,
+#             extended here without editing the owning APR
+#   format    additional lexical constraint: reverse-dns
+#   status    active | provisional | deprecated | reserved
+#
+# Rules (enforced by tools/project/check-project.ts):
+#   - field `name`s are unique; each `owner` is an APR id; `type`/`status` are valid.
+#   - project.yaml MUST carry every `required` field and MUST NOT carry an unregistered
+#     key; each value MUST satisfy its field's `type` / `values` / `format`.
+#
+# See docs/studies/metadata-extensibility.md for the registry pattern (RFC 8126).
+
+registry_version: 1
+
+fields:
+  # ---------- identity (APR-019) ----------
+  - name: id
+    owner: APR-019
+    required: true
+    type: string
+    format: reverse-dns              # the node-id namespace: project.id : node.id
+    status: active
+    since: "APR-019 0.1.0"
+  - name: title
+    owner: APR-019
+    required: true
+    type: string
+    status: active
+    since: "APR-019 0.1.0"
+  - name: owner
+    owner: APR-019
+    required: true
+    type: string                     # accountable owner; MAY be an ORCID
+    status: active
+    since: "APR-019 0.1.0"
+  - name: institution
+    owner: APR-019
+    required: false
+    type: string                     # organization; MAY be a ROR id
+    status: active
+    since: "APR-019 0.1.0"
+
+  # ---------- classification (APR-019) — open vocabularies ----------
+  - name: type
+    owner: APR-019
+    required: false
+    type: enum
+    values: [research, industrial, governmental, educational, personal]
+    status: active
+    since: "APR-019 0.2.0"
+  - name: domain
+    owner: APR-019
+    required: false
+    type: list
+    values: [software-architecture, agentic-ai, promptware, physics, communication-networks]
+    status: active
+    since: "APR-019 0.2.0"
+
+  # ---------- descriptive / lifecycle (APR-019) ----------
+  - name: description
+    owner: APR-019
+    required: false
+    type: string
+    status: active
+    since: "APR-019 0.1.0"
+  - name: version
+    owner: APR-019
+    required: false
+    type: string                     # optional — latest project release
+    status: active
+    since: "APR-019 0.1.0"
+  - name: license
+    owner: APR-019
+    required: false
+    type: string                     # SPDX license expression (external vocabulary)
+    status: active
+    since: "APR-019 0.1.0"
+
+  # ---------- federation (APR-019 / APR-012) ----------
+  - name: dependencies
+    owner: APR-019
+    required: false
+    type: ref-list
+    format: reverse-dns              # foreign project ids this may edge into (APR-012)
+    status: active
+    since: "APR-019 0.1.0"

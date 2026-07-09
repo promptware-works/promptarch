@@ -1,0 +1,59 @@
+# Project Metadata Registry Schema (JSON Schema, expressed in YAML).
+#
+# Validates registries/project-metadata.yaml — the authoritative list of fields in a
+# project manifest (project.yaml). Governed by APR-019 (Identity & Provenance); sibling
+# of schemas/component-metadata.schema.yaml (APR-014). The zero-dependency checker
+# tools/project/check-project.ts enforces the constraints below AND validates project.yaml
+# against the registered fields.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/promptware-works/promptarch/blob/main/schemas/project-metadata.schema.yaml
+title: Project Metadata Registry
+type: object
+additionalProperties: false
+required:
+  - registry_version
+  - fields
+properties:
+  registry_version:
+    description: Schema/format version of the registry file itself.
+    type: integer
+    minimum: 1
+  fields:
+    description: >
+      Manifest fields. Each is owned by exactly one APR. `required` fields MUST appear in
+      every project.yaml; a manifest MUST NOT carry an unregistered key. Registered by the
+      owning APR, never by editing another APR.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [name, owner, required, type, status]
+      properties:
+        name:
+          description: Manifest key (the leaf under `project`).
+          type: string
+          pattern: '^[a-z][a-z0-9_-]*$'
+        owner:
+          description: The single owning APR.
+          type: string
+          pattern: '^APR-\d{3,}$'
+        required:
+          type: boolean
+        type:
+          type: string
+          enum: [enum, list, ref-list, string, number, boolean]
+        values:
+          description: Permitted values (enum) or permitted items (list).
+          type: array
+        format:
+          description: Additional lexical constraint on the value / items.
+          type: string
+          enum: [reverse-dns]
+        status:
+          type: string
+          enum: [active, provisional, deprecated, reserved]
+        since:
+          description: Free-form provenance, e.g. "APR-019 0.1.0".
+          type: string
