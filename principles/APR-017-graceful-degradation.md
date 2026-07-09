@@ -3,13 +3,13 @@ apr: 17
 title: "A Graceful-Degradation and Failure-Handling Principle for Promptware"
 abstract: "When a tool errors, an injection is missing, a delegate times out, or the model is unavailable, handling is set by what the failure blocks: safety-critical paths fail closed, other paths degrade only via a declared bounded fallback, and no failure or degradation is ever silent."
 status: Draft
-version: 0.1.0
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-07-08
-last-updated: 2026-07-08
+last-updated: 2026-07-09
 audience: Architects and framework authors of agentic AI platforms; harness/runtime and SRE engineers handling tool, delegate, injection, and model failures; anyone hardening promptware for production
 supersedes: []
 superseded-by: []
@@ -21,6 +21,8 @@ related:
   - APR-008
   - APR-009
   - APR-011
+  - APR-015
+  - APR-016
 tags:
   - failure-handling
   - graceful-degradation
@@ -31,7 +33,7 @@ tags:
 
 # APR-017 — A Graceful-Degradation and Failure-Handling Principle for Promptware
 
-> **A failure's handling is set by what it blocks: safety-critical or consequential paths fail closed (halt, deny, escalate), other paths may degrade only via a declared, bounded fallback, and no failure or degradation is ever silent.**
+> **A failure's handling is set at design time by what it blocks — its irreversibility, blast radius, and detectability — never by runtime model judgment. Irreversible/consequential (and unclassified) paths fail closed: the harness denies new consequential actions, rolls back or compensates in-flight ones, presumes ambiguous outcomes committed, and constrains the action space so the model cannot re-plan around the halt. Other paths degrade only via a declared fallback that is never less constrained than the path it replaces, within a sticky run-level degradation budget that may never reach the guardrail or classification machinery. Retries are a distinct mode, permitted only for idempotent operations under declared limits. No failure is silent — it is logged, disclosed, and marked at the artifact boundary so degraded output is never consumed as full-fidelity.**
 
 ## Motivation
 
@@ -42,34 +44,41 @@ Without one, adopters improvise — and improvised failure handling collapses to
 - **Silent best-effort.** The system proceeds on a guess that hides the failure: a missing injection is silently backfilled by the model's prior knowledge; a failed access-check "fails open" because the error path was never considered; a degraded summary flows downstream as if authoritative. This is how failures become *safety* incidents.
 - **Brittle total halt.** A flaky, low-stakes tool takes down a reversible, non-critical path that could have degraded cleanly — so operators disable the guardrails that were "too noisy," and the pendulum swings back to silent best-effort.
 
+And there is a structural complication the other two failure-domains lack: **the model is inside the loop, reading the failure and re-planning around it.** A fail-closed decision delivered to the model as a tool-error *string* is not experienced as a halt — it is a signal to try a different tool (denied `transfer_funds` → reach for `execute_script`). That is a model-invented, undeclared fallback: exactly what this principle forbids, re-entering through the back door. So fail-closed must be enforced in code — terminating or constraining the loop — not returned as text the model is free to reinterpret.
+
 The discipline that resolves this is the same one [APR-009](APR-009-human-in-the-loop.md) uses for oversight placement: **let a declared property of the action — not the model's in-the-moment judgment — select the behavior.**
 
 ## The principle
 
-**On any failure, the handling mode is selected by the safety-criticality of the path the failure blocks; the mechanics of any degrade are declared in advance; and both the failure and the degrade are always recorded.**
+**On any failure, the handling mode is selected — at design time, from a declared property of the path the failure blocks — among three modes; any degrade's mechanics are declared in advance; and both the failure and the degrade are always recorded and disclosed.**
 
-- **Fail closed** on safety-critical, consequential, or irreversible paths: halt, deny, or escalate — never proceed on a guessed or degraded substitute.
-- **Degrade** on other paths, but only through a **declared, bounded fallback** — never an improvised or model-invented substitute.
-- **Never silently.** Every failure and every fallback activation is audit-logged and marked, so a degraded result is always distinguishable from a normal one.
+- **Fail closed** on irreversible, consequential, or unclassified paths: deny new consequential actions, roll back or compensate in-flight ones, and **constrain the action space** — never proceed on a guessed or degraded substitute, and never return a mere error string the model can route around.
+- **Degrade** on reversible/low-blast paths, only through a **declared fallback that is never less constrained than the path it replaces** (reduce capability, never guarantees) — never an improvised or model-invented substitute.
+- **Retry** — a distinct third mode (the most common real behavior), permitted only for **idempotent** operations under declared limits; an ambiguous outcome is **presumed committed**, never blind-retried.
+- **Never silently.** Every failure and fallback is logged, disclosed to the right audience, and **marked at the artifact boundary** so degraded output is never consumed as full-fidelity.
 
 ## The placement rule
 
+The selector is the path's **irreversibility** and **blast radius**, with **detectability** as tiebreaker (an irreversible failure you cannot detect afterward is more severe than one you can). It MUST come from declared metadata (`safety_critical`, reversibility, blast radius — [APR-009](APR-009-human-in-the-loop.md)), **not** the agent's judgment at failure time.
+
 | Path the failure blocks | Handling |
 |---|---|
-| **Safety-critical / consequential / irreversible** (allow-deny, access control, secrets, audit, or any action gated per APR-003 / APR-005 / APR-009) | **Fail closed** — halt or deny and escalate; record the partial state; never substitute a guess or a degraded value. |
-| **Reversible / low-blast / advisory** | **Degrade** — activate a *declared* bounded fallback (canonical default, cached value, reduced-capability mode, bounded retry), mark the result degraded, log it. |
-
-Safety-criticality selects the column; blast radius tunes the rigor of the fallback (how many retries, how loud the alert). The selection MUST come from declared metadata (`safety_critical`, reversibility, blast radius — [APR-009](APR-009-human-in-the-loop.md)), **not** from the agent's judgment at failure time.
+| **Irreversible / consequential** (allow-deny, access control, secrets, audit, or any action gated per APR-003 / APR-005 / APR-009) | **Fail closed** — deny new actions, roll back/compensate in-flight, presume ambiguous outcomes committed, constrain the action space, escalate; never substitute a guess or degraded value. |
+| **Reversible / low-blast / advisory** | **Degrade** — a *declared* fallback no less constrained than the primary (canonical default, cached value, reduced-capability mode), marked and logged. |
+| **Idempotent, transient** | **Retry** — under declared count/budget/time limits; ambiguous outcome ⇒ presume committed, do not blind-retry; on exhaustion fall through to fail-closed or the declared fallback. |
+| **Unclassified / unrecognized** | **Fail closed** — an unknown blast radius is treated as high; classification is a design-time property in code, never a runtime model judgment. |
 
 ## Prescription
 
-- A failure on a **safety-critical, consequential, or irreversible** path MUST **fail closed** — halt or deny and escalate — and MUST NOT proceed on a guessed value, a degraded substitute, or a silently-skipped check. (Generalizes APR-003 "halt, don't guess," OBSERVE strict-mode halt, APR-015 non-evictable halt.)
-- A failure on a **non-safety-critical** path MAY **degrade**, but only via a **declared fallback** — a default from canonical source ([OBSERVE](APR-002-observe.md) `config/`), a cached prior result, a reduced-capability mode, or a bounded retry. The fallback MUST NOT be improvised by the model, and MUST NOT silently substitute a probabilistic value where a deterministic one failed (composes APR-003).
-- **No degradation is silent.** Every failure and every fallback activation MUST be **audit-logged** and **marked** in the output/trace (an explicit degraded marker, e.g. OBSERVE's `[INJECTION_FALLBACK]`); a degraded result MUST be distinguishable from a normal one downstream.
-- The **failure-handling mode MUST be selected by declared metadata** (safety-criticality, reversibility, blast radius), never by the agent's in-the-moment self-assessment (composes APR-003, APR-009).
-- **Recovery MUST be bounded.** Retries, re-delegation, and re-prompting MUST have a declared bound (count / budget / time); exhausting the bound MUST fall through to fail-closed or the declared fallback — never spin or retry unboundedly (composes APR-006 termination, APR-011 budget).
-- A **degraded or partial result** propagated downstream MUST carry its degraded status (taint-style), so a consumer does not treat a fallback value as authoritative (composes APR-005; parallels APR-016 recall-trust).
-- When a failure interrupts a **multi-step irreversible action**, the system MUST NOT leave a partial irreversible effect silently: it MUST complete, roll back, or halt-and-escalate with the partial state recorded (composes APR-009's rollback plan).
+- A failure on an **irreversible, consequential, or unclassified** path MUST **fail closed** and MUST NOT proceed on a guessed value, a degraded substitute, or a silently-skipped check. (Generalizes APR-003 "halt, don't guess," OBSERVE strict-mode halt, APR-015 protected-tier halt.)
+- Fail-closed MUST be **enforced in code**: the harness MUST **constrain the action space** (not merely refuse one call and return an error string), so the model cannot invent an undeclared fallback by reaching for a different tool. Returning a fail-closed decision as free text the model may reinterpret is non-conformant.
+- The **handling mode MUST be selected by declared metadata** — irreversibility, blast radius, detectability (`safety_critical`, reversibility, blast radius — APR-009) — never by the agent's in-the-moment self-assessment (composes APR-003, APR-009). **Unclassified failures MUST fail closed** (unknown blast radius is treated as high).
+- A failure on a **reversible** path MAY **degrade**, but only via a **declared fallback** that is **never less constrained than the path it replaces** — degradation reduces **capability, never guarantees**. A fallback that would weaken a safety property (e.g. the same operation minus its validator/policy-check) is a privilege escalation dressed as resilience; if the only available fallback would weaken a guarantee, the path **fails closed**. The fallback MUST NOT be model-improvised, and MUST NOT silently substitute a probabilistic value where a deterministic one failed (composes APR-003).
+- **Retry is a distinct governed mode**, permitted only for **idempotent** operations under a declared count/budget/time bound; a non-idempotent operation MUST NOT be blind-retried, and an **ambiguous outcome** (e.g. a write that timed out with unknown commit state) MUST be **presumed committed** for safety. Exhausting the bound MUST fall through to fail-closed or the declared fallback — never spin (composes APR-006 termination, APR-011 budget).
+- **Degradation is bounded per run, not only per failure.** Individually-bounded degradations compose into an out-of-spec aggregate; the platform MUST enforce a **run-level degradation budget**, and degradation state MUST be **sticky and monotone** across the run (it does not silently reset to full-fidelity on the next call). A run MUST define how it **recovers** from degraded state (a declared recovery gate), so a long-lived agent neither ratchets monotonically into uselessness nor quietly resumes nominal mode. Degradation MUST NOT reach the **failure-classification or guardrail machinery** itself (the floor).
+- **No degradation is silent — and "not silent" has three audiences.** Every failure and fallback MUST be **audit-logged for the operator**, **disclosed to the user** where it affects the result, and **marked at the artifact boundary** so a downstream consumer (including the next agent) does not treat degraded output as full-fidelity. The archetypal silent failure is **confabulation** — retrieval returns nothing, the tool errors, and the model emits fluent, success-shaped prose over the hole: the failure was logged but the *output* was silent, so boundary-marking is mandatory. What is disclosed *to the model* is a separate manipulation surface and SHOULD be kept thin. A degraded/partial result propagated downstream MUST carry its degraded status taint-style (composes APR-005; parallels APR-016 recall-trust).
+- When a failure interrupts a **multi-step irreversible action**, the system MUST NOT leave a partial irreversible effect silently: it MUST complete, roll back/compensate, or halt-and-escalate with the partial state recorded (composes APR-009's rollback plan).
+- **Escalation is not a terminal state.** It is a blocking wait on a channel that can itself fail or go unanswered; every escalation MUST carry a **declared timeout**, and the timeout's **expiry MUST fail closed** — otherwise "escalate" quietly becomes "wait, then proceed."
 - On **model unavailability**, an artifact MAY fall back to another model **only if that model is within the artifact's validated set** ([APR-008](APR-008-artifact-lifecycle.md)); a safety-critical artifact MUST NOT silently run on an unvalidated model — it fails closed instead.
 
 ## Scope and applicability
@@ -89,12 +98,13 @@ Safety-criticality selects the column; blast radius tunes the rigor of the fallb
 
 *(Shared conformance model — two-tier CI/human, audit-binding, change-via-ADR — per [APR-010](APR-010-governance.md).)*
 
-- **Fail-closed on safety-critical** — an error-injection test shows every safety-critical/consequential path halts-or-denies on dependency failure and never proceeds on a substitute (Tier 1 test harness; Tier 2 to confirm the safety-critical set is complete).
-- **Declared fallbacks** — every degrade path names a fallback from a canonical source; no model-improvised substitution (Tier 1 presence; Tier 2 judgment).
-- **No silent degradation** — failures + fallback activations are audit-logged and output-marked; degraded results are flagged downstream (Tier 1).
-- **Mode from metadata** — handling mode derives from declared safety-criticality/reversibility, not agent self-assessment (Tier 2).
-- **Bounded recovery** — retries/re-delegation carry a declared bound; exhaustion falls through, never spins (Tier 1 config; parallels APR-006).
-- **Degraded taint propagated** — a fallback value carries degraded status to consumers (Tier 1/2).
+- **Fail-closed enforced in code** — an error-injection test shows every irreversible/consequential path denies-and-constrains on dependency failure, never proceeds on a substitute, and does not merely return a routable error string (Tier 1 test harness; Tier 2 confirms the set is complete).
+- **Unclassified fails closed** — a path with no declared classification fails closed, not degrades (Tier 1).
+- **Fallbacks no weaker than primary** — every degrade path names a fallback from a canonical source that preserves the primary's safety properties; a would-be-weaker fallback fails closed instead (Tier 1 presence; Tier 2 judgment).
+- **Retry gated** — retries apply only to idempotent operations under a declared bound; ambiguous outcomes are presumed committed, not blind-retried (Tier 1 config; Tier 2 idempotency judgment).
+- **Run-level degradation budget** — degradation is sticky/monotone with a run budget and a declared recovery gate; degradation cannot reach the classification/guardrail machinery (Tier 1 budget; Tier 2 floor).
+- **No silent degradation (three audiences)** — failures + fallbacks are logged (operator), disclosed (user), and marked at the artifact boundary (downstream); a confabulation-over-empty-retrieval case is in the evals (Tier 1 marking; Tier 2 disclosure).
+- **Escalation bounded** — every escalation carries a timeout whose expiry fails closed (Tier 1).
 - **Model-fallback validated** — a fallback model is within the artifact's validated set; safety-critical artifacts fail closed rather than run unvalidated (Tier 1 against APR-008 pins).
 
 ## What this principle is NOT
@@ -144,3 +154,4 @@ This APR introduces **no new component-metadata field**, consistent with APR-015
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-07-08 | Draft | Initial draft. Failure handling selected by declared safety-criticality: fail closed for safety-critical/consequential/irreversible paths, declared bounded fallback elsewhere, never silent. Unifies the six local halt rules (APR-002/003/005/006/011/015) as instances of one principle. |
+| 0.2.0 | 2026-07-09 | Draft | Review-driven (feedback on the principle). Addressed the **model-in-the-loop**: fail-closed MUST be **enforced in code** and **constrain the action space**, not return a routable error string. Selector sharpened to **irreversibility + blast radius + detectability**; **unclassified fails closed** (fixed the residual-class inversion). Added **retry** as a distinct **idempotency-gated** mode, with **ambiguous-outcome ⇒ presume-committed**. Degradation made **run-level, sticky/monotone** with a declared **recovery gate** and a **floor** (never reach classification/guardrail machinery). Fallbacks MUST be **no weaker than the primary** (reduce capability, not guarantees). "Never silent" decomposed into **three audiences** + **confabulation** boundary-marking. **Escalation** given a timeout that **expires fail-closed**. Added `related:` APR-015/016. |

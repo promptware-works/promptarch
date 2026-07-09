@@ -3,13 +3,13 @@ apr: 5
 title: "A Trust-Boundary and Untrusted-Input Principle for Promptware"
 abstract: "Classify every input and injected reference by trust; treat untrusted content as data, never instructions; make trust boundaries between content categories and between authors explicit and enforced, with recorded provenance — so promptware resists prompt injection and unauthorized behavior change."
 status: Draft
-version: 0.1.1
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-05-31
-last-updated: 2026-05-31
+last-updated: 2026-07-09
 audience: Architects and framework authors of agentic AI platforms; security reviewers of agentic systems; anyone whose promptware processes content from outside its trust boundary
 supersedes: []
 superseded-by: []
@@ -18,6 +18,9 @@ related:
   - APR-002
   - APR-003
   - APR-004
+  - APR-015
+  - APR-016
+  - APR-017
 tags:
   - security
   - trust-boundary
@@ -62,8 +65,8 @@ Three commitments: (1) **trust classification** of all inputs and references; (2
 
 - A **trust boundary** separates operator-controlled content (**trusted**) from everything else (**untrusted**).
   - *Trusted*: skills and agent specs, the canonical promptware root ([APR-004](APR-004-canonical-source.md)), reference content authored and reviewed by authorized principals.
-  - *Untrusted*: user input, external documents, web content, tool/sub-agent output, third-party skills/refs.
-- Trust is a property of **origin**, assigned **at ingress** (the point content enters), and **carried with the content** (taint-style) through every hop — including transitive injection (OBSERVE cross-references) and materialization (APR-004).
+  - *Untrusted*: user input, external documents, web content, tool/sub-agent output, third-party skills/refs, **and model-generated content that incorporates or derives from any of these** (the agent's own scratchpad, plans, reflections, and summaries — see *Derivation, self-authored content, and unforgeable labels* below).
+- Trust is a property of **origin**, assigned **at ingress** (the point content enters), and **carried with the content** (taint-style) through every hop — including transitive injection (OBSERVE cross-references), materialization (APR-004), and **derivation** (summarization, merge, reflection, paraphrase).
 - Two tiers are the minimum; platforms MAY add finer ones (e.g., *reviewed-external*).
 
 ## Untrusted content is data, not instructions
@@ -74,6 +77,16 @@ This is the load-bearing rule. Untrusted content **MUST** be delivered to the mo
 
 **But enforcement strength MUST scale with blast radius.** Delimiting plus a "treat as data" instruction is the weakest form and is known to be bypassable; it MAY suffice for low-consequence, read-only paths, but it MUST NOT be the *only* safeguard on a safety-critical or high-blast-radius path. There, stronger isolation is required — quarantine, a dual-LLM / CaMeL design where the privileged path never acts on untrusted content directly, or capability limits on untrusted-influenced steps — composing with [APR-003](APR-003-code-prompt-boundary.md)'s deterministic gate and [ASPECT](APR-001-aspect.md)'s blast-radius declaration.
 
+## Derivation, self-authored content, and unforgeable labels
+
+The "carried with the content" rule above has three consequences that adversaries exploit and that a bare labeling scheme misses:
+
+- **Derivation is monotone (min, never max).** Content produced by transforming other content — a summary, a merge, a reflection, a paraphrase — inherits the **least-trusted** label among its inputs. A summary of one trusted and one untrusted source is **untrusted**. Transformation MUST NOT be a trust-elevation channel; without this rule, "carried taint" holds for direct copies but breaks the moment the agent summarizes or aggregates — which it does constantly.
+- **Self-authored content is not trusted by origin.** Output is not trusted merely because the model produced it. Model-generated content that incorporates or derives from untrusted input carries that input's trust floor; the agent's own scratchpad, plans, and reflections that re-enter the context window MUST be labeled by the floor of their inputs, not as operator-trusted. Otherwise the agent loop is a free elevation channel: launder untrusted text through one "summarize" step and it re-enters as if trusted.
+- **The label must be unforgeable from within content.** A trust label enforced by in-band string markers (e.g. a fixed `<untrusted>…</untrusted>` delimiter) can be **forged**: a fetched page or an email can contain the closing marker and then impersonate trusted instructions. The boundary MUST be unforgeable from within segment content — untrusted content MUST NOT be able to reproduce the labeling/delimiting scheme to escalate itself. Prefer out-of-band structural separation (the API's own message-role boundaries) or per-run unpredictable sentinels over fixed in-band delimiters.
+
+The single elevation path that *is* legitimate is an **explicit, governed promotion** — a reviewed step that raises trust deliberately and is audit-logged — never a side effect of processing (this is the trust-side twin of [APR-016](APR-016-memory.md)'s memory *graduation*).
+
 ## Trust boundaries inside the platform
 
 Beyond ingress, two internal boundaries:
@@ -83,8 +96,11 @@ Beyond ingress, two internal boundaries:
 
 ## Prescription
 
-- All inputs and injected references **MUST** be classified trusted/untrusted at ingress, and the label **MUST** propagate with the content through every hop (injection, cross-reference, materialization).
+- All inputs and injected references **MUST** be classified trusted/untrusted at ingress, and the label **MUST** propagate with the content through every hop (injection, cross-reference, materialization, **derivation**).
+- Content **derived** from multiple sources (summary, merge, reflection, paraphrase) **MUST** inherit the **least-trusted** label among its inputs; transformation **MUST NOT** elevate trust. Trust **MUST** rise only through an explicit, governed, audit-logged promotion — never as a side effect of processing.
+- **Model-generated content is not trusted by origin.** Output that incorporates or derives from untrusted input **MUST** carry that input's trust floor; the agent's own scratchpad, plans, and reflections re-entering the context window **MUST** be labeled by the floor of their inputs, not as operator-trusted.
 - Untrusted content **MUST** be delivered as delimited data, never via the instruction channel; the agent **MUST NOT** act on instructions found in untrusted content.
+- The trust label and its channel boundary **MUST** be **unforgeable from within segment content**: untrusted content **MUST NOT** be able to reproduce the labeling/delimiting scheme to escalate itself. Enforcement **SHOULD** use out-of-band structural separation (message-role boundaries) or per-run unpredictable sentinels rather than fixed in-band string delimiters.
 - The **strength** of that enforcement **MUST** scale with blast radius: delimiting alone **MUST NOT** be the sole safeguard on a safety-critical or high-blast-radius path, which **MUST** use stronger isolation (quarantine, dual-LLM / CaMeL, or capability limits).
 - Consequential or safety-critical actions **MUST NOT** rest solely on untrusted content; a deterministic check or an authorized human **MUST** gate them (composes with [APR-003](APR-003-code-prompt-boundary.md)).
 - Authority to author/modify each reference category **MUST** be explicit and enforced; modifying safety-critical categories **MUST** require stricter authorization.
@@ -98,6 +114,9 @@ The shared governance model — two-tier enforcement, audit-log binding, and cha
 A conformant platform checks, in review or CI:
 
 - **Labeling & propagation** — inputs/references carry trust labels; untrusted content never reaches the instruction channel.
+- **Derivation monotonicity** — derived/summarized/merged content carries the *min* label of its sources; no elevation without a governed, logged promotion.
+- **Self-authored labeling** — model output that incorporates untrusted input is labeled at its input floor, not as operator-trusted.
+- **Unforgeable boundaries** — the label/delimiter scheme cannot be reproduced from within untrusted content (structural separation or per-run sentinels); a delimiter-forgery attempt lives in the red-team `evals/` cases.
 - **Category authority** — `CODEOWNERS` / review gates enforce who may edit each reference category; safety-critical categories are gated more strictly.
 - **Provenance** — recorded for behavior-driving artifacts; signatures verified where required.
 - **Untrusted-input declarations** — skills that take untrusted input carry the ASPECT security-sensitive treatment.
@@ -156,3 +175,4 @@ External sources referenced in this APR; see *Relationship to established patter
 |---|---|---|---|
 | 0.1.0 | 2026-05-31 | Draft | Initial draft published as APR-005. |
 | 0.1.1 | 2026-05-31 | Draft | Enforcement strength of "untrusted = data" MUST scale with blast radius — delimiting alone is insufficient for safety-critical/high-blast-radius paths, which require stronger isolation (quarantine, dual-LLM, capability limits). |
+| 0.2.0 | 2026-07-09 | Draft | Added the trust-mechanics the APR-015/016/017 drafts lean on: taint propagates through **derivation** and is **monotone** (derived content takes the least-trusted input's label; transformation never elevates); **self-authored content** is a trust origin (model output inheriting untrusted input's floor; scratchpad/reflections re-entering context labeled accordingly); **labels MUST be unforgeable** from within content (structural separation / per-run sentinels over in-band delimiters). Governed promotion is the only elevation path. Added `related:` APR-015/016/017. |

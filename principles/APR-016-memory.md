@@ -3,18 +3,19 @@ apr: 16
 title: "A Memory and State-Lifecycle Principle for Promptware"
 abstract: "Agent memory is tiered, trust-labeled, and scope-bound: recall re-enters content at its origin trust and never elevates it, retention is bounded and forgettable, and memory that durably shapes behavior graduates into a governed, versioned artifact."
 status: Draft
-version: 0.1.0
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-07-08
-last-updated: 2026-07-08
+last-updated: 2026-07-09
 audience: Architects and framework authors of agentic AI platforms; harness/runtime engineers implementing agent memory and session state; anyone reasoning about memory poisoning, data retention, or cross-session behavior drift
 supersedes: []
 superseded-by: []
 related:
   - APR-002
+  - APR-003
   - APR-005
   - APR-008
   - APR-009
@@ -30,7 +31,7 @@ tags:
 
 # APR-016 — A Memory and State-Lifecycle Principle for Promptware
 
-> **Agent memory is tiered, trust-labeled, and scope-bound state: recall re-enters content at its origin trust and never elevates it, scope is enforced, retention is bounded and forgettable, and any memory that durably shapes behavior graduates into a governed artifact.**
+> **Agent memory is tiered, trust-labeled, and scope-bound state. Admission is governed: memory is stamped at write time with the trust floor of its inputs, by a least-privilege write path, and derived memory inherits its least-trusted ancestor's label. Recall re-enters content at its stored origin trust and never elevates it automatically. Scope is enforced default-deny at the query boundary in code. Retention is bounded and forgettable via cascading, tombstoned erasure. Trust elevation occurs only through graduation: the single audited, reviewed channel by which memory earns behavior-shaping status.**
 
 ## Motivation
 
@@ -49,10 +50,10 @@ These are not storage-engine problems; they are the absence of a *discipline* ov
 **Treat memory as governed state with four declared properties — tier, trust, scope, and lifecycle — and a graduation rule that stops durable memory from escaping artifact governance.**
 
 - **Tier** — every memory item belongs to a declared tier (working / session / long-term), which fixes its lifetime and default treatment.
-- **Trust** — memory carries the trust label of the *lowest-trust* content that formed it; recall re-enters at that trust and never elevates it ([APR-005](APR-005-trust-boundaries.md) taint, given a lifetime).
-- **Scope** — every item has a declared scope (run / session / user / agent / project / global) and is recallable only within it.
-- **Lifecycle** — write, selective recall, bounded retention, and an explicit forget path; contradictions reconciled by declared policy, not silence.
-- **Graduation** — memory that durably shapes behavior across sessions MUST become a governed artifact, not remain ungoverned "memory."
+- **Trust** — the vulnerability is the *write* path, not the read. Memory is **stamped at write time** with the trust floor of its inputs, by a **least-privilege write path** (not something any tool result performs freely); **derived or merged** memory inherits its **least-trusted ancestor's** label (monotone min — [APR-005](APR-005-trust-boundaries.md) v0.2.0). Recall then re-enters at that stored trust and **never elevates it automatically**. Self-authored memory (the model writing "the user prefers X" from observation) sits at the floor of its inputs, never at system trust.
+- **Scope** — every item has a declared scope along named axes — **tenant/user, session/task, agent-or-tool identity, time** — enforced **default-deny at the store/query boundary in code** (not by asking the model to be careful). The catastrophic failure is **cross-tenant recall** (user A's memory surfacing for user B); a query that does not declare its scope gets **nothing**, not everything.
+- **Lifecycle** — write, selective recall, bounded retention (TTL/decay), and **cascading, tombstoned** erasure; contradictions reconciled by declared policy, not silence.
+- **Graduation** — trust never elevates automatically, and graduation is the **only** elevation path: a governed, reviewed promotion that is the single audited doorway through which memory earns behavior-shaping status. This resolves the apparent tension with "never elevates" — automatic elevation is forbidden; graduation is the sanctioned, human-gated exception.
 
 ## The three tiers
 
@@ -64,14 +65,21 @@ These are not storage-engine problems; they are the absence of a *discipline* ov
 
 Tiers are distinguished by *lifetime*, the same way [OBSERVE](APR-002-observe.md) distinguishes content categories by change-lifecycle. Working memory is governed by APR-015 as a window segment; this principle governs session and long-term memory and the trust/scope discipline that spans all three.
 
+## Storage model — append-only where integrity is load-bearing
+
+Whether the store is append-only is not a free "security vs performance" choice; forcing it into one silently reinstates the silent-mutation laundering path (rewrite content, keep the trusted stamp). The store MUST be **append-only wherever a memory's integrity is load-bearing** — any session/long-term memory that is untrusted-origin, behavior-shaping, or erasure-subject — because that is where laundering, provenance, and cascading erasure live. A **mutable/fast** store is permitted only for state where integrity is not load-bearing: **ephemeral working memory** (dies with the run), or a **reconstructible projection** of an append-only source (a cache/index that can be rebuilt — the [APR-013](APR-013-artifact-graph.md) "tools are projections, reconciled back" pattern). The selector is the declared **tier + trust**, decided in code at design time — never a per-team performance preference. Append-only's costs (write amplification, read-resolution) are mitigated by a current-head index and retention-bounded compaction; it is the same append-only discipline APR-013 already commits the corpus to.
+
 ## Prescription
 
-- Every memory item MUST carry a declared **tier** and **scope**; recall MUST be confined to that scope — cross-scope or cross-principal recall is a boundary violation (composes with [APR-005](APR-005-trust-boundaries.md) author/category boundaries, [APR-012](APR-012-federated-composition.md) across domains).
-- Memory MUST carry the **trust label of the lowest-trust content** that produced it (taint composition, APR-005). **Recall MUST re-enter content at that trust level and MUST NOT elevate it**: recalled untrusted memory is delimited **data**, never instructions. This is the hard defense against memory poisoning.
+- **Admission is governed.** Memory MUST be **stamped at write time** with the trust floor of its inputs; the write path itself MUST be **least-privilege** (an explicit, authorized operation, not something any tool result performs freely). Stamping by *where content landed* rather than *where it came from* is forbidden — that launders trust before recall ever runs.
+- **Derivation is monotone.** Memory derived, summarized, merged, or reflected from multiple sources MUST inherit its **least-trusted ancestor's** label (min, never max — composes [APR-005](APR-005-trust-boundaries.md) v0.2.0). **Self-authored** memory carries the floor of its inputs, never system trust — otherwise the reflection loop is a free elevation channel bypassing graduation.
+- **Recall MUST re-enter content at its stored trust and MUST NOT elevate it automatically**: recalled untrusted memory is delimited **data**, never instructions. This is the hard defense against memory poisoning.
 - Writing **session/long-term memory from untrusted content** MUST NOT, on later recall, drive a consequential or safety-critical action on its own; a deterministic check or an authorized human MUST gate it (composes with [APR-005](APR-005-trust-boundaries.md) and [APR-009](APR-009-human-in-the-loop.md)).
+- Every memory item MUST carry a declared **scope** along its axes (tenant/user, session/task, agent-or-tool identity, time), enforced **default-deny at the store/query boundary in code** ([APR-003](APR-003-code-prompt-boundary.md) — not by asking the model). A query that does not declare its scope MUST return **nothing**; cross-scope or **cross-tenant** recall is a boundary violation (composes with [APR-005](APR-005-trust-boundaries.md), [APR-012](APR-012-federated-composition.md)).
 - Recall MUST be **selective and declared** (which memory, which scope) — never blanket re-injection of everything remembered — and every recall MUST be **audit-logged** (`{item/scope id, trust label, timestamp}`). Recalled memory is a segment assembled under [APR-015](APR-015-context-assembly.md) and budgeted there.
-- Every persisted memory MUST have a **declared retention/expiry** policy; **indefinite retention MUST be an explicit, justified choice, not a default**. Memory MUST be **forgettable**: a delete/forget operation MUST remove it from all future recall (the architectural hook for data-subject erasure; ties to the proposed PII principle).
-- Long-term memory that **durably shapes behavior across sessions** (learned rules, curated fact bases, standing preferences that steer decisions) MUST **graduate to a governed artifact** — versioned + status-tracked + provenance-recorded ([APR-008](APR-008-artifact-lifecycle.md)), organized per [OBSERVE](APR-002-observe.md), and entered into the artifact graph with edges ([APR-013](APR-013-artifact-graph.md)). It MUST NOT persist indefinitely as ungoverned memory.
+- Session/long-term memory whose integrity is load-bearing (untrusted-origin, behavior-shaping, or erasure-subject) MUST be stored **append-only**; only ephemeral or reconstructible-projection state MAY be mutable (see *Storage model*). In-place edit of an integrity-bearing memory is forbidden — it is a silent-mutation laundering path.
+- Every persisted memory MUST have a **declared retention/expiry** policy; **indefinite retention MUST be an explicit, justified choice, not a default**. Memory MUST be **forgettable**, and forgetting MUST **cascade**: erasing a memory MUST invalidate everything derived from it (deleting the origin but leaving its influence is cosmetic). Erasure MUST reconcile with audit via **tombstones** — remove the content, retain the *fact of* the memory for forensics (the architectural hook for data-subject erasure; ties to the proposed PII principle).
+- Long-term memory that **durably shapes behavior across sessions** MUST **graduate to a governed artifact** — versioned + status-tracked + provenance-recorded ([APR-008](APR-008-artifact-lifecycle.md)), organized per [OBSERVE](APR-002-observe.md), edged into the artifact graph ([APR-013](APR-013-artifact-graph.md)). Graduation is the **only** trust-elevation path (reviewed, audited); it MUST be triggered before untrusted content recalled often enough becomes de facto policy (**laundering by repetition**), not left to accrue indefinitely as ungoverned memory.
 - **Contradictory memories** MUST be reconciled by a **declared policy** (recency, provenance priority, or a HITL gate — [APR-009](APR-009-human-in-the-loop.md)); silent last-write-wins that changes behavior is forbidden (mirrors APR-013 reconciliation, APR-008 supersession).
 - A **memory item's schema** is a contract ([OBSERVE](APR-002-observe.md) `contracts/`) and is versioned ([APR-008](APR-008-artifact-lifecycle.md)); a change to it is a migration, not a silent reshape.
 
@@ -92,12 +100,14 @@ Tiers are distinguished by *lifetime*, the same way [OBSERVE](APR-002-observe.md
 
 *(Shared conformance model — two-tier CI/human, audit-binding, change-via-ADR — per [APR-010](APR-010-governance.md).)*
 
-- **Tier + scope declared** on every memory item; recall confined to scope (Tier 1 structural; Tier 2 to judge scope boundaries are right).
-- **Trust preserved across memory** — items carry a trust label; recall does not elevate it; a red-team memory-poisoning case in `evals/` (write untrusted → recall → attempt instruction) gates merge (Tier 1 label check; Tier 2 + eval for the attack).
-- **Gated writes** — a write from untrusted content cannot alone drive a consequential action on recall (Tier 2 review; deterministic gate present).
-- **Selective, logged recall** — no blanket re-injection; each recall audit-logged (Tier 1).
-- **Retention + forget** — every persisted store declares retention; indefinite is explicit; a forget operation exists and removes from recall (Tier 1 presence; Tier 2 justification of indefinite).
-- **Graduation enforced** — behavior-shaping long-term memory is a governed artifact, not raw memory (Tier 2 judgment — the key review call).
+- **Governed admission** — memory is stamped at write time with its inputs' trust floor; the write path is least-privilege (Tier 1 stamp check; Tier 2 that the write path is authorized).
+- **Monotone derivation** — derived/merged/self-authored memory carries the min ancestor label; a red-team "reflect untrusted → recall as trusted" case in `evals/` gates merge (Tier 1 label check; Tier 2 + eval).
+- **Trust preserved on recall** — recall does not elevate automatically; the memory-poisoning eval (write untrusted → recall → attempt instruction) gates merge (Tier 1; Tier 2 + eval).
+- **Scope default-deny in code** — scope declared along its axes; enforcement is at the store/query boundary in code; an undeclared-scope query returns nothing; a cross-tenant recall case is tested (Tier 1 structural; Tier 2 boundaries).
+- **Gated writes** — a write from untrusted content cannot alone drive a consequential action on recall (Tier 2; deterministic gate present).
+- **Append-only where load-bearing** — integrity-bearing memory is append-only; mutable stores are ephemeral or reconciled projections (Tier 1 config; Tier 2 the tier/trust selector is right).
+- **Retention + cascading forget** — every persisted store declares retention; indefinite is explicit; forget cascades to derived memories and uses tombstones that keep the audit fact (Tier 1 presence; Tier 2 justification + cascade coverage).
+- **Graduation enforced** — behavior-shaping long-term memory is a governed artifact, not raw memory; laundering-by-repetition is caught before it becomes de facto policy (Tier 2 judgment — the key review call).
 - **Reconciliation declared** — contradiction policy exists; no silent last-write-wins (Tier 1 presence; Tier 2 policy).
 
 ## What this principle is NOT
@@ -154,3 +164,4 @@ One case, however, is stronger here than in APR-015 and is flagged for review: *
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-07-08 | Draft | Initial draft. Memory as tiered (working/session/long-term), trust-labeled, scope-bound, lifecycle-governed state; recall never elevates trust; bounded retention + forget path; graduation of behavior-shaping memory into a governed artifact. |
+| 0.2.0 | 2026-07-09 | Draft | Review-driven (feedback on the principle). Moved the emphasis to the **write path**: governed least-privilege admission, write-time stamping, and **monotone (min) derivation** including **self-authored** memory (compose APR-005 v0.2.0). **Scope** sharpened — named axes, **cross-tenant** called out, **default-deny enforced in code** (APR-003). Forgetting made **cascading + tombstoned**. **Graduation** reframed as the *single* sanctioned elevation channel (resolving the "never elevates" tension) and triggered against **laundering by repetition**. Added a **Storage model** section: append-only where integrity is load-bearing, mutable only for ephemeral / reconstructible-projection state (APR-013 pattern). Added `related:` APR-003. `writes_memory` field still deferred to review. |

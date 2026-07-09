@@ -3,13 +3,13 @@ apr: 15
 title: "A Context-Assembly and Window-Discipline Principle for Promptware"
 abstract: "The context window is assembled, not accreted: every run composes its window from trust-labeled, canonically-sourced segments under a declared precedence order and per-class token budget, and reduces it on overflow by a declared, audit-logged policy that never evicts safety-critical content."
 status: Draft
-version: 0.1.0
+version: 0.2.0
 principals:
   - D. Maxios
 generative-contributors:
   - "Claude Opus 4.8 (Anthropic; 1M context)"
 created: 2026-07-08
-last-updated: 2026-07-08
+last-updated: 2026-07-09
 audience: Architects and framework authors of agentic AI platforms; harness/runtime engineers who assemble the context window; anyone debugging non-reproducible runs or governing token spend
 supersedes: []
 superseded-by: []
@@ -30,7 +30,7 @@ tags:
 
 # APR-015 — A Context-Assembly and Window-Discipline Principle for Promptware
 
-> **The context window is a composed artifact: every run assembles it from trust-labeled, canonically-sourced segments under a declared precedence order and per-class token budget, and — when inputs exceed budget — reduces it by a declared, audit-logged policy that never silently evicts safety-critical content.**
+> **The context window is a composed artifact: every model call re-derives it from trust-labeled, canonically-sourced segments under a declared precedence order and per-class token budget. When inputs exceed budget, reduction follows a declared per-class order of sacrifice, recorded as a composition manifest. Guardrail/policy content is carried verbatim and never evicted or lossily transformed; task-critical grounding is present-or-fail-closed; if the protected tier alone cannot fit, the run fails closed.**
 
 ## Motivation
 
@@ -48,13 +48,22 @@ These are not tuning bugs; they are the absence of a principle. The window needs
 
 ## The principle
 
-**Treat the context window as a composed artifact with three declared decisions — order, budget, and reduction — made deterministically from labeled inputs and logged so the window is reconstructable.**
+**Treat the context window as a composed artifact with three declared decisions — order, budget, and reduction — re-derived every model call from labeled inputs and logged so the window is reconstructable.**
 
 1. **Order.** Segments are assembled in a **declared precedence**. Assembly is deterministic given its inputs: the same inputs under the same policy MUST produce the same window. Instruction-channel (trusted, operator-authored) content outranks data-channel (untrusted) content in both position and authority.
-2. **Budget.** Each **segment class** has a declared token budget; their sum is bounded by the target model's window. Safety-critical segments hold **reserved, non-evictable** budget.
-3. **Reduction.** When inputs exceed budget, a **declared overflow policy** decides what is summarized, truncated, or dropped, and in what order — never an opaque default, and never touching a non-evictable segment.
+2. **Budget.** Each **segment class** has a declared token budget; their sum is bounded by the target model's window. The **protected tier** (below) holds **reserved** budget.
+3. **Reduction.** When inputs exceed budget, a **declared overflow policy** decides what is summarized, truncated, or dropped, and in what order (the *order of sacrifice*) — never an opaque default, and never touching the protected tier in a way its rule forbids.
 
-A *segment* is a contiguous, single-provenance region of the window: a system/instruction block, one injected OBSERVE reference, the applied-patterns block, a delimited untrusted-input block, a history turn (or a summary of turns), a tool-result block, a recalled-memory block. Trust label (APR-005) and canonical source + version (OBSERVE / APR-008) travel *with* the segment into the window.
+**The unit of composition is the model call, not the user turn.** Overflow and trust drift accumulate iteration by iteration in an agent loop, so the window MUST be re-derived — and its budget and invariants re-validated — on **every model call**, not once per turn.
+
+A *segment* is a contiguous, single-provenance region of the window: a system/instruction block, one injected OBSERVE reference, the applied-patterns block, a delimited untrusted-input block, a history turn (or a summary of turns), a tool-result block, a recalled-memory block, or a **self-authored block** (the model's own prior plans/scratchpad re-entering context). Trust label (APR-005) and canonical source + version (OBSERVE / APR-008) travel *with* the segment into the window. Self-authored segments are **not trusted by origin**: per [APR-005](APR-005-trust-boundaries.md) they carry the trust floor of their inputs, so a plan that summarized a tool result is untrusted.
+
+## The protected tier — two classes, two rules
+
+Collapsing everything a run must not lose into one "safety-critical" class is where the protected tier leaks. There are two classes, with different eviction rules:
+
+- **Tier-0 — guardrails & policy instructions** (behavioral constraints; active policy; any segment gating a consequential action per APR-005). Few, stable, small. MUST be **reserved and carried verbatim** — never evicted, truncated, **or lossily summarized** by any reduction policy. If Tier-0 alone cannot fit, the run **fails closed** (it does not evict to make room).
+- **Tier-1 — task-critical grounding facts** (the specific data the task depends on: an account number, a retrieved clause, the user's stated constraint). Many, volatile, task-specific. MUST be **present-or-fail-closed for the task**: they need not all be held verbatim (they MAY be re-fetched or re-ranked), but if a needed grounding fact cannot be present, the task **fails closed** rather than proceeding over the hole (the confabulation failure — see [APR-017](APR-017-graceful-degradation.md)).
 
 ## Scope and applicability
 
@@ -73,13 +82,15 @@ A *segment* is a contiguous, single-provenance region of the window: a system/in
 ## Prescription
 
 - Window assembly MUST be **deterministic given its inputs**: identical inputs under an identical assembly policy MUST yield an identical window. Any nondeterminism MUST come from the inputs, never from the assembler.
-- Every segment MUST carry its **trust label** ([APR-005](APR-005-trust-boundaries.md)) and its **canonical source + version** ([APR-002](APR-002-observe.md) / [APR-008](APR-008-artifact-lifecycle.md)) into the window; assembly MUST NOT strip provenance.
-- Segments MUST be assembled in a **declared precedence order**. Instruction-channel (trusted operator) content MUST outrank data-channel (untrusted) content in both position and authority; untrusted content MUST occupy a **delimited data region** and MUST NOT be interleaved into the instruction channel (composes with APR-005's "untrusted is data, never instructions").
+- The window MUST be **re-derived on every model call**, not once per user turn; budget and the protected-tier invariants MUST be **re-validated each call** (overflow and trust drift accumulate per iteration in an agent loop).
+- Every segment MUST carry its **trust label** ([APR-005](APR-005-trust-boundaries.md)) and its **canonical source + version** ([APR-002](APR-002-observe.md) / [APR-008](APR-008-artifact-lifecycle.md)) into the window; assembly MUST NOT strip provenance. A **self-authored segment** (the model's own prior output re-entering context) MUST carry the trust floor of its inputs per APR-005 — never operator trust by virtue of being model-produced.
+- Segments MUST be assembled in a **declared precedence order**. Instruction-channel (trusted operator) content MUST outrank data-channel (untrusted) content in both position and authority; untrusted content MUST occupy a **delimited data region** and MUST NOT be interleaved into the instruction channel (composes with APR-005's "untrusted is data, never instructions"). The delimiting/labeling boundary MUST be **unforgeable from within segment content** per [APR-005](APR-005-trust-boundaries.md) — structural (message-role) separation or per-run sentinels, not fixed in-band string markers a segment could reproduce.
+- Declared precedence governs **conflict resolution**; it is not the only force on the model, whose attention has its own positional/recency bias. Precedence therefore MUST be reinforced by **placement and explicit in-band authority signaling**, not by ordering alone.
 - Each segment class MUST have a **declared token budget**; the total budgeted size MUST be bounded by the **target model's** context window (a model-dependent value — pin the model per [APR-008](APR-008-artifact-lifecycle.md) `validated_against`).
-- **Safety-critical segments** (guardrails, safety-critical instructions, active policy, and any segment gating a consequential action per APR-005) MUST hold **reserved budget** and MUST NOT be evicted, truncated, or summarized away by any reduction policy. This is the hard floor — no budget-pressure lever may cross it (mirrors [APR-009](APR-009-human-in-the-loop.md)'s "no fatigue lever skips a safety gate" and APR-011's audit floor).
-- On overflow, reduction MUST follow a **declared policy** stating which classes are summarized, truncated, or dropped and in what order; it MUST NOT be an opaque middleware default. If reduction would evict a non-evictable segment, the run MUST **halt with an audit-logged error** rather than silently drop it (composes with APR-003's "halt, don't guess").
+- The **protected tier** MUST hold **reserved budget** and MUST be handled per its two classes: **Tier-0** (guardrails/policy/consequential-gating) MUST be carried **verbatim** — never evicted, truncated, or lossily summarized; **Tier-1** (task-critical grounding) MUST be **present-or-fail-closed** for the task (it MAY be re-fetched/re-ranked, but a needed grounding fact that cannot be present MUST fail the task closed, not proceed over the gap). No budget-pressure lever may cross either rule (mirrors [APR-009](APR-009-human-in-the-loop.md)'s "no fatigue lever skips a safety gate").
+- On overflow, reduction MUST follow a **declared policy** stating which classes are summarized, truncated, or dropped and in what order (the *order of sacrifice*); it MUST NOT be an opaque middleware default. If reduction would violate a protected-tier rule — evict/summarize Tier-0, or drop a needed Tier-1 fact — the run/task MUST **fail closed with an audit-logged error** (composes with APR-003's "halt, don't guess" and [APR-017](APR-017-graceful-degradation.md)). When the protected tier *alone* exceeds the window, assembly MUST fail closed rather than evict to fit.
 - **Summarization / compaction of window content is a probabilistic transform** ([APR-003](APR-003-code-prompt-boundary.md)) → it MUST be eval-gated (`evaluated_by` + `min_eval_score`). Because it operates over **trust-mixed** content, its output MUST inherit the **lowest trust** and **highest sensitivity** of its inputs (taint composition, APR-005) — a summary of untrusted content is untrusted. Truncation or windowing by a closed rule (keep last N turns, drop oldest) is deterministic → code, unit-tested.
-- The **realized window's composition** MUST be audit-logged at the moment of assembly — the ordered segment list with each segment's source + version + token count, and every reduction action taken — sufficient to **reconstruct the window** from the record. This is one more consumption event on the shared audit/observability substrate ([APR-010](APR-010-governance.md) / [APR-011](APR-011-observability.md)).
+- The **realized window's composition** MUST be audit-logged at the moment of assembly as a **full composition manifest** — the ordered list of segment IDs with each segment's class, trust label, source + version, and token count, plus which reduction fired on each class — sufficient to **reconstruct the window** from the record. A bare `reduced: true` flag does NOT satisfy this; the manifest is what makes a run reconstructable after an incident. This is one more consumption event on the shared audit/observability substrate ([APR-010](APR-010-governance.md) / [APR-011](APR-011-observability.md)).
 - Ordering SHOULD place **stable/shared segments before volatile/per-request segments** to preserve the model's prompt-cache prefix (this absorbs the previously-parked prompt-caching kernel). This is a cost SHOULD, **subordinate** to the precedence and safety MUSTs above — cache stability never reorders instruction-above-data or evicts a reserved segment.
 - The **assembly policy itself is a versioned artifact** ([APR-008](APR-008-artifact-lifecycle.md)): a change to precedence, budgets, or reduction is a behavioral change requiring a version bump and re-validation, not a silent config edit.
 
@@ -87,13 +98,13 @@ A *segment* is a contiguous, single-provenance region of the window: a system/in
 
 *(Shared conformance model — two-tier CI/human, audit-binding, change-via-ADR — per [APR-010](APR-010-governance.md).)*
 
-- **Deterministic assembly** — a golden test asserts identical inputs + policy ⇒ byte-identical window (Tier 1).
-- **Provenance intact** — every segment in the logged window carries a trust label and a resolvable source + version (Tier 1).
-- **Precedence enforced** — the declared order exists; no untrusted segment sits in or above the instruction channel (Tier 1 for the structural check; Tier 2 to judge the order is *sensible*).
+- **Deterministic, per-call assembly** — a golden test asserts identical inputs + policy ⇒ byte-identical window; the window is re-derived and invariants re-validated each model call, not once per turn (Tier 1).
+- **Provenance intact** — every segment in the manifest carries a trust label and a resolvable source + version; self-authored segments are labeled at their input floor (Tier 1).
+- **Precedence enforced + unforgeable** — the declared order exists; no untrusted segment sits in or above the instruction channel; the boundary is structural/sentinel, and a delimiter-forgery attempt is in the red-team evals (Tier 1 structural; Tier 2 judges the order is *sensible*).
 - **Budgets bound the window** — per-class budgets declared; total ≤ the pinned model's limit (Tier 1).
-- **Safety floor** — no reduction path can evict/summarize a reserved segment; an attempted eviction halts-and-logs (Tier 1: assert no reduction rule targets a non-evictable class; Tier 2: confirm the safety-critical set is complete).
-- **Reduction declared, summarization eval-gated** — an overflow policy exists (not a default); every summarization step has `evaluated_by` + `min_eval_score` and composes taint (Tier 1 presence; Tier 2 policy judgment).
-- **Window reconstructable** — assembly is audit-logged with enough detail to rebuild the window (Tier 1).
+- **Protected tier** — no reduction path can evict/summarize a Tier-0 segment or drop a needed Tier-1 fact; a violation, or protected-tier-alone-overflow, fails closed and logs (Tier 1: assert no rule targets Tier-0; Tier 2: confirm the Tier-0/Tier-1 sets are complete).
+- **Reduction declared, summarization eval-gated** — an overflow policy exists (not a default) with a declared order of sacrifice; every summarization step has `evaluated_by` + `min_eval_score` and composes taint (Tier 1 presence; Tier 2 policy judgment).
+- **Window reconstructable** — assembly is logged as a full composition manifest, not a bare `reduced` flag (Tier 1).
 - **Cache ordering** — where cost matters, stable-before-volatile ordering is present (Tier 2 / SHOULD).
 
 ## What this principle is NOT
@@ -102,7 +113,7 @@ A *segment* is a contiguous, single-provenance region of the window: a system/in
 - **Not [OBSERVE](APR-002-observe.md).** OBSERVE governs *which sources exist* and the selective injection of *declared references*. This governs the *whole window* — including history, tool output, untrusted input, and memory, which OBSERVE does not touch — and its order, budget, and reduction.
 - **Not [APR-005](APR-005-trust-boundaries.md).** APR-005 owns trust *labeling and enforcement*; this composes it by making segment *position and precedence* a first-class assembly decision. Labeling without ordering leaves injection's positional face open.
 - **Not [APR-011](APR-011-observability.md).** APR-011 owns cost measurement and budgets; here cache-stable ordering is one SHOULD. The window-composition log is emitted on APR-011's substrate but is an assembly concern.
-- **Not a memory principle.** Recalled memory is one segment class this orders and budgets; *how memory is structured, scoped, trusted, and persisted* is a separate (proposed) principle.
+- **Not a memory principle.** Recalled memory is one segment class this orders and budgets; *how memory is structured, scoped, trusted, and persisted* is [APR-016](APR-016-memory.md).
 - **Not a prompt-engineering guide.** It mandates *declared* order + budget + reduction, not a specific optimal ordering; "put the important thing where the model attends" is adopter tuning, not a normative rule here.
 - **Not a guarantee against context degradation.** It makes assembly explicit, bounded, reproducible, and auditable — not optimal.
 
@@ -153,3 +164,4 @@ The test that fixes all four: declare a property in frontmatter **only if** it (
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-07-08 | Draft | Initial draft. Context window as a composed artifact: declared order, per-class budget, declared reduction with a non-evictable safety floor; deterministic, provenance-carrying, audit-logged assembly. Absorbs the parked prompt-caching kernel as a subordinate SHOULD. |
+| 0.2.0 | 2026-07-09 | Draft | Review-driven (feedback on the principle). Unit of composition fixed to the **model call** (re-derive + re-validate each call). Protected tier split into **Tier-0** (guardrails — verbatim, never evicted *or lossily summarized*) and **Tier-1** (task-critical grounding — present-or-fail-closed); protected-tier-alone-overflow fails closed. Named the **self-authored segment** class (trust floor per APR-005). Labels MUST be **unforgeable** and precedence reinforced by placement, not ordering alone (compose APR-005 v0.2.0). Audit log tightened to a **full composition manifest**. |
