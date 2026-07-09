@@ -47,6 +47,10 @@ PROMPTARCH prose is matter-of-fact, declarative, and audit-friendly. We avoid:
 - Vague hedges ("might", "could" — prefer "MAY"/"SHOULD"/"MUST" per RFC 2119 when stating a normative rule).
 - Tables-for-decoration. If a list is not actually tabular, use a list.
 
+## Releasing
+
+Releases are promoted through a **PR at every step** — working branch → `develop` → `main` → tag + GitHub release — never a direct push to `main`. The flow and the `tools/release.ts` usage are in [`meta/release-process.md`](meta/release-process.md); the decision and rationale are in [`meta/decisions/ADR-004-release-process.md`](meta/decisions/ADR-004-release-process.md).
+
 ## Code of conduct
 
 See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
