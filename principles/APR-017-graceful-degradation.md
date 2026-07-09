@@ -3,6 +3,7 @@ apr: 17
 title: "A Graceful-Degradation and Failure-Handling Principle for Promptware"
 abstract: "When a tool errors, an injection is missing, a delegate times out, or the model is unavailable, handling is set by what the failure blocks: safety-critical paths fail closed, other paths degrade only via a declared bounded fallback, and no failure or degradation is ever silent."
 status: Draft
+class: architectural
 version: 0.2.0
 principals:
   - D. Maxios

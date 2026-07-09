@@ -3,6 +3,7 @@ apr: 16
 title: "A Memory and State-Lifecycle Principle for Promptware"
 abstract: "Agent memory is tiered, trust-labeled, and scope-bound: recall re-enters content at its origin trust and never elevates it, retention is bounded and forgettable, and memory that durably shapes behavior graduates into a governed, versioned artifact."
 status: Draft
+class: architectural
 version: 0.2.1
 principals:
   - D. Maxios

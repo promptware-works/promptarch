@@ -38,6 +38,7 @@ For background on what an APR is, see the top-level [`README.md`](../README.md).
 | [APR-016](APR-016-memory.md) | — | A Memory and State-Lifecycle Principle for Promptware | Draft | 0.2.1 |
 | [APR-017](APR-017-graceful-degradation.md) | — | A Graceful-Degradation and Failure-Handling Principle for Promptware | Draft | 0.2.0 |
 | [APR-018](APR-018-runtime-contract.md) | — | A Runtime-Conformance Profile for Promptware Harnesses | Draft | 0.1.0 |
+| [APR-019](APR-019-identity.md) | — | A Project & Node Identity and Provenance Principle for Promptware | Draft | 0.1.0 |
 
 APR-000 is the project's foundational position — start there if you are new to PROMPTARCH or evaluating whether the APR series applies to your work. APR-001 onward are normal principle records.
 

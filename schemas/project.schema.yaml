@@ -1,0 +1,59 @@
+# Project Manifest Schema (JSON Schema, expressed in YAML).
+#
+# Validates project.yaml — the project's identity & provenance. Governed by APR-019.
+# The zero-dependency checker tools/project/check-project.ts enforces the key
+# constraints below in CI.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/promptware-works/promptarch/blob/main/schemas/project.schema.yaml
+title: Project Manifest
+type: object
+additionalProperties: false
+required:
+  - project
+properties:
+  project:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - title
+      - owner
+    properties:
+      id:
+        description: >
+          Canonical, globally-unique project id (reverse-DNS). It is the namespace for
+          every node's canonical id (`project.id : node.id`).
+        type: string
+        pattern: '^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)+$'
+      title:
+        type: string
+        minLength: 1
+      description:
+        type: string
+      type:
+        description: >
+          Project nature — e.g. research | industrial | governmental. Free-form
+          (extensible); adopters MAY pin a controlled vocabulary.
+        type: string
+      domain:
+        description: Subject area(s); adopters MAY pin a taxonomy (OECD FoS, arXiv, ACM CCS).
+        type: array
+        items: { type: string }
+      version:
+        type: string
+      owner:
+        description: Accountable owner (person/team). MAY be an ORCID.
+        type: string
+        minLength: 1
+      institution:
+        description: Organization. MAY be a ROR id.
+        type: string
+      license:
+        type: string
+      dependencies:
+        description: Foreign project ids this project may edge into (APR-012). Reverse-DNS.
+        type: array
+        items:
+          type: string
+          pattern: '^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)+$'

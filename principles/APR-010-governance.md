@@ -3,6 +3,7 @@ apr: 10
 title: "A Governance Principle for Promptware Conformance"
 abstract: "Promptware has no compiler, so conformance is reconstructed through a layered apparatus — schema validation, evals, review gates, audit-log binding — in two tiers: mechanics run as CI fitness functions, judgment goes to human review. The canonical governance model the domain APRs defer to."
 status: Draft
+class: architectural
 version: 0.1.0
 principals:
   - D. Maxios

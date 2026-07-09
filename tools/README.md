@@ -28,6 +28,14 @@ Optional tooling that helps maintain and validate the repo. TypeScript / Node pe
 
   Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-graph.yml`](../.github/workflows/check-graph.yml) runs it on pushes and PRs to `main` and `develop`.
 
+- [`project/check-project.ts`](project/check-project.ts) — validates the [project manifest](../project.yaml) against [`../schemas/project.schema.yaml`](../schemas/project.schema.yaml): reverse-DNS `project.id`, required `title` + `owner`, reverse-DNS dependency ids. Governed by [APR-019](../principles/APR-019-identity.md). Run from this directory (`tools/`):
+
+  ```bash
+  node project/check-project.ts      # or:  npm run check:project
+  ```
+
+  Exits non-zero on any violation, so it gates CI — [`.github/workflows/check-project.yml`](../.github/workflows/check-project.yml) runs it on pushes and PRs to `main` and `develop`.
+
 - [`release.ts`](release.ts) — cuts a release from an already-promoted `main`, per the PR-based flow ([ADR-004](../meta/decisions/ADR-004-release-process.md); how-to in [`meta/release-process.md`](../meta/release-process.md)). Promotion is by PR (working → `develop` → `main`); this tool only verifies, tags, and publishes — it does **not** push commits to `main`. Run from this directory (`tools/`):
 
   ```bash
