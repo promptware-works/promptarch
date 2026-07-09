@@ -3,6 +3,7 @@ apr: 003
 title: "A Code/Prompt Boundary Principle for Promptware"
 abstract: "Places deterministic, verifiable, or safety-critical behavior in code and open-ended judgment in prompts, with an explicit, typed, testable seam at every code/prompt crossing — so each behavior is verified the right way and no safety decision rests silently on a model."
 status: Draft
+class: architectural
 version: 0.1.5
 principals:
   - D. Maxios

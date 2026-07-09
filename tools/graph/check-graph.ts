@@ -63,7 +63,7 @@ for (const n of nodeTypes) if (!SLUG.test(n)) errors.push(`node-type '${n}' is n
 if (edgeTypes.length === 0) errors.push("edge-types is empty");
 for (const e of edgeTypes) if (!SLUG.test(e)) errors.push(`edge-type '${e}' is not a lowercase slug`);
 if (nodeAttrs.length === 0) errors.push("node-attributes is empty");
-for (const req of ["id", "type", "title"]) if (!nodeAttrs.includes(req)) errors.push(`node-attributes missing mandatory identity attribute '${req}'`);
+for (const req of ["id", "project-id", "type", "title"]) if (!nodeAttrs.includes(req)) errors.push(`node-attributes missing mandatory identity attribute '${req}'`);
 if (roots.length === 0) errors.push("roots is empty");
 const nodeSet = new Set(nodeTypes);
 for (const r of roots) if (!nodeSet.has(r)) errors.push(`root '${r}' is not a declared node-type`);

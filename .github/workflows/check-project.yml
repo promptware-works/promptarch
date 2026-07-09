@@ -1,0 +1,25 @@
+name: check-project
+
+# Gate: the project manifest (project.yaml) must be valid — reverse-DNS `project.id`,
+# `title` + `owner` present, reverse-DNS dependency ids (tools/project/check-project.ts).
+# Governed by APR-019. Runs on pushes and PRs to the long-lived branches.
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  check-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24" # Node >= 23.6 runs the .ts directly (native type stripping)
+      - name: Validate the project manifest
+        run: node tools/project/check-project.ts

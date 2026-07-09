@@ -38,7 +38,8 @@ edge-types:
 # mandatory node identity; provenance (version, status, supersedes) is reused from
 # core.provenance (APR-008), not redefined here; edges reference the edge-types above.
 node-attributes:
-  id:          { required: true }     # unique, stable node id
+  id:          { required: true }     # local, project-unique, immutable node id
+  project-id:  { required: true }     # canonical project id (APR-019); global id = project-id:id
   type:        { required: true }     # one of node-types
   title:       { required: true }     # human-readable name
   description: { required: false }    # short summary

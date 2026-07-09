@@ -3,6 +3,7 @@ apr: NNN
 title: "MNEMONIC — <Descriptive subtitle>"
 abstract: "<one- to two-sentence summary, ≤300 chars: what this APR is about and why one would adopt it. Descriptive, not normative.>"
 status: Draft                  # Draft | Proposed | Accepted | Deprecated | Superseded | Withdrawn
+class: architectural
 version: 0.1.0
 principals:
   - <Principal Name>

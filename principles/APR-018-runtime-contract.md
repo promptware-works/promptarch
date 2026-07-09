@@ -3,6 +3,7 @@ apr: 18
 title: "A Runtime-Conformance Profile for Promptware Harnesses"
 abstract: "The runtime obligations scattered across the corpus — inject only what's declared, halt-and-audit, propagate trust, enforce the delegation envelope, govern memory and failure — collected by reference into one checkable conformance profile for harnesses, so no APR becomes a runtime specification."
 status: Draft
+class: architectural
 version: 0.1.0
 principals:
   - D. Maxios

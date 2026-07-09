@@ -3,6 +3,7 @@ apr: 0
 title: "PROMPTWARE — A Foundational Position for the PROMPTARCH APR Series"
 abstract: "Establishes the foundational dyad for PROMPTARCH: software divides into promptware — whose dominant runtime behaviour is shaped by content interpreted at execution time by LLM agents — and codeware — whose dominant behaviour is governed by formal instructions run under fixed semantics by a compiler or interpreter. The two are distinguished by the interpreter's semantics, not by prose-vs-code or determinism; each can serve as the other's minority serving layer, with hybrids classified by region. PROMPTARCH publishes the architectural discipline for the promptware class as the APR series."
 status: Draft
+class: architectural
 version: 0.2.0
 principals:
   - D. Maxios

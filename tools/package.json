@@ -8,6 +8,7 @@
     "check:digests": "node digests/check-digests.ts",
     "check:registry": "node registry/check-registry.ts",
     "check:graph": "node graph/check-graph.ts",
+    "check:project": "node project/check-project.ts",
     "release": "node release.ts"
   },
   "devDependencies": {

@@ -3,6 +3,7 @@ apr: 11
 title: "An Observability and Cost-Governance Principle for Promptware"
 abstract: "Every agent run is end-to-end traceable: spans nest along the delegation graph, capturing content/model versions and per-call cost that rolls up. Audit and observability share one event substrate; drift is caught by sampled re-eval; hard cost caps halt, soft budgets warn."
 status: Draft
+class: architectural
 version: 0.1.0
 principals:
   - D. Maxios

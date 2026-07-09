@@ -3,6 +3,7 @@ apr: 12
 title: "A Federated-Composition Principle for Promptware Across Trust Domains"
 abstract: "When farms compose across a trust/identity boundary (a federation), the boundary is explicit: membership is governed (central authority by default), participants are authenticated, and cross-domain trust is non-transitive and least-privilege. Membership proves identity, not blanket trust."
 status: Draft
+class: architectural
 version: 0.1.0
 principals:
   - D. Maxios

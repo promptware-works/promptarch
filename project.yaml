@@ -1,0 +1,19 @@
+# Project Manifest — this project's identity & provenance.
+#
+# Governed by APR-019 (Identity & Provenance). This is the SINGLE SOURCE OF TRUTH for
+# project identity: the `id` here is the namespace for every node's canonical id
+# (`project.id : node.id`), and `owner` / `institution` are the provenance anchors a
+# node resolves to. Nodes and tools READ from here; they never copy the metadata (only
+# reference `id`). One `project.yaml` per project, at the root — like package.json.
+
+project:
+  id: works.promptware.promptarch        # canonical, globally-unique (reverse-DNS)
+  title: PROMPTARCH
+  description: "Architectural Principle Records (APRs) for promptware."
+  type: research                          # research | industrial | governmental | … (extensible)
+  domain: [software-architecture, agentic-ai, promptware]
+  version: 0.5.0                          # optional — latest project release
+  owner: "D. Maxios"                      # accountable owner (person/team); MAY be an ORCID
+  institution: "promptware.works"         # organization; MAY be a ROR id
+  license: "CC-BY-4.0 AND Apache-2.0"     # dual-licensed — see README
+  dependencies: []                        # foreign project ids this may edge into (APR-012)

@@ -3,6 +3,7 @@ apr: 7
 title: "A Pattern Principle for Reusable, Declaratively-Applied Promptware Behavior"
 abstract: "A reusable unit of agent/skill behavior — a pattern — is a first-class, named, versioned artifact applied declaratively (via applies_patterns): behavioral prose plus optional structural obligations, defined once in patterns/, composed orthogonally, and never copy-pasted into prose."
 status: Draft
+class: architectural
 version: 0.1.2
 principals:
   - D. Maxios
