@@ -90,6 +90,15 @@ fields:
     status: active
     since: "APR-019 0.1.0"
 
+  # ---------- containment (APR-019) ----------
+  - name: parent
+    owner: APR-019
+    required: false                  # absent = this is the root container (a project)
+    type: string
+    format: reverse-dns              # parent container id; this container's id MUST extend it
+    status: active
+    since: "APR-019 0.3.0"
+
   # ---------- federation (APR-019 / APR-012) ----------
   - name: dependencies
     owner: APR-019
