@@ -59,6 +59,13 @@ fields:
     values: [trusted, semi-trusted, untrusted]
     status: active
     since: "APR-005 0.1.0"
+  - name: permission_tier
+    path: core.classification
+    owner: APR-022
+    type: enum
+    values: [read, write, destructive]
+    status: active
+    since: "APR-022 0.1.0"
   - name: agency
     path: core.classification
     owner: APR-006

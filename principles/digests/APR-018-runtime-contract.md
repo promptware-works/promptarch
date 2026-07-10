@@ -1,6 +1,6 @@
 # APR-018 — Runtime-Conformance Profile for Harnesses — Digest
 
-> **Generated digest of [APR-018 — A Runtime-Conformance Profile for Promptware Harnesses](../APR-018-runtime-contract.md) v0.2.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
+> **Generated digest of [APR-018 — A Runtime-Conformance Profile for Promptware Harnesses](../APR-018-runtime-contract.md) v0.3.0.** The full APR is authoritative — read it for motivation, prior art, and worked detail. Do not edit by hand.
 
 **Abstract.** The runtime obligations scattered across the corpus — inject only what's declared, halt-and-audit, propagate trust, enforce the delegation envelope, govern memory and failure — collected by reference into one checkable conformance profile for harnesses, so no APR becomes a runtime specification.
 
@@ -28,6 +28,8 @@ The harness MUST:
 - **R12** read metadata from frontmatter only; never parse the body for metadata; never inject frontmatter — APR-014.
 - **R13** across a federation boundary, authenticate participants; least-privilege, non-transitive cross-domain trust — APR-012.
 - **R14** reference artifacts by canonical `container-id:id` in emitted lineage/audit records; resolve a cross-project reference only through a declared `dependency` — APR-019.
+- **R15** execute model-invoked tools/code isolated, resource-bounded, no ambient credentials, default-deny egress; capability per action; fail closed on breach — APR-020.
+- **R16** expose tools as schema-validated contracts (input *and* output), effect-tiered (read/write/destructive) at least privilege, destructive gated, machine-actionable errors — APR-022.
 
 Conformance of the whole = passing the union of the owners' runtime-facing governance checks; partial conformance is per-obligation and testable.
 
@@ -37,11 +39,11 @@ Closed for modification. New obligations are **registered by their owning APR** 
 
 ## Governance checks
 
-Profile completeness (every obligation cites a live owner; no redefinition) · conformance report exists listing R1–R14 + each owner's check + pass/fail · no new checks introduced (indexes existing governance) · extensions owner-registered.
+Profile completeness (every obligation cites a live owner; no redefinition) · conformance report exists listing R1–R16 + each owner's check + pass/fail · no new checks introduced (indexes existing governance) · extensions owner-registered.
 
 ## Scope limits — do NOT misapply
 
 Not a runtime / reference implementation / execution model (the interface, not the scheduler/bus/store) · not a new set of requirements (defines nothing; owner wins) · not APR-010 (that is the conformance *machinery*; this is the *index* it verifies) · not a certification/compliance program · not a god-object (closed for modification; owner-registered) · excludes build-time materialization (APR-004 is not a runtime obligation).
 
 ---
-*Source: [APR-018 — A Runtime-Conformance Profile for Promptware Harnesses](../APR-018-runtime-contract.md) v0.2.0 · regenerate this digest whenever the source changes.*
+*Source: [APR-018 — A Runtime-Conformance Profile for Promptware Harnesses](../APR-018-runtime-contract.md) v0.3.0 · regenerate this digest whenever the source changes.*
