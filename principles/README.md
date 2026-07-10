@@ -44,16 +44,31 @@ APR-000 is the project's foundational position — start there if you are new to
 
 Each APR also has a token-efficient **[digest](digests/)** — an injectable summary (~1k tokens vs 3–7k) for feeding to an LLM while building promptware. The full APR is always canonical; see [`digests/README.md`](digests/README.md).
 
-## By concern (reading guide)
+## Reading guides
 
-The numbers above are stable citation IDs assigned in drafting order (RFC-style) — **not** a ranking or reading sequence, so an APR may reference a higher-numbered one (see [`meta/apr-numbering.md`](../meta/apr-numbering.md)). For a conceptual tour, the principles group into four layers:
+Two orthogonal cuts over the index above — a conceptual tour (**by concern**) and a grain-of-system tour (**by operational scope**). Both are navigation aids; the numbered index above remains authoritative. Both are also independent of an APR's `class` (`architectural | implementation | process`): scope says *where* a principle applies, `class` says *what kind* of record it is. The numbers themselves are stable citation IDs assigned in drafting order (RFC-style) — **not** a ranking or reading sequence, so an APR may reference a higher-numbered one (see [`meta/apr-numbering.md`](../meta/apr-numbering.md)).
+
+### By concern
+
+For a conceptual tour, the principles group into four layers:
 
 - **Foundations** — [APR-000](APR-000-promptware.md) (what promptware is) · [APR-010](APR-010-governance.md) (how conformance is governed) · [APR-018](APR-018-runtime-contract.md) (the runtime contract a harness must satisfy)
 - **Specifying a component** — [APR-001](APR-001-aspect.md) ASPECT · [APR-014](APR-014-declare.md) DECLARE (frontmatter classification) · [APR-003](APR-003-code-prompt-boundary.md) code/prompt boundary · [APR-007](APR-007-pattern-mechanism.md) patterns
-- **Organizing the platform** — [APR-002](APR-002-observe.md) OBSERVE · [APR-004](APR-004-canonical-source.md) canonical source · [APR-006](APR-006-composition-topology.md) composition · [APR-013](APR-013-artifact-graph.md) artifact graph · [APR-015](APR-015-context-assembly.md) context assembly
-- **Operating safely over time** — [APR-005](APR-005-trust-boundaries.md) trust boundaries · [APR-008](APR-008-artifact-lifecycle.md) lifecycle · [APR-009](APR-009-human-in-the-loop.md) human-in-the-loop · [APR-016](APR-016-memory.md) memory & state · [APR-017](APR-017-graceful-degradation.md) graceful degradation
+- **Organizing the platform** — [APR-002](APR-002-observe.md) OBSERVE · [APR-004](APR-004-canonical-source.md) canonical source · [APR-006](APR-006-composition-topology.md) composition · [APR-012](APR-012-federated-composition.md) federated composition · [APR-013](APR-013-artifact-graph.md) artifact graph · [APR-019](APR-019-identity.md) identity & provenance · [APR-015](APR-015-context-assembly.md) context assembly
+- **Operating safely over time** — [APR-005](APR-005-trust-boundaries.md) trust boundaries · [APR-008](APR-008-artifact-lifecycle.md) lifecycle · [APR-009](APR-009-human-in-the-loop.md) human-in-the-loop · [APR-011](APR-011-observability.md) observability & cost · [APR-016](APR-016-memory.md) memory & state · [APR-017](APR-017-graceful-degradation.md) graceful degradation
 
-This grouping is a navigation aid; the numbered index above remains authoritative.
+### By operational scope
+
+The other cut: **which grain of an agentic system a principle governs.** The grain is set by the **trust domain** — a single component, one runtime (a structured agent and its subagents inside one trust domain), or several agents across trust domains. Most principles are cross-cutting; the ones that are grain-specific cluster cleanly.
+
+- **Agent** — one component / agent / skill in isolation: [APR-001](APR-001-aspect.md) ASPECT · [APR-003](APR-003-code-prompt-boundary.md) code/prompt boundary · [APR-007](APR-007-pattern-mechanism.md) patterns · [APR-014](APR-014-declare.md) DECLARE.
+- **Harness** — *one runtime / one trust domain*: a **structured agent and its subagents**, and the loader/orchestrator that runs them: [APR-002](APR-002-observe.md) OBSERVE (loader) · [APR-006](APR-006-composition-topology.md) delegation topology · [APR-015](APR-015-context-assembly.md) context assembly · [APR-016](APR-016-memory.md) memory · [APR-017](APR-017-graceful-degradation.md) graceful degradation · [APR-018](APR-018-runtime-contract.md) runtime profile.
+- **Multi-agent** — *across trust domains* (federation; each participant runs its own harness): [APR-012](APR-012-federated-composition.md) federated composition.
+- **Cross-cutting** — apply at every grain: [APR-000](APR-000-promptware.md) · [APR-004](APR-004-canonical-source.md) · [APR-005](APR-005-trust-boundaries.md) · [APR-008](APR-008-artifact-lifecycle.md) · [APR-009](APR-009-human-in-the-loop.md) · [APR-010](APR-010-governance.md) · [APR-011](APR-011-observability.md) · [APR-013](APR-013-artifact-graph.md) · [APR-019](APR-019-identity.md).
+
+The **structured-agent (harness) → multi-agent (federation)** step is the same **trust-domain boundary** the corpus draws as *containment vs. dependency* ([APR-013](APR-013-artifact-graph.md)/[APR-019](APR-019-identity.md)): subagents are contained within one domain (intra-domain delegation, APR-006), while cross-domain agents federate (APR-012).
+
+A few principles **span grains** and are listed under their home above with this note: [APR-005](APR-005-trust-boundaries.md) runs agent → multi-agent (trust propagates across every hop); [APR-006](APR-006-composition-topology.md) covers subagent delegation *and* intra-domain multi-agent topology; [APR-016](APR-016-memory.md) is harness memory but scopes cross-agent sharing; [APR-018](APR-018-runtime-contract.md) is a harness profile that **indexes obligations at every grain** (e.g. R13 federation, R14 identity). This is a reading aid, not a partition — an APR may belong to more than one grain.
 
 ## Conventions
 
